@@ -102,6 +102,13 @@ void uart1TXInterrupt( void )
 void uart2RXInterrupt( void )
 {
   // user code
+    uint8_t uartChar;
+    uartChar = uartReadChar(eUART2);
+    
+    uartWriteChar(eUART2, uartChar);
+    
+    //if...
+    //setPwmDuty(ePWM1,7500) : duty cycle à 25% (PWM inversé)
 }
 //UART2 TX interrupt
 void uart2TXInterrupt( void )
@@ -268,6 +275,11 @@ int16_t main(void)
     registerRTCCallback(rtcInterrupt);
     
 	// TBD: INITIALIZATION OF THE USER USED MODULE
+    
+    uartInit(eUART2, 19200);
+    uartInterruptEnable(eUART2, eRX);
+    
+    pwmAllInit();
     
 	_GENERAL_INTERRUPT_ENABLED_; // start the interrupt
     
