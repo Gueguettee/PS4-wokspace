@@ -23,43 +23,7 @@
             </sourceRootList>
             <confList>
                 <confElem>
-                    <name>XC16_dsPIC33EP512GM710</name>
-                    <type>2</type>
-                </confElem>
-                <confElem>
-                    <name>XC16_dsPIC33FJ256GP710A</name>
-                    <type>2</type>
-                </confElem>
-                <confElem>
-                    <name>C30_dsPIC33FJ128MC804</name>
-                    <type>2</type>
-                </confElem>
-                <confElem>
-                    <name>XC16_dsPIC33FJ128MC804</name>
-                    <type>2</type>
-                </confElem>
-                <confElem>
-                    <name>C30_dsPIC33FJ16GS504</name>
-                    <type>2</type>
-                </confElem>
-                <confElem>
-                    <name>XC16_dsPIC33FJ16GS504</name>
-                    <type>2</type>
-                </confElem>
-                <confElem>
-                    <name>C30_dsPIC33FJ06GS101</name>
-                    <type>2</type>
-                </confElem>
-                <confElem>
-                    <name>XC16_dsPIC33FJ06GS101</name>
-                    <type>2</type>
-                </confElem>
-                <confElem>
-                    <name>C30_dsPIC33EP512MU810</name>
-                    <type>2</type>
-                </confElem>
-                <confElem>
-                    <name>XC16_dsPIC33EP512MU810</name>
+                    <name>XC16_dsPIC33EP128GM710</name>
                     <type>2</type>
                 </confElem>
             </confList>
