@@ -51,6 +51,8 @@ void uartInit(uart_t eUARTx, uint32_t baud);
 ///          allows you to send a single char
 void uartWriteChar(uart_t eUARTx, char c);
 
+void uartWriteString(uart_t eUARTx, char *str);
+
 /// @brief   Read a single char via UART
 /// @param   eUARTx UART you want to use to read the char
 /// @return  The char value read from UART Rx buffer

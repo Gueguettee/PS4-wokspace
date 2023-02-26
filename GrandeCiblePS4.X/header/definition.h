@@ -30,6 +30,9 @@
 #include <stdint.h>        /* Includes uint16_t definition                    */
 #include <stddef.h>        /* Includes NULL Pointer definition                */
 #include <stdbool.h>       /* Includes true/false definition                  */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 /// @brief   Pointer definition for callback of interrupt
 typedef void (*Callback_t)(void);

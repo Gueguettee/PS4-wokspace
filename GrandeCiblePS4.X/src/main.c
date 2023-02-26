@@ -196,6 +196,20 @@ void rtcInterrupt( void )
 /******************************************************************************/
 /*                                User Program                                */
 /******************************************************************************/
+char* itoa(int val, int base){
+	
+	static char buf[32] = {0};
+	
+	int i = 30;
+	
+	for(; val && i ; --i, val /= base)
+	
+		buf[i] = "0123456789abcdef"[val % base];
+	
+	return &buf[i+1];
+	
+}
+
 void mainLoop(void)
 {
 	// TBD: USER CODE HERE
@@ -203,6 +217,12 @@ void mainLoop(void)
     if (100==sysCounter++)
     {
         LATCbits.LATC3 = !LATCbits.LATC3;
+        
+        uint16_t value = adcChannelRead(AN1);
+        
+        uartWriteString(eUART2, itoa(value,10));
+        //uartWriteChar(eUART2, '\n');
+        
         sysCounter=0;
     }
 }
@@ -276,7 +296,7 @@ int16_t main(void)
     
 	// TBD: INITIALIZATION OF THE USER USED MODULE
     
-    uartInit(eUART2, 19200);
+    uartInit(eUART2, 9600);
     uartInterruptEnable(eUART2, eRX);
     
     pwmAllInit();
