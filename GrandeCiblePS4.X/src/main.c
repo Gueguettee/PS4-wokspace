@@ -108,7 +108,7 @@ void uart2RXInterrupt( void )
     uartWriteChar(eUART2, uartChar);
     
     //if...
-    //setPwmDuty(ePWM1,7500) : duty cycle à 25% (PWM inversé)
+    //setPwmDuty(ePWM1,7500) : duty cycle ï¿½ 25% (PWM inversï¿½)
 }
 //UART2 TX interrupt
 void uart2TXInterrupt( void )
@@ -296,10 +296,13 @@ int16_t main(void)
     
 	// TBD: INITIALIZATION OF THE USER USED MODULE
     
-    uartInit(eUART2, 9600);
-    uartInterruptEnable(eUART2, eRX);
-    
-    pwmAllInit();
+  uartInit(eUART2, 9600);
+  uartInterruptEnable(eUART2, eRX);
+  
+  //pwmAllInit();
+  pwmInit(ePWM1,)
+
+  //xbeeInit(//9600);
     
 	_GENERAL_INTERRUPT_ENABLED_; // start the interrupt
     
