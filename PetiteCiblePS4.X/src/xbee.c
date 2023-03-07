@@ -90,6 +90,17 @@ void xbeeWriteChar(char c)
 	U4TXREG = c;    // Write the data byte to the USART.
 }
 
+//---------------------------------------------------------
+void xbeeWriteString(char *str)
+{
+    while(*str!='\0')
+    {
+        xbeeWriteChar(*str);
+        str++;
+    }
+}
+//---------------------------------------------------------	
+
 char xbeeReadChar(void) 
 {
 	while (0 == U4STAbits.URXDA);   // Wait for data to be available

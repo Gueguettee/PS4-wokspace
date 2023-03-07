@@ -36,6 +36,8 @@ void xbeeInit(uint32_t baud);
 ///          to send a single char
 void xbeeWriteChar(char c);
 
+void xbeeWriteString(char *str);
+
 /// @brief   Read a single char via UART4
 /// @return  The char value read from UART Rx buffer
 /// @note    This function is created to be used by the UARTRead fct and allow

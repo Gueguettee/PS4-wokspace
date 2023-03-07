@@ -26,22 +26,22 @@
 //INT1 interrupt
 void externalINT1Interrupt( void )
 {
-  // user code
+    xbeeWriteChar('1');
 }
 //INT2 interrupt
 void externalINT2Interrupt( void )
 {
-  // user code
+    xbeeWriteChar('2');
 }
 //INT3 interrupt
 void externalINT3Interrupt( void )
 {
-  // user code
+    xbeeWriteChar('3');
 }
 //INT4 interrupt
 void externalINT4Interrupt( void )
 {
-  // user code
+    xbeeWriteChar('4');
 }
 
 /******************************************************************************/
@@ -83,7 +83,7 @@ void adc1Interrupt( void )
 //UART2 RX interrupt
 void uart2RXInterrupt( void )
 {
-  // user code
+    // user code
 }
 //UART2 TX interrupt
 void uart2TXInterrupt( void )
@@ -141,6 +141,11 @@ void i2c2Interrupt( void )
 /******************************************************************************/
 /*                                User Program                                */
 /******************************************************************************/
+void Uint16ToString(char* hexStr, uint16_t valueInt)
+{
+    sprintf(hexStr, "%04X", valueInt);
+}
+
 void mainLoop(void)
 {
 	// TBD: USER CODE HERE
@@ -148,6 +153,15 @@ void mainLoop(void)
     if (100==sysCounter++)
     {
         LATCbits.LATC3 = !LATCbits.LATC3;
+        
+        uint16_t value = adcChannelRead(AN3);
+        
+        //char* hexStr = (char *)malloc(5); // 4 hex digits + '\0'
+        char hexStr[5];
+        Uint16ToString(hexStr,value);
+        value=0;
+        xbeeWriteString(hexStr);
+        
         sysCounter=0;
     }    
 }
@@ -206,6 +220,20 @@ int16_t main(void)
     registerI2CxCallback(eI2C2, i2c2Interrupt);
             
 	// TBD: INITIALIZATION OF THE USER USED MODULE
+    
+    uartInit(eUART2, 9600);
+    uartInterruptEnable(eUART2, eRX);
+    
+    adc1Init(); // number of 1us, 12 bits or 10 bits
+    
+    pwmAllInit();
+    
+    //gpioInit();
+    externInterruptInit(eINT1, eRisingEdge);
+    externInterruptEnable(eINT1);
+
+    xbeeInit(57600);
+    //xbeeInterruptEnable(eTX);
     
 	_GENERAL_INTERRUPT_ENABLED_; // start the interrupt
     

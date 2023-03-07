@@ -101,14 +101,10 @@ void uart1TXInterrupt( void )
 //UART2 RX interrupt
 void uart2RXInterrupt( void )
 {
-  // user code
     uint8_t uartChar;
     uartChar = uartReadChar(eUART2);
     
     uartWriteChar(eUART2, uartChar);
-    
-    //if...
-    //setPwmDuty(ePWM1,7500) : duty cycle � 25% (PWM invers�)
 }
 //UART2 TX interrupt
 void uart2TXInterrupt( void )
@@ -132,7 +128,12 @@ void uart3TXInterrupt( void )
 //XBee RX interrupt
 void xbeeRXInterrupt( void )
 {
-  // user code
+    uint8_t xbeeChar;
+    xbeeChar = xbeeReadChar();
+    
+    uartWriteChar(eUART2, xbeeChar);
+    
+    LATCbits.LATC3 = !LATCbits.LATC3;
 }
 //XBee TX interrupt
 void xbeeTXInterrupt( void )
@@ -216,11 +217,11 @@ void mainLoop(void)
     static uint16_t sysCounter=0;
     if (100==sysCounter++)
     {
-        LATCbits.LATC3 = !LATCbits.LATC3;
+        //LATCbits.LATC3 = !LATCbits.LATC3;
         
-        uint16_t value = adcChannelRead(AN1);
+        uint16_t value = adcChannelRead(AN0);
         
-        uartWriteString(eUART2, Itoa(value,10));
+        //uartWriteString(eUART2, Itoa(value,10));
         //uartWriteChar(eUART2, '\n');
         
         sysCounter=0;
@@ -296,13 +297,16 @@ int16_t main(void)
     
 	// TBD: INITIALIZATION OF THE USER USED MODULE
     
-  uartInit(eUART2, 9600);
-  uartInterruptEnable(eUART2, eRX);
-  
-  //pwmAllInit();
-  pwmInit(ePWM1,ePWMPrimaryTimeBase);
+    uartInit(eUART2, 9600);
+    uartInterruptEnable(eUART2, eRX);
+    
+    adc1Init();
 
-  //xbeeInit(//9600);
+    //pwmAllInit();
+    pwmInit(ePWM1,ePWMPrimaryTimeBase);
+
+    xbeeInit(57600);
+    xbeeInterruptEnable(eRX);
     
 	_GENERAL_INTERRUPT_ENABLED_; // start the interrupt
     

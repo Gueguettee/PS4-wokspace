@@ -235,11 +235,6 @@ void uartWriteChar(uart_t eUARTx, char c)
 }
 
 //---------------------------------------------------------
-// Sous programme USART_SendString
-// Auteur: JenniG
-// Desc.: sous programme pour envoyer une chaîne de caractères
-// Ver. Date: V00 20200617 Création (YYYYMMDD)	
-//---------------------------------------------------------
 void uartWriteString(uart_t eUARTx, char *str)
 {
     while(*str!='\0')

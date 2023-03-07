@@ -159,6 +159,17 @@ void uartWriteChar(uart_t eUARTx, char c)
 	}
 }
 
+//---------------------------------------------------------
+void uartWriteString(uart_t eUARTx, char *str)
+{
+    while(*str!='\0')
+    {
+        uartWriteChar(eUARTx, *str);
+        str++;
+    }
+}
+//---------------------------------------------------------	
+
 char uartReadChar(uart_t eUARTx) 
 {
 	switch(eUARTx)
