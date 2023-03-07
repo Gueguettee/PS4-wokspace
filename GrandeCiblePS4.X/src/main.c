@@ -196,18 +196,18 @@ void rtcInterrupt( void )
 /******************************************************************************/
 /*                                User Program                                */
 /******************************************************************************/
-char* itoa(int val, int base){
+char* Itoa(int val1, int base1)
+{
 	
 	static char buf[32] = {0};
 	
 	int i = 30;
 	
-	for(; val && i ; --i, val /= base)
+	for(; val1 && i ; --i, val1 /= base1)
 	
-		buf[i] = "0123456789abcdef"[val % base];
+		buf[i] = "0123456789abcdef"[val1 % base1];
 	
 	return &buf[i+1];
-	
 }
 
 void mainLoop(void)
@@ -220,7 +220,7 @@ void mainLoop(void)
         
         uint16_t value = adcChannelRead(AN1);
         
-        uartWriteString(eUART2, itoa(value,10));
+        uartWriteString(eUART2, Itoa(value,10));
         //uartWriteChar(eUART2, '\n');
         
         sysCounter=0;
@@ -300,7 +300,7 @@ int16_t main(void)
   uartInterruptEnable(eUART2, eRX);
   
   //pwmAllInit();
-  pwmInit(ePWM1,)
+  pwmInit(ePWM1,ePWMPrimaryTimeBase);
 
   //xbeeInit(//9600);
     
