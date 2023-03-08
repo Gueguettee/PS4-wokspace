@@ -23,7 +23,7 @@
 /*                         Global Variable Declaration                        */
 /******************************************************************************/
 
-const uint16_t N_STEP_JOYSTICK = 9;
+char state = WAIT_CONNECTION;
 
 /******************************************************************************/
 /*                        GPIO Interrupt Routines (IRQ)                       */
@@ -148,28 +148,28 @@ void xbeeRXInterrupt( void )
         case CHAR_JOYSTICK_Y:
             
             break;
-          
-        case CHAR_JOYSTICK_STEP:
-            N_STEP_JOYSTICK = xbeeChar;
-            break;
-            
+                    
         default:
             switch()
             {
-            case CHAR_BUTTON_1:
-                break;
+                case CHAR_PING:
+                    xbeeWriteChar(CHAR_PING);
+                    break;
+                    
+                case CHAR_BUTTON_1:
+                    break;
 
-            case CHAR_BUTTON_2:
-                break;
+                case CHAR_BUTTON_2:
+                    break;
 
-            case CHAR_BUTTON_3:
-                break;
+                case CHAR_BUTTON_3:
+                    break;
 
-            case CHAR_BUTTON_4:
-                break;
-                
-            default:
-                break;
+                case CHAR_BUTTON_4:
+                    break;
+
+                default:
+                    break;
             }
             break;
     }

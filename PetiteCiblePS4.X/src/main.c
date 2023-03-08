@@ -21,7 +21,7 @@
 /*                         Global Variable Declaration                        */
 /******************************************************************************/
 
-char state = WAIT_CONNECTION_ROBOT;
+char state = WAIT_CONNECTION;
 
 uint16_t middleValue = 0;
 uint16_t stepPos = 0;
@@ -117,7 +117,7 @@ void xbeeRXInterrupt( void )
     char xbeeChar;
     xbeeChar = xbeeReadChar();
     
-    if(xbeeChar == CHAR_ROBOT)
+    if(xbeeChar == CHAR_PING)
     {
         state = RUN;
     }
@@ -157,12 +157,6 @@ void i2c2Interrupt( void )
 /*                                User Program                                */
 /******************************************************************************/
 
-void stepJoystickSend(void)
-{
-    xbeeWriteChar(CHAR_JOYSTICK_STEP);
-    xbeeWriteChar(N_STEP_JOYSTICK);
-}
-
 bool joysitckInit(analog_t ANx, port_t ePORTx, uint16_t BIT)
 {
     bool check = true;
@@ -170,7 +164,7 @@ bool joysitckInit(analog_t ANx, port_t ePORTx, uint16_t BIT)
     uint16_t minValue = 0x0000;
     middleValue = (maxValue+minValue)/2;
     
-    if(gpioBitConfig(ePORTx, BIT, OUTPUT))
+    /*if(gpioBitConfig(ePORTx, BIT, OUTPUT))
     {
         if(gpioBitWrite(ePORTx, BIT, 0))
         {
@@ -218,7 +212,7 @@ bool joysitckInit(analog_t ANx, port_t ePORTx, uint16_t BIT)
     else
     {
         check = false;
-    }
+    }*/
     
     stepPos = (maxValue-middleValue)/(N_STEP_JOYSTICK+1);
     stepNeg = (middleValue-minValue)/(N_STEP_JOYSTICK+1);
@@ -230,7 +224,8 @@ char joystickToSpeed(uint16_t value)
 {   
     if(value >= middleValue)
     {
-        for(uint16_t step=N_STEP_JOYSTICK; step>0; step--)
+        uint16_t step;
+        for(step=N_STEP_JOYSTICK; step>0; step--)
         {
             if(value >= (middleValue+step*stepPos))
             {
@@ -241,7 +236,8 @@ char joystickToSpeed(uint16_t value)
     }
     else
     {
-        for(uint16_t step=N_STEP_JOYSTICK; step>0; step--)
+        uint16_t step;
+        for(step=N_STEP_JOYSTICK; step>0; step--)
         {
             if(value <= (middleValue-step*stepNeg))
             {
@@ -268,9 +264,9 @@ void mainLoop(void)
         
         switch(state)
         {
-            case WAIT_CONNECTION_ROBOT:
+            case WAIT_CONNECTION:
                 
-                stepJoystickSend();
+                xbeeWriteChar(CHAR_PING);
                 
                 break;
                 
@@ -364,8 +360,8 @@ int16_t main(void)
     
     __delay_ms(200);
     
-    bool check = joystickInit(AN1, ePORTx, pinRxxx); ///////////////////////////
-    bool check2 = joystickInit(AN2, ePORTx, pinRxxx); //////////////////////////
+    //bool check = joystickInit(AN1, ePORTx, pinRxxx); /////////////////////////
+    //bool check2 = joystickInit(AN2, ePORTx, pinRxxx); ////////////////////////
     
 	/**************************************************************************/
 	/*                              INFINITE LOOP                             */
