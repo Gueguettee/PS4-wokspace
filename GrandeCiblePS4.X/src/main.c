@@ -17,9 +17,13 @@
 #include "can.h"        /* Includes CAN functions and initialization          */
 #include "rtc.h"        /* Includes RTC functions and initialization          */
 
+#include "comDefinition.h" /* Includes commons definition beetween 2 CiblePS4 */
+
 /******************************************************************************/
 /*                         Global Variable Declaration                        */
 /******************************************************************************/
+
+const uint16_t N_STEP_JOYSTICK = 9;
 
 /******************************************************************************/
 /*                        GPIO Interrupt Routines (IRQ)                       */
@@ -104,12 +108,12 @@ void uart2RXInterrupt( void )
     uint8_t uartChar;
     uartChar = uartReadChar(eUART2);
     
-    uartWriteChar(eUART2, uartChar);
+    xbeeWriteChar(uartChar);
 }
 //UART2 TX interrupt
 void uart2TXInterrupt( void )
 {
-  // user code
+    // user code
 }
 //UART3 RX interrupt
 void uart3RXInterrupt( void )
@@ -128,12 +132,47 @@ void uart3TXInterrupt( void )
 //XBee RX interrupt
 void xbeeRXInterrupt( void )
 {
-    uint8_t xbeeChar;
+    static char xbeeChar = '0';
+    char lastXbeeChar = xbeeChar;
+    
     xbeeChar = xbeeReadChar();
     
     uartWriteChar(eUART2, xbeeChar);
     
-    LATCbits.LATC3 = !LATCbits.LATC3;
+    switch(lastXbeeChar)
+    {
+        case CHAR_JOYSTICK_X:
+            
+            break;
+            
+        case CHAR_JOYSTICK_Y:
+            
+            break;
+          
+        case CHAR_JOYSTICK_STEP:
+            N_STEP_JOYSTICK = xbeeChar;
+            break;
+            
+        default:
+            switch()
+            {
+            case CHAR_BUTTON_1:
+                break;
+
+            case CHAR_BUTTON_2:
+                break;
+
+            case CHAR_BUTTON_3:
+                break;
+
+            case CHAR_BUTTON_4:
+                break;
+                
+            default:
+                break;
+            }
+            break;
+    }
 }
 //XBee TX interrupt
 void xbeeTXInterrupt( void )
@@ -217,7 +256,7 @@ void mainLoop(void)
     static uint16_t sysCounter=0;
     if (100==sysCounter++)
     {
-        //LATCbits.LATC3 = !LATCbits.LATC3;
+        LATCbits.LATC3 = !LATCbits.LATC3;
         
         uint16_t value = adcChannelRead(AN0);
         
@@ -296,15 +335,15 @@ int16_t main(void)
     registerRTCCallback(rtcInterrupt);
     
 	// TBD: INITIALIZATION OF THE USER USED MODULE
+
+    //pwmAllInit();
+    pwmInit(ePWM1,ePWMPrimaryTimeBase);
+    
+    adc1Init();
     
     uartInit(eUART2, 9600);
     uartInterruptEnable(eUART2, eRX);
     
-    adc1Init();
-
-    //pwmAllInit();
-    pwmInit(ePWM1,ePWMPrimaryTimeBase);
-
     xbeeInit(57600);
     xbeeInterruptEnable(eRX);
     

@@ -50,6 +50,10 @@ typedef enum{
 #define _GENERAL_INTERRUPT_ENABLED_  INTCON2bits.GIE = 1
 #define _GENERAL_INTERRUPT_DISABLED_ INTCON2bits.GIE = 0
 
+// States
+#define WAIT_CONNECTION_ROBOT 0
+#define RUN 1
+
 // Bit direction definition
 #define INPUT  1
 #define OUTPUT 0
