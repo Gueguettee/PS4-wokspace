@@ -19,7 +19,8 @@
 
 #define N_STEP_JOYSTICK 7
 
-#define CHAR_PING 'w'
+#define CHAR_PING 'v'
+#define CHAR_PING_OK 'w'
 
 #define CHAR_JOYSTICK_X 'x'
 #define CHAR_JOYSTICK_Y 'y'

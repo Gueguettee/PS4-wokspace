@@ -15,6 +15,7 @@
       <itemPath>header/spi.h</itemPath>
       <itemPath>header/i2c.h</itemPath>
       <itemPath>header/pwm.h</itemPath>
+      <itemPath>header/comDefinition.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -55,7 +56,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>pk4hybrid</platformTool>
         <languageToolchain>XC16</languageToolchain>
-        <languageToolchainVersion>1.70</languageToolchainVersion>
+        <languageToolchainVersion>2.00</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>

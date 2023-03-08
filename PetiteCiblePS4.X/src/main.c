@@ -23,9 +23,9 @@
 
 char state = WAIT_CONNECTION;
 
-uint16_t middleValue = 0;
-uint16_t stepPos = 0;
-uint16_t stepNeg = 0;
+uint16_t middleValue[2] = {0};
+uint16_t stepPos[2] = {0};
+uint16_t stepNeg[2] = {0};
 
 /******************************************************************************/
 /*                        GPIO Interrupt Routines (IRQ)                       */
@@ -117,12 +117,21 @@ void xbeeRXInterrupt( void )
     char xbeeChar;
     xbeeChar = xbeeReadChar();
     
-    if(xbeeChar == CHAR_PING)
+    switch(xbeeChar)
     {
-        state = RUN;
+        case CHAR_PING:
+            state = RUN;
+            xbeeWriteChar(CHAR_PING_OK);
+            break;
+            
+        case CHAR_PING_OK:
+            state = RUN;
+            break;
+            
+        default:
+            xbeeWriteChar(xbeeChar);
+            break;
     }
-    
-    xbeeWriteChar(xbeeChar);
 }
 //XBee TX interrupt
 void xbeeTXInterrupt( void )
@@ -157,101 +166,62 @@ void i2c2Interrupt( void )
 /*                                User Program                                */
 /******************************************************************************/
 
-bool joysitckInit(analog_t ANx, port_t ePORTx, uint16_t BIT)
-{
-    bool check = true;
-    uint16_t maxValue = 0x0FFF;
-    uint16_t minValue = 0x0000;
-    middleValue = (maxValue+minValue)/2;
-    
-    /*if(gpioBitConfig(ePORTx, BIT, OUTPUT))
-    {
-        if(gpioBitWrite(ePORTx, BIT, 0))
-        {
-            __delay_ms(100);
-            minValue = adcChannelRead(ANx);
-            if(minValue >= middleValue)
-            {
-                minValue = 0x0000;
-                check = false;
-            }
-            if(gpioBitWrite(ePORTx, BIT, 1))
-            {
-                __delay_ms(100);
-                maxValue = adcChannelRead(ANx);
-                if(maxValue <= middleValue)
-                {
-                    maxValue = 0x0FFF;
-                    check = false;
-                }
-                if(gpioBitConfig(ePORTx, BIT, INPUT))
-                {
-                    __delay_ms(100);
-                    middleValue = adcChannelRead(ANx);
-                    if((middleValue>=maxValue)||(middleValue<=minValue))
-                    {
-                        middleValue = (maxValue+minValue)/2;
-                        check = false;
-                    }
-                }
-                else
-                {
-                    check = false;
-                }
-            }
-            else
-            {
-                check = false;
-            }
-        }
-        else
-        {
-            check = false;
-        }
-    }
-    else
-    {
-        check = false;
-    }*/
-    
-    stepPos = (maxValue-middleValue)/(N_STEP_JOYSTICK+1);
-    stepNeg = (middleValue-minValue)/(N_STEP_JOYSTICK+1);
-    
-    return check;
-}
-    
-char joystickToSpeed(uint16_t value)
-{   
-    if(value >= middleValue)
-    {
-        uint16_t step;
-        for(step=N_STEP_JOYSTICK; step>0; step--)
-        {
-            if(value >= (middleValue+step*stepPos))
-            {
-                return ((N_STEP_JOYSTICK+step) + '0');
-            }
-        }
-        return N_STEP_JOYSTICK;
-    }
-    else
-    {
-        uint16_t step;
-        for(step=N_STEP_JOYSTICK; step>0; step--)
-        {
-            if(value <= (middleValue-step*stepNeg))
-            {
-                return ((N_STEP_JOYSTICK-step) + '0');
-            }
-        }
-        return N_STEP_JOYSTICK;
-    }
-}
-
 void Uint16ToString(char* hexStr, uint16_t valueInt)
 {
     sprintf(hexStr, "%03X", valueInt);
 }
+
+char HexToChar(uint16_t valueInt)
+{
+    if(valueInt < 10)
+    {
+        return((char)(valueInt + '0'));
+    }
+    else
+    {
+        return((char)((valueInt-10) + 'A'));
+    }
+}
+
+void JoystickInit(analog_t ANx, analog_t ANx2)
+{
+    middleValue[JOYSTICK_X] = adcChannelRead(ANx);
+    middleValue[JOYSTICK_Y] = adcChannelRead(ANx2);
+    
+    stepPos[JOYSTICK_X] = (MAX_VALUE_JOYSTICK-middleValue[JOYSTICK_X])/(N_STEP_JOYSTICK+1);
+    stepNeg[JOYSTICK_X] = (middleValue[JOYSTICK_X]-MIN_VALUE_JOYSTICK)/(N_STEP_JOYSTICK+1);
+    stepPos[JOYSTICK_Y] = (MAX_VALUE_JOYSTICK-middleValue[JOYSTICK_Y])/(N_STEP_JOYSTICK+1);
+    stepNeg[JOYSTICK_Y] = (middleValue[JOYSTICK_Y]-MIN_VALUE_JOYSTICK)/(N_STEP_JOYSTICK+1);
+}
+    
+char JoystickToSpeed(uint16_t value, uint16_t joystick)
+{   
+    if(value >= middleValue[joystick])
+    {
+        uint16_t step;
+        for(step=N_STEP_JOYSTICK; step>0; step--)
+        {
+            if(value >= (middleValue[joystick]+step*stepPos[joystick]))
+            {
+                return(HexToChar(N_STEP_JOYSTICK+step));
+            }
+        }
+        return(HexToChar(N_STEP_JOYSTICK));
+    }
+    else
+    {
+        uint16_t step;
+        for(step=N_STEP_JOYSTICK; step>0; step--)
+        {
+            if(value <= (middleValue[joystick]-step*stepNeg[joystick]))
+            {
+                return(HexToChar(N_STEP_JOYSTICK-step));
+            }
+        }
+        return(HexToChar(N_STEP_JOYSTICK));
+    }
+}
+
 
 void mainLoop(void)
 {
@@ -265,12 +235,13 @@ void mainLoop(void)
         switch(state)
         {
             case WAIT_CONNECTION:
-                
+            {
                 xbeeWriteChar(CHAR_PING);
-                
                 break;
-                
+            }
+            
             case RUN:
+            {
                 //uint16_t value = adcChannelRead(AN3);  
                 //char hexStr[4];
                 //Uint16ToString(hexStr,value);
@@ -278,11 +249,17 @@ void mainLoop(void)
                 //xbeeWriteString(hexStr);
 
                 xbeeWriteChar(CHAR_JOYSTICK_X);
-                xbeeWriteChar(joystickToSpeed(adcChannelRead(AN1)));
+                xbeeWriteChar(JoystickToSpeed(adcChannelRead(AN1), JOYSTICK_X));
                 xbeeWriteChar(CHAR_JOYSTICK_Y);
-                xbeeWriteChar(joystickToSpeed(adcChannelRead(AN2)));
+                xbeeWriteChar(JoystickToSpeed(adcChannelRead(AN2), JOYSTICK_Y));
                 
-                break;        
+                break;  
+            }
+                
+            default:
+            {
+                break;
+            }
         }
         sysCounter=0;
     }    
@@ -358,10 +335,7 @@ int16_t main(void)
     
     /* Other init output the intern system */
     
-    __delay_ms(200);
-    
-    //bool check = joystickInit(AN1, ePORTx, pinRxxx); /////////////////////////
-    //bool check2 = joystickInit(AN2, ePORTx, pinRxxx); ////////////////////////
+    JoystickInit(AN1, AN2);
     
 	/**************************************************************************/
 	/*                              INFINITE LOOP                             */

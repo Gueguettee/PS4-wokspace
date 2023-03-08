@@ -139,36 +139,43 @@ void xbeeRXInterrupt( void )
     
     uartWriteChar(eUART2, xbeeChar);
     
-    switch(lastXbeeChar)
+    switch(xbeeChar)
     {
-        case CHAR_JOYSTICK_X:
-            
+        case CHAR_PING:
+            state = RUN;
+            xbeeWriteChar(CHAR_PING_OK);
             break;
             
-        case CHAR_JOYSTICK_Y:
-            
+        case CHAR_PING_OK:
+            state = RUN;
             break;
-                    
+            
+        case CHAR_BUTTON_1:
+            break;
+
+        case CHAR_BUTTON_2:
+            break;
+
+        case CHAR_BUTTON_3:
+            break;
+
+        case CHAR_BUTTON_4:
+            break;
+
         default:
-            switch()
+            
+            switch(lastXbeeChar)
             {
-                case CHAR_PING:
-                    xbeeWriteChar(CHAR_PING);
-                    break;
-                    
-                case CHAR_BUTTON_1:
+                case CHAR_JOYSTICK_X:
+
                     break;
 
-                case CHAR_BUTTON_2:
-                    break;
+                case CHAR_JOYSTICK_Y:
 
-                case CHAR_BUTTON_3:
-                    break;
-
-                case CHAR_BUTTON_4:
                     break;
 
                 default:
+            
                     break;
             }
             break;
@@ -258,11 +265,27 @@ void mainLoop(void)
     {
         LATCbits.LATC3 = !LATCbits.LATC3;
         
-        uint16_t value = adcChannelRead(AN0);
-        
-        //uartWriteString(eUART2, Itoa(value,10));
-        //uartWriteChar(eUART2, '\n');
-        
+        switch(state)
+        {
+            case WAIT_CONNECTION:
+            {
+                xbeeWriteChar(CHAR_PING);
+                break;
+            }
+            case RUN:
+            {
+                uint16_t value = adcChannelRead(AN0);
+
+                //uartWriteString(eUART2, Itoa(value,10));
+                //uartWriteChar(eUART2, '\n');
+
+                break;
+            }
+            default:
+            {
+                break;
+            }
+        }
         sysCounter=0;
     }
 }

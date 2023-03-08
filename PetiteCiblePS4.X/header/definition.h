@@ -54,6 +54,14 @@ typedef enum{
 #define WAIT_CONNECTION 0
 #define RUN 1
 
+// Extremes values of the joystick
+#define MAX_VALUE_JOYSTICK 0x0FFF
+#define MIN_VALUE_JOYSTICK 0x0000
+
+// Joysticks
+#define JOYSTICK_X 0
+#define JOYSTICK_Y 1
+
 // Bit direction definition
 #define INPUT  1
 #define OUTPUT 0
