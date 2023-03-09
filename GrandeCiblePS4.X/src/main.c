@@ -274,7 +274,7 @@ void mainLoop(void)
             }
             case RUN:
             {
-                uint16_t value = adcChannelRead(AN0);
+                
 
                 //uartWriteString(eUART2, Itoa(value,10));
                 //uartWriteChar(eUART2, '\n');
@@ -361,8 +361,14 @@ int16_t main(void)
 
     //pwmAllInit();
     pwmInit(ePWM1,ePWMPrimaryTimeBase);
+    //setPwmFreq(1000, ePWMPrimaryTimeBase);
+    //setPwmPhase(ePWM, 90)
+    setPwmDeadTime(ePWM1, 1);
+    setPwmDuty(ePWM1, 5000); //0 -> 10000 = 0 -> 100%
+    pwmEnable(ePWM1);
+    pwmDisable(ePWM1);
     
-    adc1Init();
+    //adc1Init();
     
     uartInit(eUART2, 9600);
     uartInterruptEnable(eUART2, eRX);

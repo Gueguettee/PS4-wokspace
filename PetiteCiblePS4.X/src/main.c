@@ -325,7 +325,8 @@ int16_t main(void)
     //externInterruptInit(eINT1, eRisingEdge);
     //externInterruptEnable(eINT1);
     
-    adc1Init(1000, b12); // number of 1us, 12 bits or 10 bits
+    //adc1Init(1000, b12); // number of 1us, 12 bits or 10 bits
+    adc1Init();
 
     xbeeInit(57600);
     xbeeInterruptEnable(eRX);
