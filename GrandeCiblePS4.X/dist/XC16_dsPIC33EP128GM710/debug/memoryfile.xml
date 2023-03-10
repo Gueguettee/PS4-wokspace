@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project>
-  <executable name="dist/XC16_dsPIC33EP128GM710/production/GrandeCiblePS4.X.production.elf">
+  <executable name="dist/XC16_dsPIC33EP128GM710/debug/GrandeCiblePS4.X.debug.elf">
     <memory name="data">
       <units>bytes</units>
       <length>16384</length>
-      <used>1954</used>
-      <free>14430</free>
+      <used>2034</used>
+      <free>14350</free>
     </memory>
     <memory name="program">
       <units>bytes</units>
       <length>130530</length>
-      <used>36657</used>
-      <free>93873</free>
+      <used>36762</used>
+      <free>93768</free>
     </memory>
   </executable>
 </project>

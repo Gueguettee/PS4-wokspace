@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project>
-  <executable name="dist/XC16_dsPIC33EP512GM710/production/PetiteCiblePS4.X.production.elf">
+  <executable name="dist/XC16_dsPIC33EP512GM710/debug/PetiteCiblePS4.X.debug.elf">
     <memory name="data">
       <units>bytes</units>
       <length>49152</length>
-      <used>478</used>
-      <free>48674</free>
+      <used>558</used>
+      <free>48594</free>
     </memory>
     <memory name="program">
       <units>bytes</units>
       <length>524514</length>
-      <used>29835</used>
-      <free>494679</free>
+      <used>29841</used>
+      <free>494673</free>
     </memory>
   </executable>
 </project>

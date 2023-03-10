@@ -49,6 +49,9 @@ typedef enum{
   ePullUpOff,
 }pullup_on_off_t;
 
+// User definitions types
+typedef int8_t joySpeed_t;
+
 // General Interrupt Enable/Disable Macro
 #define _GENERAL_INTERRUPT_ENABLED_  INTCON2bits.GIE = 1
 #define _GENERAL_INTERRUPT_DISABLED_ INTCON2bits.GIE = 0
@@ -56,6 +59,9 @@ typedef enum{
 // States
 #define WAIT_CONNECTION 0
 #define RUN 1
+
+// Times
+#define TIME_BIG_WHEEL 10000
 
 // Bit direction definition
 #define INPUT  1

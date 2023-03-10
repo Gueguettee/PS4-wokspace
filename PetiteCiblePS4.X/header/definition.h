@@ -46,6 +46,9 @@ typedef enum{
   ePullUpOff,
 }pullup_on_off_t;
 
+// User definitions types
+typedef uint16_t joySpeed_t;
+
 // General Interrupt Enable/Disable Macro
 #define _GENERAL_INTERRUPT_ENABLED_  INTCON2bits.GIE = 1
 #define _GENERAL_INTERRUPT_DISABLED_ INTCON2bits.GIE = 0
@@ -55,12 +58,8 @@ typedef enum{
 #define RUN 1
 
 // Extremes values of the joystick
-#define MAX_VALUE_JOYSTICK 0x0FFF
-#define MIN_VALUE_JOYSTICK 0x0000
-
-// Joysticks
-#define JOYSTICK_X 0
-#define JOYSTICK_Y 1
+#define MAX_VALUE_JOY 0x0415
+#define MIN_VALUE_JOY 0x0193
 
 // Bit direction definition
 #define INPUT  1

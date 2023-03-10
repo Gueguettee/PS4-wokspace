@@ -22,8 +22,52 @@
 /******************************************************************************/
 /*                         Global Variable Declaration                        */
 /******************************************************************************/
-
 char state = WAIT_CONNECTION;
+
+bool stateBigWheel = false;
+uint16_t timeBigWheel = 0;
+
+char xbeeChar = '0';
+char lastXbeeChar = '0';
+
+//bool fButton1 = false;
+bool fButton2 = false;
+bool fButton3 = false;
+bool fButton4 = false;
+
+joySpeed_t speed[2] = {0};
+joySpeed_t lastSpeed[2] = {0};
+
+/******************************************************************************/
+/*                               User functions                               */
+/******************************************************************************/
+uint8_t CharToUint8(char ch)
+{
+    if((ch >= '0')&&(ch <= '9'))
+    {
+        return((uint8_t)(ch - '0'));
+    }
+    else if((ch >= 'A')&&(ch <= 'F'))
+    {
+        return(((uint8_t)(ch - 'A')) + 10);
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+joySpeed_t Uint8ToJoySpeed(uint8_t val)
+{
+    if(val >= N_STEP_JOYSTICK)
+    {
+        return((joySpeed_t)(val - N_STEP_JOYSTICK));
+    }
+    else
+    {
+        return(-((joySpeed_t)(N_STEP_JOYSTICK - val)));
+    }
+}
 
 /******************************************************************************/
 /*                        GPIO Interrupt Routines (IRQ)                       */
@@ -131,9 +175,8 @@ void uart3TXInterrupt( void )
 /******************************************************************************/
 //XBee RX interrupt
 void xbeeRXInterrupt( void )
-{
-    static char xbeeChar = '0';
-    char lastXbeeChar = xbeeChar;
+{ 
+    lastXbeeChar = xbeeChar;
     
     xbeeChar = xbeeReadChar();
     
@@ -145,37 +188,39 @@ void xbeeRXInterrupt( void )
             state = RUN;
             xbeeWriteChar(CHAR_PING_OK);
             break;
-            
+
         case CHAR_PING_OK:
             state = RUN;
             break;
-            
+
         case CHAR_BUTTON_1:
+            stateBigWheel = true;
             break;
 
         case CHAR_BUTTON_2:
+            fButton2 = true;
             break;
 
         case CHAR_BUTTON_3:
+            fButton3 = true;
             break;
 
         case CHAR_BUTTON_4:
+            fButton4 = true;
             break;
 
         default:
-            
             switch(lastXbeeChar)
             {
                 case CHAR_JOYSTICK_X:
-
+                    speed[eJoyX] = Uint8ToJoySpeed(CharToUint8(xbeeChar));
                     break;
 
                 case CHAR_JOYSTICK_Y:
-
+                    speed[eJoyY] = Uint8ToJoySpeed(CharToUint8(xbeeChar));
                     break;
 
                 default:
-            
                     break;
             }
             break;
@@ -243,20 +288,6 @@ void rtcInterrupt( void )
 /******************************************************************************/
 /*                                User Program                                */
 /******************************************************************************/
-char* Itoa(int val1, int base1)
-{
-	
-	static char buf[32] = {0};
-	
-	int i = 30;
-	
-	for(; val1 && i ; --i, val1 /= base1)
-	
-		buf[i] = "0123456789abcdef"[val1 % base1];
-	
-	return &buf[i+1];
-}
-
 void mainLoop(void)
 {
 	// TBD: USER CODE HERE
@@ -264,7 +295,7 @@ void mainLoop(void)
     if (100==sysCounter++)
     {
         LATCbits.LATC3 = !LATCbits.LATC3;
-        
+               
         switch(state)
         {
             case WAIT_CONNECTION:
@@ -274,11 +305,61 @@ void mainLoop(void)
             }
             case RUN:
             {
+                if(speed[eJoyX] != lastSpeed[eJoyX])
+                {
+                    if(lastSpeed[eJoyX] == 0)
+                    {
+                        //setPwmFreq(150, ePWMPrimaryTimeBase);
+                        //pwmInit(ePWM1,ePWMPrimaryTimeBase);
+                        //setPwmDuty(ePWM1, speed[eJoyX]*1000);
+                        //pwmEnable(ePWM1);
+                    }
+                    else
+                    {
+                        if(speed[eJoyX] == 0)
+                        {
+                            //pwmDisable(ePWM1);
+                        }
+                    }
+                }
+                if(speed[eJoyY] != lastSpeed[eJoyY])
+                {
+                    if(lastSpeed[eJoyY] == 0)
+                    {
+                        //setPwmFreq(5000, ePWMSecondaryTimeBase);
+                        //pwmInit(ePWM2,ePWMSecondaryTimeBase);
+                        //setPwmDuty(ePWM2, 1000);
+                        //pwmEnable(ePWM2);
+                    }
+                    else
+                    {
+                        if(speed[eJoyY] == 0)
+                        {
+                            //pwmDisable(ePWM2);
+                        }
+                    }
+                }
                 
-
-                //uartWriteString(eUART2, Itoa(value,10));
-                //uartWriteChar(eUART2, '\n');
-
+                if(stateBigWheel)
+                {
+                    if(timeBigWheel == 0)
+                    {
+                        //pwmEnable(ePWMx);
+                    }
+                    else
+                    {
+                        if(timeBigWheel == TIME_BIG_WHEEL)
+                        {
+                            //pwmDisable(ePWMx);
+                            stateBigWheel = false;
+                        }
+                        else
+                        {
+                            timeBigWheel++;
+                        }
+                    }
+                }
+                
                 break;
             }
             default:
@@ -360,15 +441,16 @@ int16_t main(void)
 	// TBD: INITIALIZATION OF THE USER USED MODULE
 
     //pwmAllInit();
-    pwmInit(ePWM1,ePWMPrimaryTimeBase);
+    //pwmInit(ePWM1,ePWMPrimaryTimeBase);
     //setPwmFreq(1000, ePWMPrimaryTimeBase);
     //setPwmPhase(ePWM, 90)
-    setPwmDeadTime(ePWM1, 1);
-    setPwmDuty(ePWM1, 5000); //0 -> 10000 = 0 -> 100%
-    pwmEnable(ePWM1);
-    pwmDisable(ePWM1);
+    //setPwmDeadTime(ePWM1, 1);
+    //setPwmDuty(ePWM1, 5000); //0 -> 10000 = 0 -> 100%
     
     //adc1Init();
+    
+    //spiInit(eSPI2, 10, byte8,
+    //    TxMode3, RxMiddle,);
     
     uartInit(eUART2, 9600);
     uartInterruptEnable(eUART2, eRX);
@@ -377,6 +459,12 @@ int16_t main(void)
     xbeeInterruptEnable(eRX);
     
 	_GENERAL_INTERRUPT_ENABLED_; // start the interrupt
+    
+    setPwmFreq(150, ePWMPrimaryTimeBase);
+    pwmInit(ePWM1,ePWMPrimaryTimeBase);
+    setPwmDeadTime(ePWM1, 100);
+    setPwmDuty(ePWM1, 2000);
+    pwmEnable(ePWM1);
     
 	/****************************************************************************/
 	/*                               INFINITE LOOP                              */
