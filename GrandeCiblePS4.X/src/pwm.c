@@ -35,7 +35,8 @@ void pwmAllInit(void)
     }
 }
 
-void pwmInit(pwm_t ePWMx, pwmPER_t exPER){
+void pwmInit(pwm_t ePWMx, pwmPER_t exPER, pwmMode_t exMode)
+{
     // Disabled PWM Module as some bits can't be changed otherwise
 	PTCONbits.PTEN = 0;
     
@@ -54,7 +55,15 @@ void pwmInit(pwm_t ePWMx, pwmPER_t exPER){
     switch(ePWMx)
     {
 		case ePWM1:
-             // Set PWM Mode to Complementary
+            // Set PWM Mode to Complementary or Push-Pull
+            if(exMode == ePWMModeCompl)
+            {
+                IOCON1bits.PMOD = 0b00; // PWMx I/O pin pair is in Complementary Output mode
+            }
+            else 
+            {
+                IOCON1bits.PMOD = 0b10; // PWMx I/O pin pair is in Push-Pull Output mode
+            }
             IOCON1bits.PMOD = 0b00; // PWMx I/O pin pair is in Complementary Output mode
             IOCON1bits.PENH = 1;    // PWMx module controls the PWMxH pin
             IOCON1bits.PENL = 1;    // PWMx module controls the PWMxL pin
@@ -87,8 +96,15 @@ void pwmInit(pwm_t ePWMx, pwmPER_t exPER){
             //__builtin_write_PWMSFR(&FCLCON1, (FCLCON1 | 0x0003), &PWMKEY);  // If config PWMLOCK = ON
 			break;
 		case ePWM2:
-             // Set PWM Mode to Complementary
-            IOCON2bits.PMOD = 0b00; // PWMx I/O pin pair is in Complementary Output mode
+            // Set PWM Mode to Complementary or Push-Pull
+            if(exMode == ePWMModeCompl)
+            {
+                IOCON2bits.PMOD = 0b00; // PWMx I/O pin pair is in Complementary Output mode
+            }
+            else 
+            {
+                IOCON2bits.PMOD = 0b10; // PWMx I/O pin pair is in Push-Pull Output mode
+            }
             IOCON2bits.PENH = 1;    // PWMx module controls the PWMxH pin
             IOCON2bits.PENL = 1;    // PWMx module controls the PWMxL pin
             IOCON2bits.POLH = 0;    // PWMxH pin is active-high
@@ -120,8 +136,15 @@ void pwmInit(pwm_t ePWMx, pwmPER_t exPER){
             //__builtin_write_PWMSFR(&FCLCON2, (FCLCON2 | 0x0003), &PWMKEY);  // If config PWMLOCK = ON
 			break;
 		case ePWM3:
-             // Set PWM Mode to Complementary
-            IOCON3bits.PMOD = 0b00; // PWMx I/O pin pair is in Complementary Output mode
+            // Set PWM Mode to Complementary or Push-Pull
+            if(exMode == ePWMModeCompl)
+            {
+                IOCON3bits.PMOD = 0b00; // PWMx I/O pin pair is in Complementary Output mode
+            }
+            else 
+            {
+                IOCON3bits.PMOD = 0b10; // PWMx I/O pin pair is in Push-Pull Output mode
+            }
             IOCON3bits.PENH = 1;    // PWMx module controls the PWMxH pin
             IOCON3bits.PENL = 1;    // PWMx module controls the PWMxL pin
             IOCON3bits.POLH = 0;    // PWMxH pin is active-high
@@ -153,8 +176,15 @@ void pwmInit(pwm_t ePWMx, pwmPER_t exPER){
             //__builtin_write_PWMSFR(&FCLCON3, (FCLCON3 | 0x0003), &PWMKEY);  // If config PWMLOCK = ON
 			break;
 		case ePWM4:
-             // Set PWM Mode to Complementary
-            IOCON4bits.PMOD = 0b00; // PWMx I/O pin pair is in Complementary Output mode
+            // Set PWM Mode to Complementary or Push-Pull
+            if(exMode == ePWMModeCompl)
+            {
+                IOCON4bits.PMOD = 0b00; // PWMx I/O pin pair is in Complementary Output mode
+            }
+            else 
+            {
+                IOCON4bits.PMOD = 0b10; // PWMx I/O pin pair is in Push-Pull Output mode
+            }
             IOCON4bits.PENH = 1;    // PWMx module controls the PWMxH pin
             IOCON4bits.PENL = 1;    // PWMx module controls the PWMxL pin
             IOCON4bits.POLH = 0;    // PWMxH pin is active-high
@@ -186,8 +216,15 @@ void pwmInit(pwm_t ePWMx, pwmPER_t exPER){
             //__builtin_write_PWMSFR(&FCLCON4, (FCLCON4 | 0x0003), &PWMKEY);  // If config PWMLOCK = ON
 			break;
 		case ePWM5:
-             // Set PWM Mode to Complementary
-            IOCON5bits.PMOD = 0b00; // PWMx I/O pin pair is in Complementary Output mode
+            // Set PWM Mode to Complementary or Push-Pull
+            if(exMode == ePWMModeCompl)
+            {
+                IOCON5bits.PMOD = 0b00; // PWMx I/O pin pair is in Complementary Output mode
+            }
+            else 
+            {
+                IOCON5bits.PMOD = 0b10; // PWMx I/O pin pair is in Push-Pull Output mode
+            }
             IOCON5bits.PENH = 1;    // PWMx module controls the PWMxH pin
             IOCON5bits.PENL = 1;    // PWMx module controls the PWMxL pin
             IOCON5bits.POLH = 0;    // PWMxH pin is active-high
@@ -220,8 +257,15 @@ void pwmInit(pwm_t ePWMx, pwmPER_t exPER){
             //__builtin_write_PWMSFR(&FCLCON5, (FCLCON5 | 0x0003), &PWMKEY);  // If config PWMLOCK = ON
 			break;
 		case ePWM6:
-             // Set PWM Mode to Complementary
-            IOCON6bits.PMOD = 0b00; // PWMx I/O pin pair is in Complementary Output mode
+            // Set PWM Mode to Complementary or Push-Pull
+            if(exMode == ePWMModeCompl)
+            {
+                IOCON6bits.PMOD = 0b00; // PWMx I/O pin pair is in Complementary Output mode
+            }
+            else 
+            {
+                IOCON6bits.PMOD = 0b10; // PWMx I/O pin pair is in Push-Pull Output mode
+            }
             IOCON6bits.PENH = 1;    // PWMx module controls the PWMxH pin
             IOCON6bits.PENL = 1;    // PWMx module controls the PWMxL pin
             IOCON6bits.POLH = 0;    // PWMxH pin is active-high
@@ -257,6 +301,14 @@ void pwmInit(pwm_t ePWMx, pwmPER_t exPER){
 	}
     
     PTCONbits.PTEN = 1;     // Enable PWMx Module
+}
+
+void pwmStepByStepInit(pwm_t ePWMx, pwm_t ePWMx2, pwmPER_t exPER)
+{
+    pwmInit(ePWMx, exPER, ePWMModePushPull);
+    pwmInit(ePWMx2, exPER, ePWMModePushPull);
+    
+    setPwmPhase(ePWMx2, 180);  // Phase of 180° for the second ePWM
 }
 
 /******************************************************************************/

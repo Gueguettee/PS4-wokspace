@@ -42,6 +42,12 @@ typedef enum {
   NbrOfPWMTimeBasePeriod
 }pwmPER_t;
 
+typedef enum {
+  ePWMModeCompl,
+  ePWMModePushPull,
+  NbrOfPWMMode
+}pwmMode_t;
+
 /******************************************************************************/
 /*                        PWMs INITIALIZATION FUNCTION                        */
 /******************************************************************************/
@@ -52,7 +58,9 @@ void pwmAllInit(void);
 /// @brief   PWM Initialization
 /// @param   ePWMx PWM you want to initialize
 /// @param   exPER Time base you want to use
-void pwmInit(pwm_t ePWMx, pwmPER_t exPER);
+void pwmInit(pwm_t ePWMx, pwmPER_t exPER, pwmMode_t exMode);
+
+void pwmStepByStepInit(pwm_t ePWMx, pwm_t ePWMx2, pwmPER_t exPER);
 
 /******************************************************************************/
 /*                            PWMs USER FUNCTIONS                             */
