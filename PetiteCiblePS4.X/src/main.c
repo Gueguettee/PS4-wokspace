@@ -25,9 +25,9 @@ const analog_t AN_JOYSTICK[2] = {AN1, AN2};
 
 char state = WAIT_CONNECTION;
 
-uint16_t middleValue[2] = {0};
-uint16_t stepPos[2] = {0};
-uint16_t stepNeg[2] = {0};
+joySpeed_t middleJoyValue[2] = {0};
+joySpeed_t stepPos[2] = {0};
+joySpeed_t stepNeg[2] = {0};
 
 /******************************************************************************/
 /*                               User functions                               */
@@ -51,13 +51,13 @@ char HexToChar(uint16_t valueInt)
 
 void JoystickInit(void)
 {
-    middleValue[eJoyX] = adcChannelRead(AN_JOYSTICK[eJoyX]);
-    middleValue[eJoyY] = adcChannelRead(AN_JOYSTICK[eJoyY]);
+    middleJoyValue[eJoyX] = adcChannelRead(AN_JOYSTICK[eJoyX]);
+    middleJoyValue[eJoyY] = adcChannelRead(AN_JOYSTICK[eJoyY]);
     
-    stepPos[eJoyX] = (MAX_VALUE_JOY-middleValue[eJoyX])/(N_STEP_JOY+1);
-    stepNeg[eJoyX] = (middleValue[eJoyX]-MIN_VALUE_JOY)/(N_STEP_JOY+1);
-    stepPos[eJoyY] = (MAX_VALUE_JOY-middleValue[eJoyY])/(N_STEP_JOY+1);
-    stepNeg[eJoyY] = (middleValue[eJoyY]-MIN_VALUE_JOY)/(N_STEP_JOY+1);
+    stepPos[eJoyX] = (MAX_VALUE_JOY-middleJoyValue[eJoyX])/(N_STEP_JOY+1);
+    stepNeg[eJoyX] = (middleJoyValue[eJoyX]-MIN_VALUE_JOY)/(N_STEP_JOY+1);
+    stepPos[eJoyY] = (MAX_VALUE_JOY-middleJoyValue[eJoyY])/(N_STEP_JOY+1);
+    stepNeg[eJoyY] = (middleJoyValue[eJoyY]-MIN_VALUE_JOY)/(N_STEP_JOY+1);
 }
     
 char JoystickToSpeedChar(joystick_t joystick)
@@ -65,11 +65,11 @@ char JoystickToSpeedChar(joystick_t joystick)
     joySpeed_t value = adcChannelRead(AN_JOYSTICK[joystick]);
     joySpeed_t step = 0;
     
-    if(value >= middleValue[joystick])
+    if(value >= middleJoyValue[joystick])
     {
         for(step=N_STEP_JOY; step>0; step--)
         {
-            if(value >= (middleValue[joystick]+step*stepPos[joystick]))
+            if(value >= (middleJoyValue[joystick]+step*stepPos[joystick]))
             {
                 return(HexToChar(N_STEP_JOY+step));
             }
@@ -80,7 +80,7 @@ char JoystickToSpeedChar(joystick_t joystick)
     {
         for(step=N_STEP_JOY; step>0; step--)
         {
-            if(value <= (middleValue[joystick]-step*stepNeg[joystick]))
+            if(value <= (middleJoyValue[joystick]-step*stepNeg[joystick]))
             {
                 return(HexToChar(N_STEP_JOY-step));
             }
@@ -230,6 +230,7 @@ void i2c2Interrupt( void )
 void mainLoop(void)
 {
 	// TBD: USER CODE HERE
+    static bool firstLoop = true;
     static uint16_t sysCounter = 0;
     static char lastJoySpeed[2] = {0};
     
@@ -252,6 +253,12 @@ void mainLoop(void)
                 //Uint16ToString(hexStr,value);
                 //value=0;
                 //xbeeWriteString(hexStr);
+                
+                if(firstLoop)
+                {
+                    JoystickInit();
+                    firstLoop = false;
+                }
 
                 char speed[2] = 
                     {JoystickToSpeedChar(eJoyX),
@@ -349,11 +356,6 @@ int16_t main(void)
     
 	_GENERAL_INTERRUPT_ENABLED_; // start the interrupt
     
-    
-    /* Other init output the intern system */
-    
-    JoystickInit();
-    
 	/**************************************************************************/
 	/*                              INFINITE LOOP                             */
 	/**************************************************************************/
@@ -361,11 +363,12 @@ int16_t main(void)
 	{
 		if(1 == sysTickFlag)
 		{
-			mainLoop();
+            mainLoop();
             
 			// Reset sysTickFlag
 			sysTickFlag = 0;
             ClrWdt(); // reset the watch dog counter to 0
 		}
 	}
+    return 0;
 }

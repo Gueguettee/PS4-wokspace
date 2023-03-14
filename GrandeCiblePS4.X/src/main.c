@@ -318,7 +318,7 @@ void mainLoop(void)
                     {
                         if(speed[eJoyX] == 0)
                         {
-                            //pwmDisable(ePWM1);
+                            //pwmDisable(ePWM2);
                         }
                     }
                 }
@@ -460,11 +460,14 @@ int16_t main(void)
     
 	_GENERAL_INTERRUPT_ENABLED_; // start the interrupt
     
-    setPwmFreq(150, ePWMPrimaryTimeBase);
+    /*setPwmFreq(150, ePWMPrimaryTimeBase);
     pwmInit(ePWM1,ePWMPrimaryTimeBase);
     setPwmDeadTime(ePWM1, 100);
     setPwmDuty(ePWM1, 2000);
-    pwmEnable(ePWM1);
+    pwmEnable(ePWM1);*/
+    
+    setPwmFreq(10, ePWMPrimaryTimeBase);
+    pwmStepByStepInit(ePWM1, ePWM2, ePWMPrimaryTimeBase);
     
 	/****************************************************************************/
 	/*                               INFINITE LOOP                              */

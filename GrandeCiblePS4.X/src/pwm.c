@@ -31,7 +31,7 @@ void pwmAllInit(void)
     pwm_t ePWMx;
     for (ePWMx=ePWM1;ePWMx<NbrOfPWM;ePWMx++)
     {
-        pwmInit(ePWMx,ePWMPrimaryTimeBase);
+        pwmInit(ePWMx,ePWMPrimaryTimeBase,ePWMModeCompl);
     }
 }
 
