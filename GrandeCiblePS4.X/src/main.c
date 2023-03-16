@@ -286,6 +286,48 @@ void rtcInterrupt( void )
 }
 
 /******************************************************************************/
+/*                        PWM Interrupt Routines (IRQ)                        */
+/******************************************************************************/
+//PWM1 interrupt
+void PWM1Interrupt( void )
+{
+//    if(timeBigWheel == TIME_BIG_WHEEL)
+//    {
+//        pwmStepByStepDisable(ePWM1, ePWM2);
+//        timeBigWheel = 0;
+//    }
+//    else
+//    {
+//        timeBigWheel++;
+//    }
+}
+//PWM2 interrupt
+void PWM2Interrupt( void )
+{
+  // user code
+}
+//PWM3 interrupt
+void PWM3Interrupt( void )
+{
+  // user code
+}
+//PWM4 interrupt
+void PWM4Interrupt( void )
+{
+  // user code
+}
+//PWM5 interrupt
+void PWM5Interrupt( void )
+{
+  // user code
+}
+//PWM6 interrupt
+void PWM6Interrupt( void )
+{
+  // user code
+}
+
+/******************************************************************************/
 /*                                User Program                                */
 /******************************************************************************/
 void mainLoop(void)
@@ -336,26 +378,6 @@ void mainLoop(void)
                         if(speed[eJoyY] == 0)
                         {
                             //pwmDisable(ePWM2);
-                        }
-                    }
-                }
-                
-                if(stateBigWheel)
-                {
-                    if(timeBigWheel == 0)
-                    {
-                        //pwmEnable(ePWMx);
-                    }
-                    else
-                    {
-                        if(timeBigWheel == TIME_BIG_WHEEL)
-                        {
-                            //pwmDisable(ePWMx);
-                            stateBigWheel = false;
-                        }
-                        else
-                        {
-                            timeBigWheel++;
                         }
                     }
                 }
@@ -437,6 +459,13 @@ int16_t main(void)
     registerCANxCallback(eCAN2, can2Interrupt);
     //RTC
     registerRTCCallback(rtcInterrupt);
+    //PWM
+    registerPWMCallback(ePWM1, PWM1Interrupt);
+    registerPWMCallback(ePWM2, PWM2Interrupt);
+    registerPWMCallback(ePWM3, PWM3Interrupt);
+    registerPWMCallback(ePWM4, PWM4Interrupt);
+    registerPWMCallback(ePWM5, PWM5Interrupt);
+    registerPWMCallback(ePWM6, PWM6Interrupt);
     
 	// TBD: INITIALIZATION OF THE USER USED MODULE
 
@@ -454,6 +483,8 @@ int16_t main(void)
     
     uartInit(eUART2, 9600);
     uartInterruptEnable(eUART2, eRX);
+    uartInit(eUART3, 115200);
+    uartInterruptEnable(eUART3, eRX);
     
     xbeeInit(57600);
     xbeeInterruptEnable(eRX);
@@ -466,8 +497,7 @@ int16_t main(void)
     setPwmDuty(ePWM1, 2000);
     pwmEnable(ePWM1);*/
     
-    setPwmFreq(10, ePWMPrimaryTimeBase);
-    pwmStepByStepInit(ePWM1, ePWM2, ePWMPrimaryTimeBase);
+    pwmStepByStepInit(ePWM1, ePWM2, 100, ePWMPrimaryTimeBase);
     
 	/****************************************************************************/
 	/*                               INFINITE LOOP                              */
