@@ -344,7 +344,6 @@ int16_t main(void)
     
 	/* TBD: INITIALIZATION OF THE USER USED MODULE */
     
-    //gpioInit();
     //externInterruptInit(eINT1, eRisingEdge);
     //externInterruptEnable(eINT1);
     

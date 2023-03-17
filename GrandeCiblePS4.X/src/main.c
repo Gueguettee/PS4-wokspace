@@ -162,7 +162,23 @@ void uart2TXInterrupt( void )
 //UART3 RX interrupt
 void uart3RXInterrupt( void )
 {
-  // user code
+    char uartChar;
+    uartChar = uartReadChar(eUART3);
+    
+    switch(uartChar)
+    {
+        case CHAR_PING:
+            //state = RUN
+            uartWriteChar(eUART3, CHAR_PING_OK);
+            break;
+            
+        case CHAR_PING_OK:
+            //state = RUN;
+            break;
+            
+        default:
+            break;
+    }
 }
 //UART3 TX interrupt
 void uart3TXInterrupt( void )
@@ -343,6 +359,7 @@ void mainLoop(void)
             case WAIT_CONNECTION:
             {
                 xbeeWriteChar(CHAR_PING);
+                uartWriteChar(eUART3, CHAR_PING);
                 break;
             }
             case RUN:
@@ -353,7 +370,7 @@ void mainLoop(void)
                     {
                         //setPwmFreq(150, ePWMPrimaryTimeBase);
                         //pwmInit(ePWM1,ePWMPrimaryTimeBase);
-                        //setPwmDuty(ePWM1, speed[eJoyX]*1000);
+                        //setPwmDuty(ePWM1, (N_STEP_JOYSTICK - speed[eJoyX])*1000);
                         //pwmEnable(ePWM1);
                     }
                     else
@@ -468,19 +485,7 @@ int16_t main(void)
     registerPWMCallback(ePWM6, PWM6Interrupt);
     
 	// TBD: INITIALIZATION OF THE USER USED MODULE
-
-    //pwmAllInit();
-    //pwmInit(ePWM1,ePWMPrimaryTimeBase);
-    //setPwmFreq(1000, ePWMPrimaryTimeBase);
-    //setPwmPhase(ePWM, 90)
-    //setPwmDeadTime(ePWM1, 1);
-    //setPwmDuty(ePWM1, 5000); //0 -> 10000 = 0 -> 100%
-    
-    //adc1Init();
-    
-    //spiInit(eSPI2, 10, byte8,
-    //    TxMode3, RxMiddle,);
-    
+  
     uartInit(eUART2, 9600);
     uartInterruptEnable(eUART2, eRX);
     uartInit(eUART3, 115200);

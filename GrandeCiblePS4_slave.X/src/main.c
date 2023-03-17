@@ -22,52 +22,15 @@
 /******************************************************************************/
 /*                         Global Variable Declaration                        */
 /******************************************************************************/
-char state = WAIT_CONNECTION;
+char state = RUN;//= WAIT_CONNECTION;
 
 bool stateBigWheel = false;
 uint16_t timeBigWheel = 0;
 
-char xbeeChar = '0';
-char lastXbeeChar = '0';
-
-//bool fButton1 = false;
-bool fButton2 = false;
-bool fButton3 = false;
-bool fButton4 = false;
-
-joySpeed_t speed[2] = {0};
-joySpeed_t lastSpeed[2] = {0};
-
 /******************************************************************************/
 /*                               User functions                               */
 /******************************************************************************/
-uint8_t CharToUint8(char ch)
-{
-    if((ch >= '0')&&(ch <= '9'))
-    {
-        return((uint8_t)(ch - '0'));
-    }
-    else if((ch >= 'A')&&(ch <= 'F'))
-    {
-        return(((uint8_t)(ch - 'A')) + 10);
-    }
-    else
-    {
-        return 0;
-    }
-}
 
-joySpeed_t Uint8ToJoySpeed(uint8_t val)
-{
-    if(val >= N_STEP_JOYSTICK)
-    {
-        return((joySpeed_t)(val - N_STEP_JOYSTICK));
-    }
-    else
-    {
-        return(-((joySpeed_t)(N_STEP_JOYSTICK - val)));
-    }
-}
 
 /******************************************************************************/
 /*                        GPIO Interrupt Routines (IRQ)                       */
@@ -149,10 +112,7 @@ void uart1TXInterrupt( void )
 //UART2 RX interrupt
 void uart2RXInterrupt( void )
 {
-    uint8_t uartChar;
-    uartChar = uartReadChar(eUART2);
-    
-    xbeeWriteChar(uartChar);
+    // user code
 }
 //UART2 TX interrupt
 void uart2TXInterrupt( void )
@@ -162,7 +122,27 @@ void uart2TXInterrupt( void )
 //UART3 RX interrupt
 void uart3RXInterrupt( void )
 {
-  // user code
+    char uartChar;
+    uartChar = uartReadChar(eUART3);
+    
+    switch(uartChar)
+    {
+        case CHAR_PING:
+            state = RUN;
+            uartWriteChar(eUART3, CHAR_PING_OK);
+            break;
+            
+        case CHAR_PING_OK:
+            state = RUN;
+            break;
+            
+        case BIG_WHEEL:
+            stateBigWheel = true;
+            timeBigWheel = 0;
+            
+        default:
+            break;
+    }
 }
 //UART3 TX interrupt
 void uart3TXInterrupt( void )
@@ -176,55 +156,7 @@ void uart3TXInterrupt( void )
 //XBee RX interrupt
 void xbeeRXInterrupt( void )
 { 
-    lastXbeeChar = xbeeChar;
-    
-    xbeeChar = xbeeReadChar();
-    
-    uartWriteChar(eUART2, xbeeChar);
-    
-    switch(xbeeChar)
-    {
-        case CHAR_PING:
-            state = RUN;
-            xbeeWriteChar(CHAR_PING_OK);
-            break;
-
-        case CHAR_PING_OK:
-            state = RUN;
-            break;
-
-        case CHAR_BUTTON_1:
-            stateBigWheel = true;
-            break;
-
-        case CHAR_BUTTON_2:
-            fButton2 = true;
-            break;
-
-        case CHAR_BUTTON_3:
-            fButton3 = true;
-            break;
-
-        case CHAR_BUTTON_4:
-            fButton4 = true;
-            break;
-
-        default:
-            switch(lastXbeeChar)
-            {
-                case CHAR_JOYSTICK_X:
-                    speed[eJoyX] = Uint8ToJoySpeed(CharToUint8(xbeeChar));
-                    break;
-
-                case CHAR_JOYSTICK_Y:
-                    speed[eJoyY] = Uint8ToJoySpeed(CharToUint8(xbeeChar));
-                    break;
-
-                default:
-                    break;
-            }
-            break;
-    }
+    // user code
 }
 //XBee TX interrupt
 void xbeeTXInterrupt( void )
@@ -342,45 +274,15 @@ void mainLoop(void)
         {
             case WAIT_CONNECTION:
             {
-                xbeeWriteChar(CHAR_PING);
+                uartWriteChar(eUART3, CHAR_PING);
                 break;
             }
             case RUN:
             {
-                if(speed[eJoyX] != lastSpeed[eJoyX])
-                {
-                    if(lastSpeed[eJoyX] == 0)
-                    {
-                        //setPwmFreq(150, ePWMPrimaryTimeBase);
-                        //pwmInit(ePWM1,ePWMPrimaryTimeBase);
-                        //setPwmDuty(ePWM1, speed[eJoyX]*1000);
-                        //pwmEnable(ePWM1);
-                    }
-                    else
-                    {
-                        if(speed[eJoyX] == 0)
-                        {
-                            //pwmDisable(ePWM2);
-                        }
-                    }
-                }
-                if(speed[eJoyY] != lastSpeed[eJoyY])
-                {
-                    if(lastSpeed[eJoyY] == 0)
-                    {
-                        //setPwmFreq(5000, ePWMSecondaryTimeBase);
-                        //pwmInit(ePWM2,ePWMSecondaryTimeBase);
-                        //setPwmDuty(ePWM2, 1000);
-                        //pwmEnable(ePWM2);
-                    }
-                    else
-                    {
-                        if(speed[eJoyY] == 0)
-                        {
-                            //pwmDisable(ePWM2);
-                        }
-                    }
-                }
+                //if(stateBigWheel)
+                //{
+                //    pwmStepByStepInit(ePWM1, ePWM2, 100, ePWMPrimaryTimeBase);
+                //}
                 
                 break;
             }

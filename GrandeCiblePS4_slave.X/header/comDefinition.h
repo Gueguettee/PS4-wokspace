@@ -40,4 +40,6 @@ typedef enum{
 #define CHAR_BUTTON_3 'n'
 #define CHAR_BUTTON_4 'o'
 
+#define BIG_WHEEL 'p'
+
 #endif	/* _COMDEFINITION_H_ */
