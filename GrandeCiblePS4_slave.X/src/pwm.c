@@ -75,8 +75,8 @@ void pwmInit(pwm_t ePWMx, pwmPER_t exPER, pwmMode_t exMode)
             //IOCON1bits.PENL = 1;    // PWMx module controls the PWMxL pin
             IOCON1bits.PENH = 0;    // PWMxH pin disable
             IOCON1bits.PENL = 0;    // PWMxL pin disable
-            IOCON1bits.POLH = 0;    // PWMxH pin is active-high
-            IOCON1bits.POLL = 0;    // PWMxL pin is active-highh
+            IOCON1bits.POLH = 1;    // PWMxH pin is active-high
+            IOCON1bits.POLL = 1;    // PWMxL pin is active-highh
             //__builtin_write_PWMSFR(&IOCON1, (IOCON1 | 0xC000), &PWMKEY);    // If config PWMLOCK = ON
 
             /* PWMx control register PWMCONx
@@ -117,8 +117,8 @@ void pwmInit(pwm_t ePWMx, pwmPER_t exPER, pwmMode_t exMode)
             //IOCON2bits.PENL = 1;    // PWMx module controls the PWMxL pin
             IOCON1bits.PENH = 0;    // PWMxH pin disable
             IOCON1bits.PENL = 0;    // PWMxL pin disable
-            IOCON2bits.POLH = 0;    // PWMxH pin is active-high
-            IOCON2bits.POLL = 0;    // PWMxL pin is active-highh
+            IOCON2bits.POLH =1;    // PWMxH pin is active-high
+            IOCON2bits.POLL =1;    // PWMxL pin is active-highh
             //__builtin_write_PWMSFR(&IOCON2, (IOCON2 | 0xC000), &PWMKEY);    // If config PWMLOCK = ON
 
             /* PWMx control register PWMCONx
@@ -328,8 +328,8 @@ void pwmStepByStepInit(pwm_t ePWMx, pwm_t ePWMx2, uint16_t pwmFreq, pwmPER_t exP
     pwmInit(ePWMx, exPER, ePWMModePushPull);    
     pwmInit(ePWMx2, exPER, ePWMModePushPull);
     
-    setPwmDuty(ePWMx, 4980);
-    setPwmDuty(ePWMx2, 4980);
+    setPwmDuty(ePWMx, 4000);
+    setPwmDuty(ePWMx2, 4000);
     
     setPwmPhase(ePWMx2, 180);  // Phase of 180° for the second ePWM
     
