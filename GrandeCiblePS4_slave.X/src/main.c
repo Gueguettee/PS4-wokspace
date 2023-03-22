@@ -24,8 +24,8 @@
 /******************************************************************************/
 char state = RUN;//= WAIT_CONNECTION;
 
-bool stateBigWheel = false;
-uint16_t timeBigWheel = 0;
+bool stateMountingBigBall = false;
+uint16_t timeMountingBigBall = 0;
 
 /******************************************************************************/
 /*                               User functions                               */
@@ -136,9 +136,9 @@ void uart3RXInterrupt( void )
             state = RUN;
             break;
             
-        case BIG_WHEEL:
-            stateBigWheel = true;
-            timeBigWheel = 0;
+        case CHAR_MOUNT_BIG_BALL:
+            stateMountingBigBall = true;
+            timeMountingBigBall = 0;
             
         default:
             break;
@@ -223,15 +223,16 @@ void rtcInterrupt( void )
 //PWM1 interrupt
 void PWM1Interrupt( void )
 {
-//    if(timeBigWheel == TIME_BIG_WHEEL)
-//    {
-//        pwmStepByStepDisable(ePWM1, ePWM2);
-//        timeBigWheel = 0;
-//    }
-//    else
-//    {
-//        timeBigWheel++;
-//    }
+    if(timeMountingBigBall == TIME_MOUNT_BIG_BALL)
+    {
+        pwmStepByStepDisable(ePWM1, ePWM2);
+        uartWriteChar(eUART3, CHAR_MOUNT_BIG_BALL);
+        timeMountingBigBall = 0;
+    }
+    else
+    {
+        timeMountingBigBall++;
+    }
 }
 //PWM2 interrupt
 void PWM2Interrupt( void )
@@ -279,10 +280,10 @@ void mainLoop(void)
             }
             case RUN:
             {
-                //if(stateBigWheel)
-                //{
-                //    pwmStepByStepInit(ePWM1, ePWM2, 100, ePWMPrimaryTimeBase);
-                //}
+                if(stateMountingBigBall)
+                {
+                    pwmStepByStepInit(ePWM1, ePWM2, 50, ePWMPrimaryTimeBase);
+                }
                 
                 break;
             }
@@ -371,14 +372,12 @@ int16_t main(void)
     
 	// TBD: INITIALIZATION OF THE USER USED MODULE
     
-    uartInit(eUART2, 9600);
-    uartInterruptEnable(eUART2, eRX);
+    //uartInit(eUART2, 9600);
+    //uartInterruptEnable(eUART2, eRX);
     uartInit(eUART3, 115200);
     uartInterruptEnable(eUART3, eRX);
 
 	_GENERAL_INTERRUPT_ENABLED_; // start the interrupt
-    
-    pwmStepByStepInit(ePWM1, ePWM2, 100, ePWMPrimaryTimeBase);
     
 	/****************************************************************************/
 	/*                               INFINITE LOOP                              */

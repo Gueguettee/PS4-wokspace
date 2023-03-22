@@ -25,15 +25,14 @@
 char state = WAIT_CONNECTION;
 
 bool stateBigWheel = false;
+bool stateMountBigBall = false;
+bool fButton3 = false;
+bool fButton4 = false;
+
 uint16_t timeBigWheel = 0;
 
 char xbeeChar = '0';
 char lastXbeeChar = '0';
-
-//bool fButton1 = false;
-bool fButton2 = false;
-bool fButton3 = false;
-bool fButton4 = false;
 
 joySpeed_t speed[2] = {0};
 joySpeed_t lastSpeed[2] = {0};
@@ -168,12 +167,14 @@ void uart3RXInterrupt( void )
     switch(uartChar)
     {
         case CHAR_PING:
-            //state = RUN
             uartWriteChar(eUART3, CHAR_PING_OK);
             break;
             
         case CHAR_PING_OK:
-            //state = RUN;
+            break;
+            
+        case CHAR_MOUNT_BIG_BALL:
+            stateMountBigBall = false;
             break;
             
         default:
@@ -193,9 +194,7 @@ void uart3TXInterrupt( void )
 void xbeeRXInterrupt( void )
 { 
     lastXbeeChar = xbeeChar;
-    
     xbeeChar = xbeeReadChar();
-    
     uartWriteChar(eUART2, xbeeChar);
     
     switch(xbeeChar)
@@ -209,12 +208,13 @@ void xbeeRXInterrupt( void )
             state = RUN;
             break;
 
-        case CHAR_BUTTON_1:
+        case CHAR_BIG_WHEEL:
             stateBigWheel = true;
             break;
 
-        case CHAR_BUTTON_2:
-            fButton2 = true;
+        case CHAR_MOUNT_BIG_BALL:
+            stateMountBigBall = true;
+            uartWriteChar(eUART3, CHAR_MOUNT_BIG_BALL);
             break;
 
         case CHAR_BUTTON_3:
@@ -307,15 +307,7 @@ void rtcInterrupt( void )
 //PWM1 interrupt
 void PWM1Interrupt( void )
 {
-//    if(timeBigWheel == TIME_BIG_WHEEL)
-//    {
-//        pwmStepByStepDisable(ePWM1, ePWM2);
-//        timeBigWheel = 0;
-//    }
-//    else
-//    {
-//        timeBigWheel++;
-//    }
+    // user code
 }
 //PWM2 interrupt
 void PWM2Interrupt( void )
@@ -366,35 +358,47 @@ void mainLoop(void)
             {
                 if(speed[eJoyX] != lastSpeed[eJoyX])
                 {
-                    if(lastSpeed[eJoyX] == 0)
+                    if(speed[eJoyX] == 0)
                     {
-                        //setPwmFreq(150, ePWMPrimaryTimeBase);
-                        //pwmInit(ePWM1,ePWMPrimaryTimeBase);
-                        //setPwmDuty(ePWM1, (N_STEP_JOYSTICK - speed[eJoyX])*1000);
-                        //pwmEnable(ePWM1);
+                        pwmDisable(ePWM1);
                     }
                     else
                     {
-                        if(speed[eJoyX] == 0)
+                        if(lastSpeed[eJoyX] == 0)
                         {
-                            //pwmDisable(ePWM2);
+                            setPwmFreq(150, ePWMPrimaryTimeBase);
+                            pwmInit(ePWM1,ePWMPrimaryTimeBase);
+                            setPwmDuty(ePWM1, 
+                                    (10000/7*(N_STEP_JOYSTICK - speed[eJoyX])));
+                            pwmEnable(ePWM1);
+                        }
+                        else
+                        {
+                            setPwmDuty(ePWM1, 
+                                    (10000/7*(N_STEP_JOYSTICK - speed[eJoyX])));
                         }
                     }
                 }
                 if(speed[eJoyY] != lastSpeed[eJoyY])
                 {
-                    if(lastSpeed[eJoyY] == 0)
+                    if(speed[eJoyY] == 0)
                     {
-                        //setPwmFreq(5000, ePWMSecondaryTimeBase);
-                        //pwmInit(ePWM2,ePWMSecondaryTimeBase);
-                        //setPwmDuty(ePWM2, 1000);
-                        //pwmEnable(ePWM2);
+                        pwmDisable(ePWM2);
                     }
                     else
                     {
-                        if(speed[eJoyY] == 0)
+                        if(lastSpeed[eJoyY] == 0)
                         {
-                            //pwmDisable(ePWM2);
+                            setPwmFreq(150, ePWMSecondaryTimeBase);
+                            pwmInit(ePWM2,ePWMSecondaryTimeBase);
+                            setPwmDuty(ePWM2, 
+                                    (10000/7*(N_STEP_JOYSTICK - speed[eJoyY])));
+                            pwmEnable(ePWM2);
+                        }
+                        else
+                        {
+                            setPwmDuty(ePWM2, 
+                                    (10000/7*(N_STEP_JOYSTICK - speed[eJoyY])));
                         }
                     }
                 }
@@ -495,14 +499,6 @@ int16_t main(void)
     xbeeInterruptEnable(eRX);
     
 	_GENERAL_INTERRUPT_ENABLED_; // start the interrupt
-    
-    /*setPwmFreq(150, ePWMPrimaryTimeBase);
-    pwmInit(ePWM1,ePWMPrimaryTimeBase);
-    setPwmDeadTime(ePWM1, 100);
-    setPwmDuty(ePWM1, 2000);
-    pwmEnable(ePWM1);*/
-    
-    pwmStepByStepInit(ePWM1, ePWM2, 100, ePWMPrimaryTimeBase);
     
 	/****************************************************************************/
 	/*                               INFINITE LOOP                              */

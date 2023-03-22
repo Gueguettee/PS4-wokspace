@@ -325,13 +325,13 @@ void pwmStepByStepInit(pwm_t ePWMx, pwm_t ePWMx2, uint16_t pwmFreq, pwmPER_t exP
 {
     setPwmFreq(pwmFreq, exPER);
     
-    pwmInit(ePWMx, exPER, ePWMModePushPull);    
-    pwmInit(ePWMx2, exPER, ePWMModePushPull);
+    pwmInit(ePWMx, exPER, ePWMModeCompl);    
+    pwmInit(ePWMx2, exPER, ePWMModeCompl);
     
     setPwmDuty(ePWMx, 4980);
     setPwmDuty(ePWMx2, 4980);
     
-    setPwmPhase(ePWMx2, 180);  // Phase of 180° for the second ePWM
+    setPwmPhase(ePWMx2, 90);  // Phase of 90° for the second ePWM
     
     PTCONbits.PTEN = 0;     // Disable PWMx Module
     
