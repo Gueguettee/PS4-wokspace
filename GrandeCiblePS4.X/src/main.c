@@ -34,8 +34,8 @@ uint16_t timeBigWheel = 0;
 char xbeeChar = '0';
 char lastXbeeChar = '0';
 
-joySpeed_t speed[2] = {0};
-joySpeed_t lastSpeed[2] = {0};
+joySpeed_t speed[eNbrOfJoy] = {0};
+joySpeed_t lastSpeed[eNbrOfJoy] = {0};
 
 /******************************************************************************/
 /*                               User functions                               */

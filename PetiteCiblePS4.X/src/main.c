@@ -21,13 +21,13 @@
 /*                         Global Variable Declaration                        */
 /******************************************************************************/
 
-const analog_t AN_JOYSTICK[2] = {AN1, AN2};
+const analog_t AN_JOYSTICK[eNbrOfJoy] = {AN1, AN2};
 
 char state = WAIT_CONNECTION;
 
-joySpeed_t middleJoyValue[2] = {0};
-joySpeed_t stepPos[2] = {0};
-joySpeed_t stepNeg[2] = {0};
+joySpeed_t middleJoyValue[eNbrOfJoy] = {0};
+joySpeed_t stepPos[eNbrOfJoy] = {0};
+joySpeed_t stepNeg[eNbrOfJoy] = {0};
 
 /******************************************************************************/
 /*                               User functions                               */

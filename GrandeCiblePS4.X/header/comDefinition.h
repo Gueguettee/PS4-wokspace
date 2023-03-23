@@ -19,8 +19,9 @@
 
 /// @brief   Enumerate for joysticks X/Y
 typedef enum{
-  eJoyX = 0,
-  eJoyY = 1,
+  eJoyX,
+  eJoyY,
+  eNbrOfJoy
 }joystick_t;
 
 /******************************************************************************/
