@@ -22,9 +22,10 @@
 /******************************************************************************/
 /*                         Global Variable Declaration                        */
 /******************************************************************************/
-char state = RUN;//= WAIT_CONNECTION;
+char state = WAIT_CONNECTION;
 
 bool stateMountingBigBall = false;
+bool flagMountingBigBall = false;
 uint16_t timeMountingBigBall = 0;
 
 /******************************************************************************/
@@ -137,7 +138,7 @@ void uart3RXInterrupt( void )
             break;
             
         case CHAR_MOUNT_BIG_BALL:
-            stateMountingBigBall = true;
+            flagMountingBigBall = true;
             timeMountingBigBall = 0;
             
         default:
@@ -228,6 +229,7 @@ void PWM1Interrupt( void )
         pwmStepByStepDisable(ePWM1, ePWM2);
         uartWriteChar(eUART3, CHAR_MOUNT_BIG_BALL);
         timeMountingBigBall = 0;
+        stateMountingBigBall = false;
     }
     else
     {
@@ -280,9 +282,11 @@ void mainLoop(void)
             }
             case RUN:
             {
-                if(stateMountingBigBall)
+                if(flagMountingBigBall)
                 {
                     pwmStepByStepInit(ePWM1, ePWM2, 50, ePWMPrimaryTimeBase);
+                    stateMountingBigBall = true;
+                    flagMountingBigBall = false;
                 }
                 
                 break;

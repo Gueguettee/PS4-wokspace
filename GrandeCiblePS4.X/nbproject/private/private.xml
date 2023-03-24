@@ -3,18 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/git/PS4-wokspace/GrandeCiblePS4.X/header/timer.h</file>
-            <file>file:/C:/git/PS4-wokspace/GrandeCiblePS4.X/src/gpio.c</file>
-            <file>file:/C:/git/PS4-wokspace/GrandeCiblePS4.X/src/xbee.c</file>
-            <file>file:/C:/git/PS4-wokspace/GrandeCiblePS4.X/header/pwm.h</file>
             <file>file:/C:/git/PS4-wokspace/GrandeCiblePS4.X/src/main.c</file>
-            <file>file:/C:/git/PS4-wokspace/GrandeCiblePS4.X/header/gpio.h</file>
             <file>file:/C:/git/PS4-wokspace/GrandeCiblePS4.X/header/comDefinition.h</file>
-            <file>file:/C:/git/PS4-wokspace/GrandeCiblePS4.X/src/spi.c</file>
-            <file>file:/C:/git/PS4-wokspace/GrandeCiblePS4.X/src/timer.c</file>
             <file>file:/C:/git/PS4-wokspace/GrandeCiblePS4.X/src/pwm.c</file>
-            <file>file:/C:/git/PS4-wokspace/GrandeCiblePS4.X/nbproject/Makefile-XC16_dsPIC33EP128GM710.mk</file>
-            <file>file:/C:/git/PS4-wokspace/GrandeCiblePS4.X/header/definition.h</file>
         </group>
     </open-files>
 </project-private>
