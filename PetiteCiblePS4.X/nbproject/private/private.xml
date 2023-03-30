@@ -5,6 +5,7 @@
         <group>
             <file>file:/C:/git/PS4-wokspace/PetiteCiblePS4.X/src/main.c</file>
             <file>file:/C:/git/PS4-wokspace/PetiteCiblePS4.X/header/comDefinition.h</file>
+            <file>file:/C:/git/PS4-wokspace/PetiteCiblePS4.X/src/pwm.c</file>
             <file>file:/C:/git/PS4-wokspace/PetiteCiblePS4.X/src/xbee.c</file>
         </group>
     </open-files>

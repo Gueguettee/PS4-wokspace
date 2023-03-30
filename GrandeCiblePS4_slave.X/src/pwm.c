@@ -75,8 +75,8 @@ void pwmInit(pwm_t ePWMx, pwmPER_t exPER, pwmMode_t exMode)
             //IOCON1bits.PENL = 1;    // PWMx module controls the PWMxL pin
             IOCON1bits.PENH = 0;    // PWMxH pin disable
             IOCON1bits.PENL = 0;    // PWMxL pin disable
-            IOCON1bits.POLH = 1;    // PWMxH pin is active-high
-            IOCON1bits.POLL = 1;    // PWMxL pin is active-highh
+            IOCON1bits.POLH = 0;    // PWMxH pin is active-high
+            IOCON1bits.POLL = 0;    // PWMxL pin is active-highh
             //__builtin_write_PWMSFR(&IOCON1, (IOCON1 | 0xC000), &PWMKEY);    // If config PWMLOCK = ON
 
             /* PWMx control register PWMCONx
@@ -117,8 +117,8 @@ void pwmInit(pwm_t ePWMx, pwmPER_t exPER, pwmMode_t exMode)
             //IOCON2bits.PENL = 1;    // PWMx module controls the PWMxL pin
             IOCON1bits.PENH = 0;    // PWMxH pin disable
             IOCON1bits.PENL = 0;    // PWMxL pin disable
-            IOCON2bits.POLH =1;    // PWMxH pin is active-high
-            IOCON2bits.POLL =1;    // PWMxL pin is active-highh
+            IOCON2bits.POLH =0;    // PWMxH pin is active-high
+            IOCON2bits.POLL =0;    // PWMxL pin is active-high
             //__builtin_write_PWMSFR(&IOCON2, (IOCON2 | 0xC000), &PWMKEY);    // If config PWMLOCK = ON
 
             /* PWMx control register PWMCONx
@@ -160,7 +160,7 @@ void pwmInit(pwm_t ePWMx, pwmPER_t exPER, pwmMode_t exMode)
             IOCON1bits.PENH = 0;    // PWMxH pin disable
             IOCON1bits.PENL = 0;    // PWMxL pin disable
             IOCON3bits.POLH = 0;    // PWMxH pin is active-high
-            IOCON3bits.POLL = 0;    // PWMxL pin is active-highh
+            IOCON3bits.POLL = 0;    // PWMxL pin is active-high
             //__builtin_write_PWMSFR(&IOCON3, (IOCON3 | 0xC000), &PWMKEY);    // If config PWMLOCK = ON
 
             /* PWMx control register PWMCONx
