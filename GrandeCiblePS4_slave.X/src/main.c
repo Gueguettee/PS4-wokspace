@@ -226,7 +226,7 @@ void PWM1Interrupt( void )
 {
     if(timeMountingBigBall == TIME_MOUNT_BIG_BALL)
     {
-        pwmStepByStepDisable(ePWM1, ePWM2);
+        //pwmStepByStepDisable(ePWM1, ePWM2);
         uartWriteChar(eUART3, CHAR_MOUNT_BIG_BALL);
         timeMountingBigBall = 0;
         stateMountingBigBall = false;
@@ -284,7 +284,7 @@ void mainLoop(void)
             {
                 if(flagMountingBigBall)
                 {
-                    pwmStepByStepInit(ePWM1, ePWM2, 50, ePWMPrimaryTimeBase);
+                    //pwmStepByStepInit(ePWM1, ePWM2, 50, ePWMPrimaryTimeBase);
                     stateMountingBigBall = true;
                     flagMountingBigBall = false;
                 }
@@ -380,6 +380,8 @@ int16_t main(void)
     //uartInterruptEnable(eUART2, eRX);
     uartInit(eUART3, 115200);
     uartInterruptEnable(eUART3, eRX);
+    
+    pwmStepByStepInit(ePWM1, ePWM2, 50, ePWMPrimaryTimeBase);
 
 	_GENERAL_INTERRUPT_ENABLED_; // start the interrupt
     

@@ -328,8 +328,8 @@ void pwmStepByStepInit(pwm_t ePWMx, pwm_t ePWMx2, uint16_t pwmFreq, pwmPER_t exP
     pwmInit(ePWMx, exPER, ePWMModeCompl);    
     pwmInit(ePWMx2, exPER, ePWMModeCompl);
     
-    setPwmDuty(ePWMx, 4980);
-    setPwmDuty(ePWMx2, 4980);
+    setPwmDuty(ePWMx, 5000);
+    setPwmDuty(ePWMx2, 5000);
     
     setPwmPhase(ePWMx2, 90);  // Phase of 90° for the second ePWM
     
@@ -677,6 +677,62 @@ void pwmDisable(pwm_t ePWMx)
 		default:
 			break;
 	}
+}
+
+void pwmDisableSide(pwm_t ePWMx, pwmSide_t ePWMSideX)
+{
+    if(ePWMSideX == ePWMH)
+    {
+        switch(ePWMx)
+        {
+            case ePWM1:
+                IOCON1bits.PENH = 0x0;	// 1 PWM module control PWM1H, 0 GPIO module control PWM1H
+                break;
+            case ePWM2:
+                IOCON2bits.PENH = 0x0;	// 1 PWM module control PWM2H, 0 GPIO module control PWM2H
+                break;
+            case ePWM3:
+                IOCON3bits.PENH = 0x0;	// 1 PWM module control PWM3H, 0 GPIO module control PWM3H
+                break;
+            case ePWM4:
+                IOCON4bits.PENH = 0x0;	// 1 PWM module control PWM4H, 0 GPIO module control PWM4H
+                break;
+            case ePWM5:
+                IOCON5bits.PENH = 0x0;	// 1 PWM module control PWM5H, 0 GPIO module control PWM5H
+                break;
+            case ePWM6:
+                IOCON6bits.PENH = 0x0;	// 1 PWM module control PWM6H, 0 GPIO module control PWM6H
+                break;
+            default:
+                break;
+        }
+    }
+    else
+    {
+        switch(ePWMx)
+        {
+            case ePWM1:
+                IOCON1bits.PENL = 0x0;	// 1 PWM module control PWM1L, 0 GPIO module control PWM1L
+                break;
+            case ePWM2:
+                IOCON2bits.PENL = 0x0;	// 1 PWM module control PWM2L, 0 GPIO module control PWM2L
+                break;
+            case ePWM3:
+                IOCON3bits.PENL = 0x0;	// 1 PWM module control PWM3L, 0 GPIO module control PWM3L
+                break;
+            case ePWM4:
+                IOCON4bits.PENL = 0x0;	// 1 PWM module control PWM4L, 0 GPIO module control PWM4L
+                break;
+            case ePWM5:
+                IOCON5bits.PENL = 0x0;	// 1 PWM module control PWM5L, 0 GPIO module control PWM5L
+                break;
+            case ePWM6:
+                IOCON6bits.PENL = 0x0;	// 1 PWM module control PWM6L, 0 GPIO module control PWM6L
+                break;
+            default:
+                break;
+        }
+    }
 }
 
 /******************************************************************************/

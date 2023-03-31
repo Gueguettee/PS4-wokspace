@@ -37,6 +37,12 @@ typedef enum {
 }pwm_t;
 
 typedef enum {
+  ePWMH,
+  ePWML,
+  NbrOfPWMSide
+}pwmSide_t;
+
+typedef enum {
   ePWMPrimaryTimeBase,
   ePWMSecondaryTimeBase,
   NbrOfPWMTimeBasePeriod
@@ -98,6 +104,8 @@ void pwmEnable(pwm_t ePWMx);
 /// @brief   Disable PWMx
 /// @param   ePWMx PWM that is disabled
 void pwmDisable(pwm_t ePWMx);
+
+void pwmDisableSide(pwm_t ePWMx, pwmSide_t ePWMSideX);
 
 /// @brief   Register callback of interrupt routines function
 /// @param   ePWMx The PWM that you want to register

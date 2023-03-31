@@ -25,16 +25,14 @@
 char state = WAIT_CONNECTION;
 
 bool stateBigWheel = false;
+bool flagMountBigBall = false;
 bool stateMountBigBall = false;
 bool fButton3 = false;
 bool fButton4 = false;
 
 uint16_t timeBigWheel = 0;
 
-char xbeeChar = '0';
-char lastXbeeChar = '0';
-
-joySpeed_t speed[eNbrOfJoy] = {0};
+joySpeed_t speedChar[eNbrOfJoy] = {0};
 joySpeed_t lastSpeed[eNbrOfJoy] = {0};
 
 /******************************************************************************/
@@ -175,7 +173,7 @@ void uart3RXInterrupt( void )
             break;
             
         case CHAR_MOUNT_BIG_BALL:
-            stateMountBigBall = false;
+            flagMountBigBall = true;
             break;
             
         default:
@@ -194,6 +192,9 @@ void uart3TXInterrupt( void )
 //XBee RX interrupt
 void xbeeRXInterrupt( void )
 { 
+    static char xbeeChar = '0';
+    static char lastXbeeChar = '0';
+    
     lastXbeeChar = xbeeChar;
     xbeeChar = xbeeReadChar();
     uartWriteChar(eUART2, xbeeChar);
@@ -214,8 +215,7 @@ void xbeeRXInterrupt( void )
             break;
 
         case CHAR_MOUNT_BIG_BALL:
-            stateMountBigBall = true;
-            uartWriteChar(eUART3, CHAR_MOUNT_BIG_BALL);
+            flagMountBigBall = true;
             break;
 
         case CHAR_BUTTON_3:
@@ -230,11 +230,11 @@ void xbeeRXInterrupt( void )
             switch(lastXbeeChar)
             {
                 case CHAR_JOYSTICK_X:
-                    speed[eJoyX] = Uint8ToJoySpeed(CharToUint8(xbeeChar));
+                    speedChar[eJoyX] = xbeeChar;
                     break;
 
                 case CHAR_JOYSTICK_Y:
-                    speed[eJoyY] = Uint8ToJoySpeed(CharToUint8(xbeeChar));
+                    speedChar[eJoyY] = xbeeChar;
                     break;
 
                 default:
@@ -357,31 +357,25 @@ void mainLoop(void)
             }
             case RUN:
             {
-                joySpeed_t tempSpeed[eNbrOfJoy] = {speed[eJoyX], speed[eJoyY]};
+                joySpeed_t tempSpeed[eNbrOfJoy] = 
+                    {Uint8ToJoySpeed(CharToUint8(speedChar[eJoyX])), 
+                    Uint8ToJoySpeed(CharToUint8(speedChar[eJoyY]))};
+                
                 if(tempSpeed[eJoyX] != lastSpeed[eJoyX])
                 {
                     if(tempSpeed[eJoyX] == 0)
                     {
-                        pwmDisable(ePWM1);
+                        //pwmDisable(ePWM1);
                     }
                     else
                     {
-                        if(lastSpeed[eJoyX == 0])
-                        {
-                            setPwmFreq(150, ePWMPrimaryTimeBase);
-                            pwmInit(ePWM1,ePWMPrimaryTimeBase, ePWMModeCompl);
-                            setPwmDuty(ePWM1, 
-                                (uint16_t)((int16_t)5000 + (int16_t)5000/N_STEP_JOYSTICK*tempSpeed[eJoyX]));
-                            pwmEnable(ePWM1);
-                        }
-                        else
-                        {
-                            setPwmDuty(ePWM1, 
-                                (uint16_t)((int16_t)5000 + (int16_t)5000/N_STEP_JOYSTICK*tempSpeed[eJoyX]));
-                        }
+                        pwmEnable(ePWM1);
+                        setPwmDuty(ePWM1, 
+                            (uint16_t)((int16_t)5000 + (int16_t)5000/N_STEP_JOYSTICK*tempSpeed[eJoyX]));
                     }
                     lastSpeed[eJoyX] = tempSpeed[eJoyX];
                 }
+                
                 if(tempSpeed[eJoyY] != lastSpeed[eJoyY])
                 {
                     if(tempSpeed[eJoyY] == 0)
@@ -394,6 +388,19 @@ void mainLoop(void)
                                 (750 + 700/N_STEP_JOYSTICK*tempSpeed[eJoyY]));
                     }
                     lastSpeed[eJoyY] = tempSpeed[eJoyY];
+                }
+                
+                if(flagMountBigBall == true)
+                {
+                    if(stateMountBigBall == false)
+                    {
+                        uartWriteChar(eUART3, CHAR_MOUNT_BIG_BALL);
+                        stateMountBigBall = true;
+                    }
+                    else
+                    {
+                        stateMountBigBall = false;
+                    }
                 }
                 
                 break;
@@ -494,6 +501,11 @@ int16_t main(void)
     setPwmFreq(50, ePWMSecondaryTimeBase);
     pwmInit(ePWM2,ePWMSecondaryTimeBase, ePWMModeCompl);
     pwmEnable(ePWM2);
+    
+    setPwmFreq(150, ePWMPrimaryTimeBase);
+    pwmInit(ePWM1,ePWMPrimaryTimeBase, ePWMModeCompl);
+    setPwmDuty(ePWM1, 
+        (uint16_t)((int16_t)5000 + (int16_t)5000/N_STEP_JOYSTICK*0));
     
 	_GENERAL_INTERRUPT_ENABLED_; // start the interrupt
     
