@@ -365,28 +365,30 @@ void mainLoop(void)
                 {
                     if(tempSpeed[eJoyX] == 0)
                     {
-                        //pwmDisable(ePWM1);
+                        pwmDisable(ePWM1);
                     }
                     else
                     {
-                        pwmEnable(ePWM1);
-                        setPwmDuty(ePWM1, 
-                            (uint16_t)((int16_t)5000 + (int16_t)5000/N_STEP_JOYSTICK*tempSpeed[eJoyX]));
+                        if(tempSpeed[eJoyX] > 0)
+                        {
+                            pwmEnableSide(ePWM1, ePWMH);
+                            setPwmDuty(ePWM1, 
+                                (uint16_t)(10000/N_STEP_JOYSTICK*tempSpeed[eJoyX]));
+                        }
+                        else
+                        {
+                            pwmEnableSide(ePWM1, ePWML);
+                            setPwmDuty(ePWM1, 
+                                (uint16_t)(10000-10000/N_STEP_JOYSTICK*tempSpeed[eJoyX]));
+                        }
                     }
                     lastSpeed[eJoyX] = tempSpeed[eJoyX];
                 }
                 
                 if(tempSpeed[eJoyY] != lastSpeed[eJoyY])
                 {
-                    if(tempSpeed[eJoyY] == 0)
-                    {
-                        setPwmDuty(ePWM2, 750);
-                    }
-                    else
-                    {
-                        setPwmDuty(ePWM2, 
-                                (750 + 700/N_STEP_JOYSTICK*tempSpeed[eJoyY]));
-                    }
+                    setPwmDuty(ePWM2, 
+                        (750 + 700/N_STEP_JOYSTICK*tempSpeed[eJoyY]));
                     lastSpeed[eJoyY] = tempSpeed[eJoyY];
                 }
                 
@@ -498,14 +500,16 @@ int16_t main(void)
     xbeeInit(57600);
     xbeeInterruptEnable(eRX);
     
-    setPwmFreq(50, ePWMSecondaryTimeBase);
-    pwmInit(ePWM2,ePWMSecondaryTimeBase, ePWMModeCompl);
-    pwmEnable(ePWM2);
-    
     setPwmFreq(150, ePWMPrimaryTimeBase);
     pwmInit(ePWM1,ePWMPrimaryTimeBase, ePWMModeCompl);
     setPwmDuty(ePWM1, 
         (uint16_t)((int16_t)5000 + (int16_t)5000/N_STEP_JOYSTICK*0));
+    pwmDisable(ePWM1);
+    
+    setPwmFreq(50, ePWMSecondaryTimeBase);
+    pwmInit(ePWM2,ePWMSecondaryTimeBase, ePWMModeCompl);
+    setPwmDuty(ePWM2, 750);
+    pwmEnable(ePWM2);
     
 	_GENERAL_INTERRUPT_ENABLED_; // start the interrupt
     
