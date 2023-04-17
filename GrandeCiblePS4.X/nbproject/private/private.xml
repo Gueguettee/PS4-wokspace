@@ -5,6 +5,7 @@
         <group>
             <file>file:/C:/git/PS4-wokspace/GrandeCiblePS4.X/header/pwm.h</file>
             <file>file:/C:/git/PS4-wokspace/GrandeCiblePS4.X/src/main.c</file>
+            <file>file:/C:/git/PS4-wokspace/GrandeCiblePS4.X/header/comDefinition.h</file>
             <file>file:/C:/git/PS4-wokspace/GrandeCiblePS4.X/src/pwm.c</file>
             <file>file:/C:/git/PS4-wokspace/GrandeCiblePS4.X/nbproject/Makefile-XC16_dsPIC33EP128GM710.mk</file>
             <file>file:/C:/git/PS4-wokspace/GrandeCiblePS4.X/src/i2c.c</file>

@@ -234,7 +234,7 @@ void mainLoop(void)
     static uint16_t sysCounter = 0;
     static char lastJoySpeed[2] = {0};
     
-    if (100==sysCounter++)
+    if (SYS_LOOP==sysCounter++)
     {
         LATCbits.LATC3 = !LATCbits.LATC3;
         

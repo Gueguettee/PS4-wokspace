@@ -343,7 +343,7 @@ void mainLoop(void)
 {
 	// TBD: USER CODE HERE
     static uint16_t sysCounter=0;
-    if (100==sysCounter++)
+    if (SYS_LOOP==sysCounter++)
     {
         LATCbits.LATC3 = !LATCbits.LATC3;
                
