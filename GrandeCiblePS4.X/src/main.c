@@ -379,7 +379,7 @@ void mainLoop(void)
                         {
                             pwmEnableSide(ePWM1, ePWML);
                             setPwmDuty(ePWM1, 
-                                (uint16_t)(10000-10000/N_STEP_JOYSTICK*tempSpeed[eJoyX]));
+                                (uint16_t)(10000/N_STEP_JOYSTICK*tempSpeed[eJoyX]));
                         }
                     }
                     lastSpeed[eJoyX] = tempSpeed[eJoyX];
@@ -387,6 +387,7 @@ void mainLoop(void)
                 
                 if(tempSpeed[eJoyY] != lastSpeed[eJoyY])
                 {
+                    pwmEnable(ePWM2);   ///////////////////////
                     setPwmDuty(ePWM2, 
                         (750 + 700/N_STEP_JOYSTICK*tempSpeed[eJoyY]));
                     lastSpeed[eJoyY] = tempSpeed[eJoyY];
