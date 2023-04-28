@@ -28,8 +28,6 @@ typedef enum{
 /*                                 DEFINITION                                 */
 /******************************************************************************/
 
-#define SYS_LOOP 20
-
 #define N_STEP_JOYSTICK 10
 
 #define CHAR_PING 'v'

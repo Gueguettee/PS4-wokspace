@@ -88,6 +88,7 @@ void pwmInit(pwm_t ePWMx, pwmPER_t exPER, pwmMode_t exMode)
              * Edge-Aligned mode is enabled
              */
             PWMCON1 = 0x0000;       // Clear PWM control register
+            PWMCON1bits.IUE = 1;
             if (exPER==ePWMSecondaryTimeBase)
             {
                 PWMCON1bits.MTBS = 1;   // Secondary Master time base selected  
@@ -130,6 +131,7 @@ void pwmInit(pwm_t ePWMx, pwmPER_t exPER, pwmMode_t exMode)
              * Edge-Aligned mode is enabled
              */
             PWMCON2 = 0x0000;       // Clear PWM control register
+            PWMCON2bits.IUE = 1;
             if (exPER==ePWMSecondaryTimeBase)
             {
                 PWMCON2bits.MTBS = 1;   // Secondary Master time base selected  

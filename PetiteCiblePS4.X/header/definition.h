@@ -49,6 +49,9 @@ typedef enum{
 // User definitions types
 typedef uint16_t joySpeed_t;
 
+// Temp system loop
+#define SYS_LOOP 20
+
 // General Interrupt Enable/Disable Macro
 #define _GENERAL_INTERRUPT_ENABLED_  INTCON2bits.GIE = 1
 #define _GENERAL_INTERRUPT_DISABLED_ INTCON2bits.GIE = 0
@@ -58,8 +61,8 @@ typedef uint16_t joySpeed_t;
 #define RUN 1
 
 // Extremes values of the joystick
-#define MAX_VALUE_JOY 0x0415
-#define MIN_VALUE_JOY 0x0193
+#define MAX_VALUE_JOY 1537
+#define MIN_VALUE_JOY 527
 
 // Bit direction definition
 #define INPUT  1

@@ -28,9 +28,7 @@ typedef enum{
 /*                                 DEFINITION                                 */
 /******************************************************************************/
 
-#define SYS_LOOP 20
-
-#define N_STEP_JOY 10   //plus petit que (9 + Z)/2
+#define N_STEP_JOY 17   //plus petit que (9 + Z)/2
 
 #define CHAR_PING 'v'
 #define CHAR_PING_OK 'w'

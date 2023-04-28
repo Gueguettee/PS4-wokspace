@@ -52,6 +52,9 @@ typedef enum{
 // User definitions types
 typedef int8_t joySpeed_t;
 
+// Temp system loop
+#define SYS_LOOP 20
+
 // General Interrupt Enable/Disable Macro
 #define _GENERAL_INTERRUPT_ENABLED_  INTCON2bits.GIE = 1
 #define _GENERAL_INTERRUPT_DISABLED_ INTCON2bits.GIE = 0
@@ -59,6 +62,12 @@ typedef int8_t joySpeed_t;
 // States
 #define WAIT_CONNECTION 0
 #define RUN 1
+
+// Servomoteurs (min 0.5ms, middle 1.5 ms, max 2.5ms, f=50Hz)
+#define SERVO_MAX_DUTY_ON 1250
+#define SERVO_MIDDLE_DUTY_ON 750
+#define SERVO_MIN_DUTY_ON 250
+#define SERVO_GAP_DUTY_ON 500
 
 // Times
 #define TIME_BIG_WHEEL 10000

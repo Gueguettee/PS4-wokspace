@@ -19,18 +19,16 @@
 
 /// @brief   Enumerate for joysticks X/Y
 typedef enum{
-  eJoyX,
-  eJoyY,
-  eNbrOfJoy
+  eJoyX=0,
+  eJoyY=1,
+  eNbrOfJoy=2
 }joystick_t;
 
 /******************************************************************************/
 /*                                 DEFINITION                                 */
 /******************************************************************************/
 
-#define SYS_LOOP 20
-
-#define N_STEP_JOYSTICK 10   //plus petit que (9 + Z)/2
+#define N_STEP_JOYSTICK 17   //plus petit que (9 + Z)/2
 
 #define CHAR_PING 'v'
 #define CHAR_PING_OK 'w'

@@ -52,6 +52,9 @@ typedef enum{
 // User definitions types
 typedef int8_t joySpeed_t;
 
+// Temp system loop
+#define SYS_LOOP 20
+
 // General Interrupt Enable/Disable Macro
 #define _GENERAL_INTERRUPT_ENABLED_  INTCON2bits.GIE = 1
 #define _GENERAL_INTERRUPT_DISABLED_ INTCON2bits.GIE = 0

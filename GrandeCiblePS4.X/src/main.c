@@ -30,6 +30,9 @@ bool stateMountBigBall = false;
 bool fButton3 = false;
 bool fButton4 = false;
 
+char xbeeChar = '0';
+char lastXbeeChar = '0';
+
 uint16_t timeBigWheel = 0;
 
 joySpeed_t speedChar[eNbrOfJoy] = {0};
@@ -64,6 +67,16 @@ joySpeed_t Uint8ToJoySpeed(uint8_t val)
     {
         return(-((joySpeed_t)(N_STEP_JOYSTICK - val)));
     }
+}
+
+void Uint16ToString(char* hexStr, uint16_t valueInt)
+{
+    sprintf(hexStr, "%03X", valueInt);
+}
+
+void Uint8ToString(char* hexStr, uint8_t valueInt)
+{
+    sprintf(hexStr, "%02X", valueInt);
 }
 
 /******************************************************************************/
@@ -161,7 +174,7 @@ void uart3RXInterrupt( void )
 {
     char uartChar;
     uartChar = uartReadChar(eUART3);
-    uartWriteChar(eUART2, uartChar);
+    //uartWriteChar(eUART2, uartChar);
     
     switch(uartChar)
     {
@@ -192,9 +205,6 @@ void uart3TXInterrupt( void )
 //XBee RX interrupt
 void xbeeRXInterrupt( void )
 { 
-    static char xbeeChar = '0';
-    static char lastXbeeChar = '0';
-    
     lastXbeeChar = xbeeChar;
     xbeeChar = xbeeReadChar();
     uartWriteChar(eUART2, xbeeChar);
@@ -343,7 +353,7 @@ void mainLoop(void)
 {
 	// TBD: USER CODE HERE
     static uint16_t sysCounter=0;
-    static bool firstLoop = false;
+    static bool firstLoop = true;
     if (SYS_LOOP==sysCounter++)
     {
         LATCbits.LATC3 = !LATCbits.LATC3;
@@ -368,44 +378,53 @@ void mainLoop(void)
 
                     setPwmFreq(50, ePWMSecondaryTimeBase);
                     pwmInit(ePWM2,ePWMSecondaryTimeBase, ePWMModeCompl);
-                    setPwmDuty(ePWM2, 750);
+                    setPwmDuty(ePWM2, SERVO_MIDDLE_DUTY_ON);
                     pwmEnable(ePWM2);
+                    
+                    firstLoop = false;
                 }
                 
+                //uartWriteChar(eUART2, speedChar[eJoyX]);
+                uartWriteChar(eUART2, speedChar[eJoyY]);
                 joySpeed_t tempSpeed[eNbrOfJoy] = 
                     {Uint8ToJoySpeed(CharToUint8(speedChar[eJoyX])), 
                     Uint8ToJoySpeed(CharToUint8(speedChar[eJoyY]))};
                 
-                if(tempSpeed[eJoyX] != lastSpeed[eJoyX])
+                //char string[2]="  ";
+                //Uint16ToString(string, tempSpeed[eJoyX]);
+                //uartWriteChar(eUART2, string[0]);
+                
+                //if(tempSpeed[eJoyX] != lastSpeed[eJoyX])
+                //{
+                if(tempSpeed[eJoyX] == 0)
                 {
-                    if(tempSpeed[eJoyX] == 0)
+                    pwmDisable(ePWM1);
+                }
+                else
+                {
+                    if(tempSpeed[eJoyX] > 0)
                     {
-                        pwmDisable(ePWM1);
+                        pwmEnableSide(ePWM1, ePWMH);
+                        setPwmDuty(ePWM1, 
+                            (uint16_t)(10000/N_STEP_JOYSTICK*tempSpeed[eJoyX]));
                     }
                     else
                     {
-                        if(tempSpeed[eJoyX] > 0)
-                        {
-                            pwmEnableSide(ePWM1, ePWMH);
-                            setPwmDuty(ePWM1, 
-                                (uint16_t)(10000/N_STEP_JOYSTICK*tempSpeed[eJoyX]));
-                        }
-                        else
-                        {
-                            pwmEnableSide(ePWM1, ePWML);
-                            setPwmDuty(ePWM1, 
-                                (uint16_t)(10000/N_STEP_JOYSTICK*tempSpeed[eJoyX]));
-                        }
+                        pwmEnableSide(ePWM1, ePWML);
+                        setPwmDuty(ePWM1, 
+                            (uint16_t)(10000/N_STEP_JOYSTICK*tempSpeed[eJoyX]));
                     }
-                    lastSpeed[eJoyX] = tempSpeed[eJoyX];
                 }
+                //lastSpeed[eJoyX] = tempSpeed[eJoyX];
+                //}
                 
-                if(tempSpeed[eJoyY] != lastSpeed[eJoyY])
-                {
-                    setPwmDuty(ePWM2, 
-                        (750 + 740/N_STEP_JOYSTICK*tempSpeed[eJoyY]));
-                    lastSpeed[eJoyY] = tempSpeed[eJoyY];
-                }
+                //if(tempSpeed[eJoyY] != lastSpeed[eJoyY])
+                //{
+                setPwmDuty(ePWM2, 
+                    (SERVO_MIDDLE_DUTY_ON + SERVO_GAP_DUTY_ON/N_STEP_JOYSTICK*tempSpeed[eJoyY]));
+                pwmEnable(ePWM2);
+                //lastSpeed[eJoyY] = tempSpeed[eJoyY];
+                //}
                 
                 if(flagMountBigBall == true)
                 {

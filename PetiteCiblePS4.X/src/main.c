@@ -272,6 +272,7 @@ void mainLoop(void)
                 }
                 if(speed[eJoyY] != lastJoySpeed[eJoyY])
                 {
+                    
                     xbeeWriteChar(CHAR_JOYSTICK_Y);
                     xbeeWriteChar(speed[eJoyY]);
                     lastJoySpeed[eJoyY] = speed[eJoyY];
