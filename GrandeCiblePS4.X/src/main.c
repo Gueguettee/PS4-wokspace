@@ -35,48 +35,39 @@ char lastXbeeChar = '0';
 
 uint16_t timeBigWheel = 0;
 
-joySpeed_t speedChar[eNbrOfJoy] = {0};
-joySpeed_t lastSpeed[eNbrOfJoy] = {0};
+joyspeed_t speedChar[eNbrOfJoy] = {0};  /////
+joyspeed_t lastSpeed[eNbrOfJoy] = {0};  /////
 
 /******************************************************************************/
 /*                               User functions                               */
 /******************************************************************************/
-uint8_t CharToUint8(char ch)
+joystick_t SpeedcharToJoystick(char ch)
 {
-    if((ch >= '0')&&(ch <= '9'))
+    if(ch >= (char)(-N_STEP_JOY*2))
     {
-        return((uint8_t)(ch - '0'));
-    }
-    else if((ch >= 'A')&&(ch <= 'Z'))
-    {
-        return(((uint8_t)(ch - 'A')) + 10);
+        return eJoyX;
     }
     else
     {
-        return 0;
+        return eJoyY;
     }
 }
 
-joySpeed_t Uint8ToJoySpeed(uint8_t val)
+joyspeed_t SpeedcharToJoyspeed(char ch, joystick_t eJoyx)
 {
-    if(val >= N_STEP_JOYSTICK)
+    if(eJoyx == eJoyX)
     {
-        return((joySpeed_t)(val - N_STEP_JOYSTICK));
+        return((-(joyspeed_t)ch) - N_STEP_JOY);
     }
     else
     {
-        return(-((joySpeed_t)(N_STEP_JOYSTICK - val)));
+        return(((joyspeed_t)ch) + (0x7F + 1) - N_STEP_JOY);
     }
 }
 
 void Uint16ToString(char* hexStr, uint16_t valueInt)
 {
     sprintf(hexStr, "%03X", valueInt);
-}
-
-void Uint8ToString(char* hexStr, uint8_t valueInt)
-{
-    sprintf(hexStr, "%02X", valueInt);
 }
 
 /******************************************************************************/
@@ -205,9 +196,8 @@ void uart3TXInterrupt( void )
 //XBee RX interrupt
 void xbeeRXInterrupt( void )
 { 
-    lastXbeeChar = xbeeChar;
     xbeeChar = xbeeReadChar();
-    uartWriteChar(eUART2, xbeeChar);
+    //uartWriteChar(eUART2, xbeeChar);    ////////////////////
     
     switch(xbeeChar)
     {
@@ -237,19 +227,7 @@ void xbeeRXInterrupt( void )
             break;
 
         default:
-            switch(lastXbeeChar)
-            {
-                case CHAR_JOYSTICK_X:
-                    speedChar[eJoyX] = xbeeChar;
-                    break;
-
-                case CHAR_JOYSTICK_Y:
-                    speedChar[eJoyY] = xbeeChar;
-                    break;
-
-                default:
-                    break;
-            }
+            speedChar[SpeedcharToJoystick(xbeeChar)] = xbeeChar;
             break;
     }
 }
@@ -384,47 +362,41 @@ void mainLoop(void)
                     firstLoop = false;
                 }
                 
-                //uartWriteChar(eUART2, speedChar[eJoyX]);
-                uartWriteChar(eUART2, speedChar[eJoyY]);
-                joySpeed_t tempSpeed[eNbrOfJoy] = 
-                    {Uint8ToJoySpeed(CharToUint8(speedChar[eJoyX])), 
-                    Uint8ToJoySpeed(CharToUint8(speedChar[eJoyY]))};
+                joyspeed_t tempSpeed[eNbrOfJoy] = 
+                    {SpeedcharToJoyspeed(speedChar[eJoyX], eJoyX), 
+                    SpeedcharToJoyspeed(speedChar[eJoyY], eJoyY)};
                 
-                //char string[2]="  ";
-                //Uint16ToString(string, tempSpeed[eJoyX]);
-                //uartWriteChar(eUART2, string[0]);
-                
-                //if(tempSpeed[eJoyX] != lastSpeed[eJoyX])
-                //{
-                if(tempSpeed[eJoyX] == 0)
+                if(tempSpeed[eJoyX] != lastSpeed[eJoyX])
                 {
-                    pwmDisable(ePWM1);
-                }
-                else
-                {
-                    if(tempSpeed[eJoyX] > 0)
+                    if(tempSpeed[eJoyX] == 0)
                     {
-                        pwmEnableSide(ePWM1, ePWMH);
-                        setPwmDuty(ePWM1, 
-                            (uint16_t)(10000/N_STEP_JOYSTICK*tempSpeed[eJoyX]));
+                        pwmDisable(ePWM1);
                     }
                     else
                     {
-                        pwmEnableSide(ePWM1, ePWML);
-                        setPwmDuty(ePWM1, 
-                            (uint16_t)(10000/N_STEP_JOYSTICK*tempSpeed[eJoyX]));
+                        if(tempSpeed[eJoyX] > 0)
+                        {
+                            pwmEnableSide(ePWM1, ePWMH);
+                            setPwmDuty(ePWM1, 
+                                (uint16_t)(10000/N_STEP_JOY*tempSpeed[eJoyX]));
+                        }
+                        else
+                        {
+                            pwmEnableSide(ePWM1, ePWML);
+                            setPwmDuty(ePWM1, 
+                                (uint16_t)(10000/N_STEP_JOY*tempSpeed[eJoyX]));
+                        }
                     }
+                    lastSpeed[eJoyX] = tempSpeed[eJoyX];
                 }
-                //lastSpeed[eJoyX] = tempSpeed[eJoyX];
-                //}
                 
-                //if(tempSpeed[eJoyY] != lastSpeed[eJoyY])
-                //{
-                setPwmDuty(ePWM2, 
-                    (SERVO_MIDDLE_DUTY_ON + SERVO_GAP_DUTY_ON/N_STEP_JOYSTICK*tempSpeed[eJoyY]));
-                pwmEnable(ePWM2);
-                //lastSpeed[eJoyY] = tempSpeed[eJoyY];
-                //}
+                if(tempSpeed[eJoyY] != lastSpeed[eJoyY])
+                {
+                    setPwmDuty(ePWM2, 
+                        (SERVO_MIDDLE_DUTY_ON + SERVO_GAP_DUTY_ON/N_STEP_JOY*tempSpeed[eJoyY]));
+                    //pwmEnable(ePWM2);
+                    lastSpeed[eJoyY] = tempSpeed[eJoyY];
+                }
                 
                 if(flagMountBigBall == true)
                 {

@@ -37,15 +37,15 @@ void Uint16ToString(char* hexStr, uint16_t valueInt)
     sprintf(hexStr, "%03X", valueInt);
 }
 
-char HexToChar(uint16_t valueInt)
+char SpeedToChar(uint16_t valueInt, joystick_t joystick)
 {
-    if(valueInt < 10)
+    if(joystick == eJoyX)
     {
-        return((char)(valueInt + '0'));
+        return((char)(-valueInt)); //(valueInt + '0')
     }
     else
     {
-        return((char)((valueInt-10) + 'A'));
+        return((char)((-0x7F - 1) + (uint8_t)valueInt)); //(valueInt-10) + 'A')
     }
 }
 
@@ -71,10 +71,10 @@ char JoystickToSpeedChar(joystick_t joystick)
         {
             if(value >= (middleJoyValue[joystick]+step*stepPos[joystick]))
             {
-                return(HexToChar(N_STEP_JOY+step));
+                return(SpeedToChar(N_STEP_JOY+step, joystick));
             }
         }
-        return(HexToChar(N_STEP_JOY));
+        return(SpeedToChar(N_STEP_JOY, joystick));
     }
     else
     {
@@ -82,10 +82,10 @@ char JoystickToSpeedChar(joystick_t joystick)
         {
             if(value <= (middleJoyValue[joystick]-step*stepNeg[joystick]))
             {
-                return(HexToChar(N_STEP_JOY-step));
+                return(SpeedToChar(N_STEP_JOY-step, joystick));
             }
         }
-        return(HexToChar(N_STEP_JOY));
+        return(SpeedToChar(N_STEP_JOY, joystick));
     }
 }
 
@@ -266,14 +266,11 @@ void mainLoop(void)
                 
                 if(speed[eJoyX] != lastJoySpeed[eJoyX])
                 {
-                    xbeeWriteChar(CHAR_JOYSTICK_X);
                     xbeeWriteChar(speed[eJoyX]);
                     lastJoySpeed[eJoyX] = speed[eJoyX];
                 }
-                if(speed[eJoyY] != lastJoySpeed[eJoyY])
+                else if(speed[eJoyY] != lastJoySpeed[eJoyY])
                 {
-                    
-                    xbeeWriteChar(CHAR_JOYSTICK_Y);
                     xbeeWriteChar(speed[eJoyY]);
                     lastJoySpeed[eJoyY] = speed[eJoyY];
                 }               

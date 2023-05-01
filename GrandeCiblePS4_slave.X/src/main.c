@@ -227,7 +227,7 @@ void PWM1Interrupt( void )
     if(timeMountingBigBall == TIME_MOUNT_BIG_BALL)
     {
         //pwmStepByStepDisable(ePWM1, ePWM2);
-        uartWriteChar(eUART3, CHAR_MOUNT_BIG_BALL);
+        uartWriteChar(eUART3, CHAR_MOUNT_BIG_BALL); ///////////////////////
         timeMountingBigBall = 0;
         stateMountingBigBall = false;
     }

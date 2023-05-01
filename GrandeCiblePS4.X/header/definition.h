@@ -50,7 +50,7 @@ typedef enum{
 }pullup_on_off_t;
 
 // User definitions types
-typedef int8_t joySpeed_t;
+typedef int8_t joyspeed_t;
 
 // Temp system loop
 #define SYS_LOOP 20
