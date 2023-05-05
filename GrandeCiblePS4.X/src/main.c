@@ -177,7 +177,7 @@ void uart3RXInterrupt( void )
             break;
             
         case CHAR_MOUNT_BIG_BALL:
-            flagMountBigBall = true;
+            stateMountBigBall = false;
             break;
             
         default:
@@ -197,7 +197,7 @@ void uart3TXInterrupt( void )
 void xbeeRXInterrupt( void )
 { 
     xbeeChar = xbeeReadChar();
-    //uartWriteChar(eUART2, xbeeChar);    ////////////////////
+    uartWriteChar(eUART2, xbeeChar);    ////////////////////
     
     switch(xbeeChar)
     {
@@ -366,13 +366,14 @@ void mainLoop(void)
                     {SpeedcharToJoyspeed(speedChar[eJoyX], eJoyX), 
                     SpeedcharToJoyspeed(speedChar[eJoyY], eJoyY)};
                 
-                if(tempSpeed[eJoyX] != lastSpeed[eJoyX])
+                if(tempSpeed[eJoyX] == 0)
                 {
-                    if(tempSpeed[eJoyX] == 0)
-                    {
-                        pwmDisable(ePWM1);
-                    }
-                    else
+                    pwmDisable(ePWM1);
+                    lastSpeed[eJoyX] = tempSpeed[eJoyX];
+                }
+                else
+                {
+                    if(tempSpeed[eJoyX] != lastSpeed[eJoyX])
                     {
                         if(tempSpeed[eJoyX] > 0)
                         {
@@ -394,7 +395,7 @@ void mainLoop(void)
                 {
                     setPwmDuty(ePWM2, 
                         (SERVO_MIDDLE_DUTY_ON + SERVO_GAP_DUTY_ON/N_STEP_JOY*tempSpeed[eJoyY]));
-                    //pwmEnable(ePWM2);
+                    pwmEnable(ePWM2);
                     lastSpeed[eJoyY] = tempSpeed[eJoyY];
                 }
                 
@@ -407,8 +408,10 @@ void mainLoop(void)
                     }
                     else
                     {
+                        uartWriteChar(eUART3, CHAR_MOUNT_BIG_BALL);
                         stateMountBigBall = false;
                     }
+                    flagMountBigBall = false;
                 }
                 
                 break;

@@ -54,6 +54,12 @@ typedef enum {
   NbrOfPWMMode
 }pwmMode_t;
 
+typedef enum {
+  ePWMUp,
+  ePWMDown,
+  NbrOfPWMDirection
+}pwmDirection_t;
+
 /******************************************************************************/
 /*                        PWMs INITIALIZATION FUNCTION                        */
 /******************************************************************************/
@@ -66,7 +72,7 @@ void pwmAllInit(void);
 /// @param   exPER Time base you want to use
 void pwmInit(pwm_t ePWMx, pwmPER_t exPER, pwmMode_t exMode);
 
-void pwmStepByStepInit(pwm_t ePWMx, pwm_t ePWMx2, uint16_t pwmFreq, pwmPER_t exPER);
+void pwmStepByStepInit(pwm_t ePWMx, pwm_t ePWMx2, uint16_t pwmFreq, pwmPER_t exPER, pwmDirection_t pwmD);
 
 /******************************************************************************/
 /*                            PWMs USER FUNCTIONS                             */

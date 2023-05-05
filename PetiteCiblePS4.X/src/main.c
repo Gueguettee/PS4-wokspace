@@ -95,12 +95,12 @@ char JoystickToSpeedChar(joystick_t joystick)
 //INT1 interrupt
 void externalINT1Interrupt( void )
 {
-    xbeeWriteChar(CHAR_BIG_WHEEL);
+    xbeeWriteChar(CHAR_MOUNT_BIG_BALL);
 }
 //INT2 interrupt
 void externalINT2Interrupt( void )
 {
-    xbeeWriteChar(CHAR_MOUNT_BIG_BALL);
+    xbeeWriteChar(CHAR_BIG_WHEEL);
 }
 //INT3 interrupt
 void externalINT3Interrupt( void )
@@ -350,6 +350,8 @@ int16_t main(void)
 
     xbeeInit(57600);
     xbeeInterruptEnable(eRX);
+    
+    externInterruptInit(eINT1, eRisingEdge);
     
 	_GENERAL_INTERRUPT_ENABLED_; // start the interrupt
     

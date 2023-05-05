@@ -28,13 +28,10 @@ typedef enum{
 /*                                 DEFINITION                                 */
 /******************************************************************************/
 
-#define N_STEP_JOYSTICK 10
+#define N_STEP_JOY 30   // max (128-1)/2 = 63
 
 #define CHAR_PING 'v'
 #define CHAR_PING_OK 'w'
-
-#define CHAR_JOYSTICK_X 'x'
-#define CHAR_JOYSTICK_Y 'y'
 
 #define CHAR_BUTTON_1 'l'
 #define CHAR_BUTTON_2 'm'
