@@ -352,6 +352,9 @@ int16_t main(void)
     xbeeInterruptEnable(eRX);
     
     externInterruptInit(eINT1, eRisingEdge);
+    externInterruptInit(eINT2, eRisingEdge);
+    externInterruptInit(eINT3, eRisingEdge);
+    externInterruptInit(eINT4, eRisingEdge);
     
 	_GENERAL_INTERRUPT_ENABLED_; // start the interrupt
     

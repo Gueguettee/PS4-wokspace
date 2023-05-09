@@ -24,6 +24,7 @@
 /******************************************************************************/
 char state = WAIT_CONNECTION;
 
+bool flagBigWheel = false;
 bool stateBigWheel = false;
 bool flagMountBigBall = false;
 bool stateMountBigBall = false;
@@ -180,6 +181,10 @@ void uart3RXInterrupt( void )
             stateMountBigBall = false;
             break;
             
+        case CHAR_BIG_WHEEL:
+            stateBigWheel = false;
+            break;
+            
         default:
             break;
     }
@@ -211,7 +216,7 @@ void xbeeRXInterrupt( void )
             break;
 
         case CHAR_BIG_WHEEL:
-            stateBigWheel = true;
+            flagBigWheel = true;
             break;
 
         case CHAR_MOUNT_BIG_BALL:
@@ -352,7 +357,6 @@ void mainLoop(void)
                     pwmInit(ePWM1,ePWMPrimaryTimeBase, ePWMModeCompl);
                     setPwmDuty(ePWM1, 
                         (uint16_t)(5000));
-                    //pwmDisable(ePWM1);
 
                     setPwmFreq(50, ePWMSecondaryTimeBase);
                     pwmInit(ePWM2,ePWMSecondaryTimeBase, ePWMModeCompl);
@@ -412,6 +416,20 @@ void mainLoop(void)
                         stateMountBigBall = false;
                     }
                     flagMountBigBall = false;
+                }
+                if(flagBigWheel == true)
+                {
+                    if(stateBigWheel == false)
+                    {
+                        uartWriteChar(eUART3, CHAR_BIG_WHEEL);
+                        stateBigWheel = true;
+                    }
+                    else
+                    {
+                        uartWriteChar(eUART3, CHAR_BIG_WHEEL);
+                        stateBigWheel = false;
+                    }
+                    flagBigWheel = false;
                 }
                 
                 break;
