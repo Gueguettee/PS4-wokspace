@@ -5,9 +5,9 @@
         <group>
             <file>file:/C:/git/PS4-wokspace/PetiteCiblePS4.X/header/definition.h</file>
             <file>file:/C:/git/PS4-wokspace/PetiteCiblePS4.X/src/gpio.c</file>
-            <file>file:/C:/git/PS4-wokspace/PetiteCiblePS4.X/header/comDefinition.h</file>
             <file>file:/C:/git/PS4-wokspace/PetiteCiblePS4.X/src/main.c</file>
-            <file>file:/C:/git/PS4-wokspace/PetiteCiblePS4.X/header/gpio.h</file>
+            <file>file:/C:/git/PS4-wokspace/PetiteCiblePS4.X/header/comDefinition.h</file>
+            <file>file:/C:/git/PS4-wokspace/PetiteCiblePS4.X/src/pwm.c</file>
         </group>
     </open-files>
 </project-private>

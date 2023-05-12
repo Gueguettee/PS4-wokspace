@@ -64,7 +64,7 @@ typedef int8_t joySpeed_t;
 #define RUN 1
 
 // Times
-#define TIME_MOUNT_BIG_BALL 10000
+#define TIME_MOUNT_BIG_BALL 1000    // t = TIME_MOUNT_BIG_BALL / 150
 
 // Bit direction definition
 #define INPUT  1

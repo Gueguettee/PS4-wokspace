@@ -36,8 +36,8 @@ char lastXbeeChar = '0';
 
 uint16_t timeBigWheel = 0;
 
-joyspeed_t speedChar[eNbrOfJoy] = {0};  /////
-joyspeed_t lastSpeed[eNbrOfJoy] = {0};  /////
+joyspeed_t speedChar[eNbrOfJoy] = {0};
+joyspeed_t lastSpeed[eNbrOfJoy] = {0};
 
 /******************************************************************************/
 /*                               User functions                               */
@@ -389,10 +389,10 @@ void mainLoop(void)
                         {
                             pwmEnableSide(ePWM1, ePWML);
                             setPwmDuty(ePWM1, 
-                                (uint16_t)(10000/N_STEP_JOY*tempSpeed[eJoyX]));
+                                (uint16_t)(10000/N_STEP_JOY*(N_STEP_JOY-tempSpeed[eJoyX])));
                         }
+                        lastSpeed[eJoyX] = tempSpeed[eJoyX];
                     }
-                    lastSpeed[eJoyX] = tempSpeed[eJoyX];
                 }
                 
                 if(tempSpeed[eJoyY] != lastSpeed[eJoyY])

@@ -26,7 +26,7 @@ char state = WAIT_CONNECTION;
 
 bool flagBigWheel = false;
 bool stateBigWheel = false;
-bool flagMountBigBall = false;
+bool flagMountBigBall = true;
 bool stateMountBigBall = false;
 bool fButton3 = false;
 bool fButton4 = false;
@@ -237,10 +237,10 @@ void PWM1Interrupt( void )
 {
     if(timeMountBigBall == TIME_MOUNT_BIG_BALL)
     {
-        //pwmStepByStepDisable(ePWM1, ePWM2);
-        //uartWriteChar(eUART3, CHAR_MOUNT_BIG_BALL); ///////////////////////
+        pwmStepByStepDisable(ePWM1, ePWM2);
+        uartWriteChar(eUART3, CHAR_MOUNT_BIG_BALL); ///////////////////////
         timeMountBigBall = 0;
-        //stateMountingBigBall = false;
+        stateMountBigBall = false;
     }
     else
     {
