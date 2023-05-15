@@ -335,14 +335,14 @@ void pwmStepByStepInit(pwm_t ePWMx, pwm_t ePWMx2, uint16_t pwmFreq, pwmPER_t exP
     
     PTCONbits.PTEN = 0;     // Disable PWMx Module
     
-    // Trigger Interrupt Enable
+    // Interrupt Enable
     switch(ePWMx)
     {
         case ePWM1:
-            PWMCON1bits.TRGIEN = 1;     // A trigger event generates an IRQ
-            IPC23bits.PWM1IP = 0x5;     // Set priority
-            IFS5bits.PWM1IF = 0;        // Clear PWM interrupt flag
-            IEC5bits.PWM1IE = 1;        // Enable PWM interrupt
+            PWMCON1bits.TRGIEN = 1;     // Trigger event generates an interrupt ?
+            IPC23bits.PWM1IP = 0x5;     // Set priority of interruption at 5
+            IFS5bits.PWM1IF = 0;        // Clear PWM1 interrupt flag
+            IEC5bits.PWM1IE = 1;        // Enable PWM1 interrupt
             IOCON1bits.POLH = pwmD;    // PWMxH pin is active-high
             IOCON1bits.POLL = pwmD;    // PWMxL pin is active-highh
             break;
