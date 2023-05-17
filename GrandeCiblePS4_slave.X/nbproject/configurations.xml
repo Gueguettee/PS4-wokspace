@@ -62,7 +62,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>pk4hybrid</platformTool>
         <languageToolchain>XC16</languageToolchain>
-        <languageToolchainVersion>1.70</languageToolchainVersion>
+        <languageToolchainVersion>2.00</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
@@ -1500,7 +1500,7 @@
         <property key="memories.programmemory.ranges" value="0-155eb"/>
         <property key="poweroptions.powerenable" value="false"/>
         <property key="programmerToGoFilePath"
-                  value="C:/git/PS4-wokspace/GrandeCiblePS4_slave.X/debug/XC16_dsPIC33EP128GM710/GrandeCiblePS4_ptg"/>
+                  value="D:/git/PS4-wokspace/GrandeCiblePS4.X/debug/XC16_dsPIC33EP128GM710/GrandeCiblePS4_ptg"/>
         <property key="programmerToGoImageName" value="GrandeCiblePS4_ptg"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>
