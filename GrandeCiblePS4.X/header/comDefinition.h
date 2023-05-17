@@ -33,11 +33,9 @@ typedef enum{
 #define CHAR_PING 'v'
 #define CHAR_PING_OK 'w'
 
-#define CHAR_BUTTON_1 'l'
-#define CHAR_BUTTON_2 'm'
-#define CHAR_BUTTON_3 'n'
-#define CHAR_BUTTON_4 'o'
+#define CHAR_BUTTON_4 'n'
 
+#define CHAR_VERIN 'o'
 #define CHAR_BIG_WHEEL 'p'
 #define CHAR_MOUNT_BIG_BALL 'q'
 

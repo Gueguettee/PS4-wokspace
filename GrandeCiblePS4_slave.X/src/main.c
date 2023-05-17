@@ -26,7 +26,7 @@ char state = WAIT_CONNECTION;
 
 bool flagBigWheel = false;
 bool stateBigWheel = false;
-bool flagMountBigBall = true;
+bool flagMountBigBall = false;
 bool stateMountBigBall = false;
 bool fButton3 = false;
 bool fButton4 = false;
@@ -55,8 +55,8 @@ void externalINT1Interrupt( void )
 void externalINT2Interrupt( void )
 {
     pwmStepByStepInit(ePWM1, ePWM2, 150, ePWMPrimaryTimeBase, ePWMDown);
-    stateMountBigBall = false;
-    uartWriteChar(eUART3, CHAR_MOUNT_BIG_BALL);
+    //stateMountBigBall = false;
+    //uartWriteChar(eUART3, CHAR_MOUNT_BIG_BALL);
 }
 //INT3 interrupt
 void externalINT3Interrupt( void )
@@ -237,10 +237,10 @@ void PWM1Interrupt( void )
 {
     if(timeMountBigBall == TIME_MOUNT_BIG_BALL)
     {
-        pwmStepByStepDisable(ePWM1, ePWM2);
-        uartWriteChar(eUART3, CHAR_MOUNT_BIG_BALL); ///////////////////////
+        //pwmStepByStepDisable(ePWM1, ePWM2);
+        //uartWriteChar(eUART3, CHAR_MOUNT_BIG_BALL); ///////////////////////
         timeMountBigBall = 0;
-        stateMountBigBall = false;
+        //sstateMountBigBall = false;
     }
     else
     {
@@ -293,9 +293,9 @@ void mainLoop(void)
             }
             case RUN:
             {
-                if(flagMountBigBall)
+                if(flagMountBigBall==true)
                 {
-                    if(stateMountBigBall)
+                    if(stateMountBigBall==true)
                     {
                         pwmStepByStepDisable(ePWM1, ePWM2);
                         stateMountBigBall = false;
@@ -308,16 +308,16 @@ void mainLoop(void)
                     flagMountBigBall = false;
                 }
                 
-                if(flagBigWheel)
+                if(flagBigWheel==true)
                 {
                     if(stateBigWheel)
                     {
-                        pwmStepByStepDisable(ePWM3, ePWM4);
+                        //pwmStepByStepDisable(ePWM3, ePWM4);
                         stateBigWheel = false;
                     }
                     else
                     {
-                        pwmStepByStepInit(ePWM3, ePWM4, 150, ePWMSecondaryTimeBase, ePWMUp);
+                        //pwmStepByStepInit(ePWM3, ePWM4, 150, ePWMSecondaryTimeBase, ePWMUp);
                         stateBigWheel = true;
                     }
                     flagBigWheel = false;

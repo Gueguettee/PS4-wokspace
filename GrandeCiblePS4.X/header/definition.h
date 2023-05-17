@@ -49,6 +49,13 @@ typedef enum{
   ePullUpOff,
 }pullup_on_off_t;
 
+typedef enum{
+    eVerinPull,
+    eVerinNotPull,
+    eVerinInTransitionToPull,
+    eVerinInTransitionToNotPull
+}verinState_t;
+
 // User definitions types
 typedef int8_t joyspeed_t;
 

@@ -21,13 +21,18 @@
 /*                         Global Variable Declaration                        */
 /******************************************************************************/
 
-const analog_t AN_JOYSTICK[eNbrOfJoy] = {AN1, AN2};
+const analog_t AN_JOYSTICK[eNbrOfJoy] = {AN1, AN4};
 
 char state = WAIT_CONNECTION;
 
 joySpeed_t middleJoyValue[eNbrOfJoy] = {0};
 joySpeed_t stepPos[eNbrOfJoy] = {0};
 joySpeed_t stepNeg[eNbrOfJoy] = {0};
+
+bool f1 = false;
+bool f2 = false;
+bool f3 = false;
+bool f4 = false;
 
 /******************************************************************************/
 /*                               User functions                               */
@@ -95,22 +100,22 @@ char JoystickToSpeedChar(joystick_t joystick)
 //INT1 interrupt
 void externalINT1Interrupt( void )
 {
-    xbeeWriteChar(CHAR_MOUNT_BIG_BALL);
+    f1 = true;
 }
 //INT2 interrupt
 void externalINT2Interrupt( void )
 {
-    xbeeWriteChar(CHAR_BIG_WHEEL);
+    f2 = true;
 }
 //INT3 interrupt
 void externalINT3Interrupt( void )
 {
-    xbeeWriteChar(CHAR_BUTTON_3);
+    f3 = true;
 }
 //INT4 interrupt
 void externalINT4Interrupt( void )
 {
-    xbeeWriteChar(CHAR_BUTTON_4);
+    f4 = true;
 }
 
 /******************************************************************************/
@@ -274,7 +279,30 @@ void mainLoop(void)
                     xbeeWriteChar(speed[eJoyY]);
                     lastJoySpeed[eJoyY] = speed[eJoyY];
                 }               
-                break;  
+                else
+                {
+                    if(f1 == true)
+                    {
+                        xbeeWriteChar(CHAR_MOUNT_BIG_BALL);
+                        f1 = false;
+                    }
+                    else if(f2 == true)
+                    {
+                        xbeeWriteChar(CHAR_BIG_WHEEL);
+                        f2 = false;
+                    }
+                    else if(f3 == true)
+                    {
+                        xbeeWriteChar(CHAR_BUTTON_4);
+                        f3 = false;
+                    }
+                    else if(f4 == true)
+                    {
+                        xbeeWriteChar(CHAR_VERIN);
+                        f4 = false;
+                    }
+                }
+                break;
             }
                 
             default:

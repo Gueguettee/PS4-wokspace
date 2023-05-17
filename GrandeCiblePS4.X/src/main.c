@@ -28,7 +28,8 @@ bool flagBigWheel = false;
 bool stateBigWheel = false;
 bool flagMountBigBall = false;
 bool stateMountBigBall = false;
-bool fButton3 = false;
+bool fVerin = false;
+verinState_t stateVerin = eVerinNotPull;
 bool fButton4 = false;
 
 char xbeeChar = '0';
@@ -151,10 +152,7 @@ void uart1TXInterrupt( void )
 //UART2 RX interrupt
 void uart2RXInterrupt( void )
 {
-    uint8_t uartChar;
-    uartChar = uartReadChar(eUART2);
-    
-    xbeeWriteChar(uartChar);
+    //
 }
 //UART2 TX interrupt
 void uart2TXInterrupt( void )
@@ -223,8 +221,8 @@ void xbeeRXInterrupt( void )
             flagMountBigBall = true;
             break;
 
-        case CHAR_BUTTON_3:
-            fButton3 = true;
+        case CHAR_VERIN:
+            fVerin = true;
             break;
 
         case CHAR_BUTTON_4:
@@ -430,6 +428,36 @@ void mainLoop(void)
                         stateBigWheel = false;
                     }
                     flagBigWheel = false;
+                }
+                if(fVerin == true)
+                {
+                    if(stateVerin == eVerinNotPull)
+                    {
+                        gpioBitConfig(ePORTF, pinRF7, OUTPUT);
+                        gpioBitWrite(ePORTF, pinRF7, HIGH);
+                        gpioBitConfig(ePORTF, pinRF6, OUTPUT);
+                        gpioBitWrite(ePORTF, pinRF6, HIGH);
+                        stateVerin = eVerinInTransitionToPull;
+                    }
+                    else if(stateVerin == eVerinPull)
+                    {
+                        gpioBitConfig(ePORTF, pinRF7, OUTPUT);
+                        gpioBitWrite(ePORTF, pinRF7, LOW);
+                        gpioBitConfig(ePORTF, pinRF6, OUTPUT);
+                        gpioBitWrite(ePORTF, pinRF6, HIGH);
+                        stateVerin = eVerinInTransitionToNotPull;
+                    }
+                    else if(stateVerin == eVerinInTransitionToNotPull)
+                    {
+                        gpioBitWrite(ePORTF, pinRF6, LOW);
+                        stateVerin = eVerinNotPull;
+                    }
+                    else    //(stateVerin == eVerinInTransitionToPull)
+                    {
+                        gpioBitWrite(ePORTF, pinRF6, LOW);
+                        stateVerin = eVerinPull;
+                    }
+                    fVerin = false;
                 }
                 
                 break;
