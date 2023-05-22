@@ -253,15 +253,9 @@ void mainLoop(void)
             
             case RUN:
             {
-                //uint16_t value = adcChannelRead(AN3);  
-                //char hexStr[4];
-                //Uint16ToString(hexStr,value);
-                //value=0;
-                //xbeeWriteString(hexStr);
-                
                 if(firstLoop)
                 {
-                    JoystickInit();
+                    //
                     firstLoop = false;
                 }
 
@@ -385,6 +379,9 @@ int16_t main(void)
 	/**************************************************************************/
 	/*                              INFINITE LOOP                             */
 	/**************************************************************************/
+    
+    JoystickInit();
+    
 	while(1)
 	{
 		if(1 == sysTickFlag)
