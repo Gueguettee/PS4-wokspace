@@ -45,7 +45,7 @@ joyspeed_t lastSpeed[eNbrOfJoy] = {0};
 /******************************************************************************/
 joystick_t SpeedcharToJoystick(char ch)
 {
-    if(ch >= (char)(-N_STEP_JOY*2))
+    if(ch < (char)(JOY2_VALUE))
     {
         return eJoyX;
     }
@@ -59,11 +59,11 @@ joyspeed_t SpeedcharToJoyspeed(char ch, joystick_t eJoyx)
 {
     if(eJoyx == eJoyX)
     {
-        return((-(joyspeed_t)ch) - N_STEP_JOY);
+        return(((joyspeed_t)ch) - N_STEP_JOY);
     }
     else
     {
-        return(((joyspeed_t)ch) + (0x7F + 1) - N_STEP_JOY);
+        return(((joyspeed_t)(ch - JOY2_VALUE)) - N_STEP_JOY);
     }
 }
 
@@ -355,6 +355,7 @@ void mainLoop(void)
                     pwmInit(ePWM1,ePWMPrimaryTimeBase, ePWMModeCompl);
                     setPwmDuty(ePWM1, 
                         (uint16_t)(5000));
+                    pwmDisable(ePWM1);
 
                     setPwmFreq(50, ePWMSecondaryTimeBase);
                     pwmInit(ePWM2,ePWMSecondaryTimeBase, ePWMModeCompl);

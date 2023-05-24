@@ -657,6 +657,7 @@ void pwmEnableSide(pwm_t ePWMx, pwmSide_t ePWMSideX)
         {
             case ePWM1:
                 IOCON1bits.PENH = 0x1;	// 1 PWM module control PWM1H, 0 GPIO module control PWM1H
+                IOCON1bits.PENL = 0x0;	// 1 PWM module control PWM1L, 0 GPIO module control PWM1L
                 break;
             case ePWM2:
                 IOCON2bits.PENH = 0x1;	// 1 PWM module control PWM2H, 0 GPIO module control PWM2H
@@ -683,8 +684,8 @@ void pwmEnableSide(pwm_t ePWMx, pwmSide_t ePWMSideX)
         {
             case ePWM1:
                 IOCON1bits.PENL = 0x1;	// 1 PWM module control PWM1L, 0 GPIO module control PWM1L
-                //gpioBitConfig(ePORTB, pinRB15, OUTPUT);
-                //gpioBitWrite(ePORTB, pinRB15, HIGH);
+                gpioBitConfig(ePORTB, pinRB15, OUTPUT);
+                gpioBitWrite(ePORTB, pinRB15, HIGH);
                 break;
             case ePWM2:
                 IOCON2bits.PENL = 0x1;	// 1 PWM module control PWM2L, 0 GPIO module control PWM2L

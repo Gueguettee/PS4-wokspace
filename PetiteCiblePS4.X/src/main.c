@@ -21,7 +21,7 @@
 /*                         Global Variable Declaration                        */
 /******************************************************************************/
 
-const analog_t AN_JOYSTICK[eNbrOfJoy] = {AN1, AN4};
+const analog_t AN_JOYSTICK[eNbrOfJoy] = {AN0, AN3};
 
 char state = WAIT_CONNECTION;
 
@@ -46,11 +46,11 @@ char SpeedToChar(uint16_t valueInt, joystick_t joystick)
 {
     if(joystick == eJoyX)
     {
-        return((char)(-valueInt)); //(valueInt + '0')
+        return((char)valueInt); //(valueInt + '0')
     }
     else
     {
-        return((char)((-0x7F - 1) + (uint8_t)valueInt)); //(valueInt-10) + 'A')
+        return((char)((0x30) + (char)valueInt)); //(valueInt-10) + 'A')
     }
 }
 
