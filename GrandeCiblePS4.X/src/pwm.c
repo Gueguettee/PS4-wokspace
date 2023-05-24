@@ -117,8 +117,8 @@ void pwmInit(pwm_t ePWMx, pwmPER_t exPER, pwmMode_t exMode)
             }
             //IOCON2bits.PENH = 1;    // PWMx module controls the PWMxH pin
             //IOCON2bits.PENL = 1;    // PWMx module controls the PWMxL pin
-            IOCON1bits.PENH = 0;    // PWMxH pin disable
-            IOCON1bits.PENL = 0;    // PWMxL pin disable
+            IOCON2bits.PENH = 0;    // PWMxH pin disable
+            IOCON2bits.PENL = 0;    // PWMxL pin disable
             IOCON2bits.POLH = 0;    // PWMxH pin is active-high
             IOCON2bits.POLL = 0;    // PWMxL pin is active-highh
             //__builtin_write_PWMSFR(&IOCON2, (IOCON2 | 0xC000), &PWMKEY);    // If config PWMLOCK = ON
@@ -160,8 +160,8 @@ void pwmInit(pwm_t ePWMx, pwmPER_t exPER, pwmMode_t exMode)
             }
             //IOCON3bits.PENH = 1;    // PWMx module controls the PWMxH pin
             //IOCON3bits.PENL = 1;    // PWMx module controls the PWMxL pin
-            IOCON1bits.PENH = 0;    // PWMxH pin disable
-            IOCON1bits.PENL = 0;    // PWMxL pin disable
+            IOCON3bits.PENH = 0;    // PWMxH pin disable
+            IOCON3bits.PENL = 0;    // PWMxL pin disable
             IOCON3bits.POLH = 0;    // PWMxH pin is active-high
             IOCON3bits.POLL = 0;    // PWMxL pin is active-highh
             //__builtin_write_PWMSFR(&IOCON3, (IOCON3 | 0xC000), &PWMKEY);    // If config PWMLOCK = ON
@@ -202,8 +202,8 @@ void pwmInit(pwm_t ePWMx, pwmPER_t exPER, pwmMode_t exMode)
             }
             //IOCON4bits.PENH = 1;    // PWMx module controls the PWMxH pin
             //IOCON4bits.PENL = 1;    // PWMx module controls the PWMxL pin
-            IOCON1bits.PENH = 0;    // PWMxH pin disable
-            IOCON1bits.PENL = 0;    // PWMxL pin disable
+            IOCON4bits.PENH = 0;    // PWMxH pin disable
+            IOCON4bits.PENL = 0;    // PWMxL pin disable
             IOCON4bits.POLH = 0;    // PWMxH pin is active-high
             IOCON4bits.POLL = 0;    // PWMxL pin is active-highh
             //__builtin_write_PWMSFR(&IOCON4, (IOCON4 | 0xC000), &PWMKEY);    // If config PWMLOCK = ON
@@ -244,8 +244,8 @@ void pwmInit(pwm_t ePWMx, pwmPER_t exPER, pwmMode_t exMode)
             }
             //IOCON5bits.PENH = 1;    // PWMx module controls the PWMxH pin
             //IOCON5bits.PENL = 1;    // PWMx module controls the PWMxL pin
-            IOCON1bits.PENH = 0;    // PWMxH pin disable
-            IOCON1bits.PENL = 0;    // PWMxL pin disable
+            IOCON5bits.PENH = 0;    // PWMxH pin disable
+            IOCON5bits.PENL = 0;    // PWMxL pin disable
             IOCON5bits.POLH = 0;    // PWMxH pin is active-high
             IOCON5bits.POLL = 0;    // PWMxL pin is active-highh
             //__builtin_write_PWMSFR(&IOCON5, (IOCON5 | 0xC000), &PWMKEY);    // If config PWMLOCK = ON
@@ -287,8 +287,8 @@ void pwmInit(pwm_t ePWMx, pwmPER_t exPER, pwmMode_t exMode)
             }
             //IOCON6bits.PENH = 1;    // PWMx module controls the PWMxH pin
             //IOCON6bits.PENL = 1;    // PWMx module controls the PWMxL pin
-            IOCON1bits.PENH = 0;    // PWMxH pin disable
-            IOCON1bits.PENL = 0;    // PWMxL pin disable
+            IOCON6bits.PENH = 0;    // PWMxH pin disable
+            IOCON6bits.PENL = 0;    // PWMxL pin disable
             IOCON6bits.POLH = 0;    // PWMxH pin is active-high
             IOCON6bits.POLL = 0;    // PWMxL pin is active-highh
             //__builtin_write_PWMSFR(&IOCON6, (IOCON6 | 0xC000), &PWMKEY);    // If config PWMLOCK = ON
@@ -684,8 +684,9 @@ void pwmEnableSide(pwm_t ePWMx, pwmSide_t ePWMSideX)
         {
             case ePWM1:
                 IOCON1bits.PENL = 0x1;	// 1 PWM module control PWM1L, 0 GPIO module control PWM1L
-                gpioBitConfig(ePORTB, pinRB15, OUTPUT);
-                gpioBitWrite(ePORTB, pinRB15, HIGH);
+                IOCON1bits.PENH = 0x0;	// 1 PWM module control PWM1L, 0 GPIO module control PWM1L
+                //gpioBitConfig(ePORTB, pinRB15, OUTPUT);
+                //gpioBitWrite(ePORTB, pinRB15, HIGH);
                 break;
             case ePWM2:
                 IOCON2bits.PENL = 0x1;	// 1 PWM module control PWM2L, 0 GPIO module control PWM2L

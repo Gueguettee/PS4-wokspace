@@ -34,12 +34,12 @@
       <itemPath>src/uart.c</itemPath>
       <itemPath>src/xbee.c</itemPath>
       <itemPath>src/configurationBit.c</itemPath>
-      <itemPath>src/main.c</itemPath>
       <itemPath>src/i2c.c</itemPath>
       <itemPath>src/spi.c</itemPath>
       <itemPath>src/clock.c</itemPath>
       <itemPath>src/can.c</itemPath>
       <itemPath>src/rtc.c</itemPath>
+      <itemPath>src/mainMaster.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -62,7 +62,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>pk4hybrid</platformTool>
         <languageToolchain>XC16</languageToolchain>
-        <languageToolchainVersion>1.70</languageToolchainVersion>
+        <languageToolchainVersion>2.00</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
@@ -1531,7 +1531,7 @@
                   value="Press to select which tool pack to use"/>
         <property key="voltagevalue" value="3.25"/>
       </pk4hybrid>
-      <item path="src/main.c" ex="false" overriding="false">
+      <item path="src/mainMaster.c" ex="false" overriding="false">
         <C30>
         </C30>
         <C30-AR>
