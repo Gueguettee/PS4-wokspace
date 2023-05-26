@@ -317,7 +317,7 @@ void mainLoop(void)
                     }
                     else
                     {
-                        //pwmStepByStepInit(ePWM3, ePWM4, 150, ePWMSecondaryTimeBase, ePWMUp);
+                        //pwmStepByStepInit(ePWM3, ePWM4, 50, ePWMSecondaryTimeBase, ePWMUp);
                         stateBigWheel = true;
                     }
                     flagBigWheel = false;

@@ -59,7 +59,7 @@ joyspeed_t SpeedcharToJoyspeed(char ch, joystick_t eJoyx)
 {
     if(eJoyx == eJoyX)
     {
-        return(((joyspeed_t)ch) - N_STEP_JOY);
+        return(((joyspeed_t)(ch)) - N_STEP_JOY);
     }
     else
     {
