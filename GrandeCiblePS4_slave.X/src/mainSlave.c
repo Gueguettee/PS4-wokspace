@@ -54,7 +54,7 @@ void externalINT1Interrupt( void )
 //INT2 interrupt
 void externalINT2Interrupt( void )
 {
-    pwmStepByStepInit(ePWM1, ePWM2, 150, ePWMPrimaryTimeBase, ePWMDown);
+    pwmStepByStepInit(ePWM1, ePWM2, 100, ePWMPrimaryTimeBase, ePWMDown);
     //stateMountBigBall = false;
     //uartWriteChar(eUART3, CHAR_MOUNT_BIG_BALL);
 }
@@ -302,7 +302,7 @@ void mainLoop(void)
                     }
                     else
                     {
-                        pwmStepByStepInit(ePWM1, ePWM2, 150, ePWMPrimaryTimeBase, ePWMUp);
+                        pwmStepByStepInit(ePWM1, ePWM2, 30, ePWMPrimaryTimeBase, ePWMUp);
                         stateMountBigBall = true;
                     }
                     flagMountBigBall = false;
