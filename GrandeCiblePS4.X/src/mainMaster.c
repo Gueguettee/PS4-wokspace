@@ -30,7 +30,8 @@ bool flagMountBigBall = false;
 bool stateMountBigBall = false;
 bool fVerin = false;
 verinState_t stateVerin = eVerinNotPull;
-bool fButton4 = false;
+bool fClapet = false;
+bool stateClapet = false;
 
 char xbeeChar = '0';
 char lastXbeeChar = '0';
@@ -226,7 +227,7 @@ void xbeeRXInterrupt( void )
             break;
 
         case CHAR_BUTTON_4:
-            fButton4 = true;
+            fClapet = true;
             break;
 
         default:
@@ -359,8 +360,11 @@ void mainLoop(void)
 
                     setPwmFreq(50, ePWMSecondaryTimeBase);
                     pwmInit(ePWM2,ePWMSecondaryTimeBase, ePWMModeCompl);
+                    pwmInit(ePWM3,ePWMSecondaryTimeBase, ePWMModeCompl);
                     setPwmDuty(ePWM2, SERVO_MIDDLE_DUTY_ON);
+                    //setPwmDuty(ePWM3, SERVO_MAX_DUTY_ON);
                     pwmEnable(ePWM2);   // obligatoire
+                    //pwmEnable(ePWM3);
                     
                     firstLoop = false;
                 }
@@ -461,6 +465,21 @@ void mainLoop(void)
                         stateVerin = eVerinPull;
                     }
                     fVerin = false;
+                }
+                
+                if(fClapet == true)
+                {
+                    if(stateClapet == true)
+                    {
+                        //setPwmDuty(ePWM3, SERVO_MAX_DUTY_ON);
+                        stateClapet = false;
+                    }
+                    else
+                    {
+                        //setPwmDuty(ePWM3, SERVO_MIN_DUTY_ON);
+                        stateClapet = true;
+                    }
+                    fClapet = false;
                 }
                 
                 break;

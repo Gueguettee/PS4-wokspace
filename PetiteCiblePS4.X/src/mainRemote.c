@@ -317,23 +317,35 @@ void mainLoop(void)
                         }
                         else if(ff1 == true)
                         {
-                            ff1 = false;
-                            f1 = false;
+                            if(gpioBitRead(ePORTB, pinRB14) == 0)
+                            {
+                                ff1 = false;
+                                f1 = false;
+                            }
                         }
                         else if(ff2 == true)
                         {
-                            ff2 = false;
-                            f2 = false;
+                            if(gpioBitRead(ePORTA, pinRA12) == 0)
+                            {
+                                ff2 = false;
+                                f2 = false;
+                            }
                         }
                         else if(ff3 == true)
                         {
-                            ff3 = false;
-                            f3 = false;
+                            if(gpioBitRead(ePORTA, pinRA14) == 0)
+                            {
+                                ff3 = false;
+                                f3 = false;
+                            }
                         }
                         else if(ff4 == true)
                         {
-                            ff4 = false;
-                            f4 = false;
+                            if(gpioBitRead(ePORTA, pinRA15) == 0)
+                            {
+                                ff4 = false;
+                                f4 = false;
+                            }
                         }
                     }
                 }
