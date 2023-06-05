@@ -23,7 +23,7 @@
 
 const analog_t AN_JOYSTICK[eNbrOfJoy] = {AN2, AN1};
 
-char state = RUN;   //////////////////////////
+char state = WAIT_CONNECTION;
 
 joySpeed_t middleJoyValue[eNbrOfJoy] = {0};
 joySpeed_t stepPos[eNbrOfJoy] = {0};
@@ -245,9 +245,7 @@ void mainLoop(void)
     static bool ff[2] = {false, false};
     
     if (SYS_LOOP==sysCounter++)
-    {
-        LATCbits.LATC3 = !LATCbits.LATC3;
-        
+    {      
         switch(state)
         {
             case WAIT_CONNECTION:
@@ -258,6 +256,8 @@ void mainLoop(void)
             
             case RUN:
             {
+                LATCbits.LATC3 = !LATCbits.LATC3;
+                
                 if(firstLoop)
                 {
                     JoystickInit(); //obligatoire tester plusieurs fois

@@ -107,11 +107,15 @@ void setPwmDuty(pwm_t ePWMx, uint16_t DC);
 /// @param   ePWMx PWM that is enabled
 void pwmEnable(pwm_t ePWMx);
 
+void pwmStepByStepEnable(pwm_t ePWMx, pwm_t ePWMx2);
+
 /// @brief   Disable PWMx
 /// @param   ePWMx PWM that is disabled
 void pwmDisable(pwm_t ePWMx);
 
 void pwmDisableSide(pwm_t ePWMx, pwmSide_t ePWMSideX);
+
+void pwmStepByStepSetDirection(pwm_t ePWMx, pwm_t ePWMx2, pwmDirection_t pwmD);
 
 /// @brief   Register callback of interrupt routines function
 /// @param   ePWMx The PWM that you want to register

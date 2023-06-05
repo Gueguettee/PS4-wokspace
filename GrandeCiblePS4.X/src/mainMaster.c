@@ -337,9 +337,7 @@ void mainLoop(void)
     static uint16_t sysCounter=0;
     static bool firstLoop = true;
     if (SYS_LOOP==sysCounter++)
-    {
-        LATCbits.LATC3 = !LATCbits.LATC3;
-               
+    {              
         switch(state)
         {
             case WAIT_CONNECTION:
@@ -348,8 +346,11 @@ void mainLoop(void)
                 uartWriteChar(eUART3, CHAR_PING);
                 break;
             }
+            
             case RUN:
             {
+                LATCbits.LATC3 = !LATCbits.LATC3;
+                
                 if(firstLoop)
                 {
                     setPwmFreq(150, ePWMPrimaryTimeBase);   // fréquence de base à 150 mais peut-être plutôt moins
