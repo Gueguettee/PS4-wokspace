@@ -353,19 +353,17 @@ void mainLoop(void)
                 
                 if(firstLoop)
                 {
-                    setPwmFreq(150, ePWMPrimaryTimeBase);   // fréquence de base à 150 mais peut-être plutôt moins
+                    setPwmFreq(DC_FREQ, ePWMPrimaryTimeBase);   // fréquence de base à 150 mais peut-être plutôt moins
                     pwmInit(ePWM1,ePWMPrimaryTimeBase, ePWMModeCompl);
                     setPwmDuty(ePWM1, 
                         (uint16_t)(5000));
                     pwmDisable(ePWM1);  // on peut enlever normalement
 
-                    setPwmFreq(50, ePWMSecondaryTimeBase);
+                    setPwmFreq(SERVO_FREQ, ePWMSecondaryTimeBase);
                     pwmInit(ePWM2,ePWMSecondaryTimeBase, ePWMModeCompl);
                     pwmInit(ePWM3,ePWMSecondaryTimeBase, ePWMModeCompl);
                     setPwmDuty(ePWM2, SERVO_MIDDLE_DUTY_ON);
-                    //setPwmDuty(ePWM3, SERVO_MAX_DUTY_ON);
-                    pwmEnable(ePWM2);   // obligatoire
-                    //pwmEnable(ePWM3);
+                    setPwmDuty(ePWM3, SERVO_MAX_DUTY_ON);
                     
                     firstLoop = false;
                 }
@@ -383,7 +381,15 @@ void mainLoop(void)
                 {
                     if(tempSpeed[eJoyX] != lastSpeed[eJoyX])
                     {
-                        if(tempSpeed[eJoyX] > 0)
+                        if(lastSpeed[eJoyX == 0])
+                        {
+                            pwmInit(ePWM1,ePWMPrimaryTimeBase, ePWMModeCompl);
+                            pwmDisable(ePWM1);  // on peut enlever normalement
+                            pwmEnableSide(ePWM1, ePWMH);
+                            setPwmDuty(ePWM1, 
+                                (uint16_t)(10000/N_STEP_JOY*tempSpeed[eJoyX]));
+                        }
+                        else if(tempSpeed[eJoyX] > 0)
                         {
                             pwmEnableSide(ePWM1, ePWMH);
                             setPwmDuty(ePWM1, 
@@ -403,7 +409,6 @@ void mainLoop(void)
                 {
                     setPwmDuty(ePWM2, 
                         (SERVO_MIDDLE_DUTY_ON + SERVO_GAP_DUTY_ON/N_STEP_JOY*tempSpeed[eJoyY]));
-                    pwmEnable(ePWM2);
                     lastSpeed[eJoyY] = tempSpeed[eJoyY];
                 }
                 
@@ -472,16 +477,19 @@ void mainLoop(void)
                 {
                     if(stateClapet == true)
                     {
-                        //setPwmDuty(ePWM3, SERVO_MAX_DUTY_ON);
+                        setPwmDuty(ePWM3, SERVO_MAX_DUTY_ON);
                         stateClapet = false;
                     }
                     else
                     {
-                        //setPwmDuty(ePWM3, SERVO_MIN_DUTY_ON);
+                        setPwmDuty(ePWM3, SERVO_MIN_DUTY_ON);
                         stateClapet = true;
                     }
                     fClapet = false;
                 }
+                
+                pwmEnable(ePWM2);
+                pwmEnable(ePWM3);
                 
                 break;
             }
