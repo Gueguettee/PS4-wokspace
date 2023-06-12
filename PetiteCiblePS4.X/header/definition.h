@@ -72,6 +72,9 @@ typedef uint16_t joySpeed_t;
 #define HIGH 1
 #define LOW  0
 
+#define STATE_BUTTON_ON 1
+#define STATE_BUTTON_OFF 0
+
 // Enable/disable definition
 #define ENABLE  1
 #define DISABLE 0

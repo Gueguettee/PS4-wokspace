@@ -242,6 +242,10 @@ void mainLoop(void)
     static bool ff2 = false;
     static bool ff3 = false;
     static bool ff4 = false;
+    static bool ff5 = false;
+    static bool ff6 = false;
+    static bool ff7 = false;
+    static bool ff8 = false;
     static bool ff[2] = {false, false};
     
     if (SYS_LOOP==sysCounter++)
@@ -282,70 +286,119 @@ void mainLoop(void)
                     xbeeWriteChar(speed[eJoyY]);
                     lastJoySpeed[eJoyY] = speed[eJoyY];
                     ff[eJoyY] = true;
-                }               
+                }
+                else if((gpioBitRead(ePORTD, pinRD1) == STATE_BUTTON_ON)
+                    && (ff5 == false))
+                {
+                    xbeeWriteChar(CHAR_F5);
+                    ff5 = true;
+                }
+                else if((gpioBitRead(ePORTD, pinRD2) == STATE_BUTTON_ON)
+                    && (ff6 == false))
+                {
+                    xbeeWriteChar(CHAR_F6);
+                    ff6 = true;
+                }
+                else if((gpioBitRead(ePORTD, pinRD3) == STATE_BUTTON_ON)
+                    && (ff7 == false))
+                {
+                    xbeeWriteChar(CHAR_F7);
+                    ff7 = true;
+                }
+                else if((gpioBitRead(ePORTD, pinRD4) == STATE_BUTTON_ON)
+                    && (ff8 == false))
+                {
+                    xbeeWriteChar(CHAR_F8);
+                    ff8 = true;
+                }
+                else if((f1 == true) && (ff1 == false))
+                {
+                    xbeeWriteChar(CHAR_MOUNT_BIG_BALL);
+                    ff1 = true;
+                }
+                else if((f2 == true) && (ff2 == false))
+                {
+                    xbeeWriteChar(CHAR_BIG_WHEEL);
+                    ff2 = true;
+                }
+                else if((f3 == true) && (ff3 == false))
+                {
+                    xbeeWriteChar(CHAR_BUTTON_4);
+                    ff3 = true;
+                }
+                else if((f4 == true) && (ff4 == false))
+                {
+                    xbeeWriteChar(CHAR_VERIN);
+                    ff4 = true;
+                }
                 else
                 {
-                    if((f1 == true) && (ff1 == false))
+                    if(ff[eJoyX] == true)
                     {
-                        xbeeWriteChar(CHAR_MOUNT_BIG_BALL);
-                        ff1 = true;
+                        ff[eJoyX] = false;
                     }
-                    else if((f2 == true) && (ff2 == false))
+                    else if(ff[eJoyY] == true)
                     {
-                        xbeeWriteChar(CHAR_BIG_WHEEL);
-                        ff2 = true;
+                        ff[eJoyY] = false;
                     }
-                    else if((f3 == true) && (ff3 == false))
+                    else if(ff1 == true)
                     {
-                        xbeeWriteChar(CHAR_BUTTON_4);
-                        ff3 = true;
+                        if(gpioBitRead(ePORTB, pinRB14) == 0)
+                        {
+                            ff1 = false;
+                            f1 = false;
+                        }
                     }
-                    else if((f4 == true) && (ff4 == false))
+                    else if(ff2 == true)
                     {
-                        xbeeWriteChar(CHAR_VERIN);
-                        ff4 = true;
+                        if(gpioBitRead(ePORTA, pinRA12) == 0)
+                        {
+                            ff2 = false;
+                            f2 = false;
+                        }
                     }
-                    else
+                    else if(ff3 == true)
                     {
-                        if(ff[eJoyX] == true)
+                        if(gpioBitRead(ePORTA, pinRA14) == 0)
                         {
-                            ff[eJoyX] = false;
+                            ff3 = false;
+                            f3 = false;
                         }
-                        else if(ff[eJoyY] == true)
+                    }
+                    else if(ff4 == true)
+                    {
+                        if(gpioBitRead(ePORTA, pinRA15) == 0)
                         {
-                            ff[eJoyY] = false;
+                            ff4 = false;
+                            f4 = false;
                         }
-                        else if(ff1 == true)
+                    }
+                    else if(ff5 == true)
+                    {
+                        if(gpioBitRead(ePORTD, pinRD1) == STATE_BUTTON_OFF)
                         {
-                            if(gpioBitRead(ePORTB, pinRB14) == 0)
-                            {
-                                ff1 = false;
-                                f1 = false;
-                            }
+                            ff5 = false;
                         }
-                        else if(ff2 == true)
+                    }
+                    else if(ff6 == true)
+                    {
+                        if(gpioBitRead(ePORTD, pinRD2) == STATE_BUTTON_OFF)
                         {
-                            if(gpioBitRead(ePORTA, pinRA12) == 0)
-                            {
-                                ff2 = false;
-                                f2 = false;
-                            }
+                            ff6 = false;
                         }
-                        else if(ff3 == true)
+                    }
+                    else if(ff7 == true)
+                    {
+                        if(gpioBitRead(ePORTD, pinRD3) == STATE_BUTTON_OFF)
                         {
-                            if(gpioBitRead(ePORTA, pinRA14) == 0)
-                            {
-                                ff3 = false;
-                                f3 = false;
-                            }
+                            ff7 = false;
                         }
-                        else if(ff4 == true)
+                    }
+                    else if(ff8 == true)
+                    {
+                        if(gpioBitRead(ePORTD, pinRD4) == STATE_BUTTON_OFF)
                         {
-                            if(gpioBitRead(ePORTA, pinRA15) == 0)
-                            {
-                                ff4 = false;
-                                f4 = false;
-                            }
+                            ff8 = false;
                         }
                     }
                 }
