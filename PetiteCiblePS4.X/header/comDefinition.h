@@ -36,9 +36,9 @@ typedef enum{
 
 #define CHAR_VERIN 'o'
 #define CHAR_BIG_WHEEL 'p'
-#define CHAR_MOUNT_BIG_BALL 'q'
-#define CHAR_BUTTON_4 'n'
-#define CHAR_F5 'r'
+#define CHAR_MOUNT_BIG_BALL_UP 'q'
+#define CHAR_CLAPET 'n'
+#define CHAR_MOUNT_BIG_BALL_DOWN 'r'
 #define CHAR_F6 's'
 #define CHAR_F7 't'
 #define CHAR_F8 'u'

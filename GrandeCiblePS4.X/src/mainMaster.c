@@ -25,9 +25,10 @@
 char state = WAIT_CONNECTION;
 
 bool flagBigWheel = false;
-bool stateBigWheel = false;
-bool flagMountBigBall = false;
-bool stateMountBigBall = false;
+//bool stateBigWheel = false;
+bool flagMountBigBallUp = false;
+bool flagMountBigBallDown = false;
+//bool stateMountBigBall = false;
 bool fVerin = false;
 verinState_t stateVerin = eVerinNotPull;
 bool fClapet = false;
@@ -35,8 +36,6 @@ bool stateClapet = false;
 
 char xbeeChar = '0';
 char lastXbeeChar = '0';
-
-uint16_t timeBigWheel = 0;
 
 joyspeed_t speedChar[eNbrOfJoy] = {0};
 joyspeed_t lastSpeed[eNbrOfJoy] = {0};
@@ -176,13 +175,13 @@ void uart3RXInterrupt( void )
         case CHAR_PING_OK:
             break;
             
-        case CHAR_MOUNT_BIG_BALL:
+        /*case CHAR_MOUNT_BIG_BALL:
             stateMountBigBall = false;
             break;
             
         case CHAR_BIG_WHEEL:
             stateBigWheel = false;
-            break;
+            break;*/
             
         default:
             break;
@@ -218,15 +217,19 @@ void xbeeRXInterrupt( void )
             flagBigWheel = true;
             break;
 
-        case CHAR_MOUNT_BIG_BALL:
-            flagMountBigBall = true;
+        case CHAR_MOUNT_BIG_BALL_UP:
+            flagMountBigBallUp = true;
+            break;
+            
+        case CHAR_MOUNT_BIG_BALL_DOWN:
+            flagMountBigBallDown = true;
             break;
 
         case CHAR_VERIN:
             fVerin = true;
             break;
 
-        case CHAR_BUTTON_4:
+        case CHAR_CLAPET:
             fClapet = true;
             break;
 
@@ -353,17 +356,18 @@ void mainLoop(void)
                 
                 if(firstLoop)
                 {
-                    setPwmFreq(DC_FREQ, ePWMPrimaryTimeBase);   // fréquence de base à 150 mais peut-être plutôt moins
+                    setPwmFreq(DC_FREQ, ePWMPrimaryTimeBase);
                     pwmInit(ePWM1,ePWMPrimaryTimeBase, ePWMModeCompl);
                     setPwmDuty(ePWM1, 
                         (uint16_t)(5000));
-                    pwmDisable(ePWM1);  // on peut enlever normalement
 
                     setPwmFreq(SERVO_FREQ, ePWMSecondaryTimeBase);
                     pwmInit(ePWM2,ePWMSecondaryTimeBase, ePWMModeCompl);
                     pwmInit(ePWM3,ePWMSecondaryTimeBase, ePWMModeCompl);
                     setPwmDuty(ePWM2, SERVO_MIDDLE_DUTY_ON);
                     setPwmDuty(ePWM3, SERVO_MAX_DUTY_ON);
+                    pwmEnable(ePWM2);
+                    pwmEnable(ePWM3);
                     
                     firstLoop = false;
                 }
@@ -383,23 +387,22 @@ void mainLoop(void)
                     {
                         if(lastSpeed[eJoyX == 0])
                         {
-                            pwmInit(ePWM1,ePWMPrimaryTimeBase, ePWMModeCompl);
-                            pwmDisable(ePWM1);  // on peut enlever normalement
-                            pwmEnableSide(ePWM1, ePWMH);
+                            //pwmInit(ePWM1,ePWMPrimaryTimeBase, ePWMModeCompl);
                             setPwmDuty(ePWM1, 
                                 (uint16_t)(10000/N_STEP_JOY*tempSpeed[eJoyX]));
+                            pwmEnableSide(ePWM1, ePWMH);
                         }
                         else if(tempSpeed[eJoyX] > 0)
                         {
-                            pwmEnableSide(ePWM1, ePWMH);
                             setPwmDuty(ePWM1, 
                                 (uint16_t)(10000/N_STEP_JOY*tempSpeed[eJoyX]));
+                            pwmEnableSide(ePWM1, ePWMH);
                         }
                         else
                         {
-                            pwmEnableSide(ePWM1, ePWML);
                             setPwmDuty(ePWM1, 
                                 (uint16_t)(10000/N_STEP_JOY*(N_STEP_JOY+tempSpeed[eJoyX])));    //'+' car tempSpeed negatif
+                            pwmEnableSide(ePWM1, ePWML);
                         }
                         lastSpeed[eJoyX] = tempSpeed[eJoyX];
                     }
@@ -412,33 +415,20 @@ void mainLoop(void)
                     lastSpeed[eJoyY] = tempSpeed[eJoyY];
                 }
                 
-                if(flagMountBigBall == true)
+                if(flagMountBigBallUp == true)
                 {
-                    if(stateMountBigBall == false)
-                    {
-                        uartWriteChar(eUART3, CHAR_MOUNT_BIG_BALL);
-                        stateMountBigBall = true;
-                    }
-                    else
-                    {
-                        uartWriteChar(eUART3, CHAR_MOUNT_BIG_BALL);
-                        stateMountBigBall = false;
-                    }
-                    flagMountBigBall = false;
+                    uartWriteChar(eUART3, CHAR_MOUNT_BIG_BALL_UP);
+                    flagMountBigBallUp = false;
+                }
+                if(flagMountBigBallDown == true)
+                {
+                    uartWriteChar(eUART3, CHAR_MOUNT_BIG_BALL_DOWN);
+                    flagMountBigBallDown = false;
                 }
                 
                 if(flagBigWheel == true)
                 {
-                    if(stateBigWheel == false)
-                    {
-                        uartWriteChar(eUART3, CHAR_BIG_WHEEL);
-                        stateBigWheel = true;
-                    }
-                    else
-                    {
-                        uartWriteChar(eUART3, CHAR_BIG_WHEEL);
-                        stateBigWheel = false;
-                    }
+                    uartWriteChar(eUART3, CHAR_BIG_WHEEL);
                     flagBigWheel = false;
                 }
                 
@@ -471,6 +461,13 @@ void mainLoop(void)
                         stateVerin = eVerinPull;
                     }
                     fVerin = false;
+                }
+                if(stateVerin == true)
+                {
+                    /*if(gpioBitRead(ePORT..., pinR...) == HIGH)
+                    {
+                        
+                    }*/
                 }
                 
                 if(fClapet == true)

@@ -290,7 +290,7 @@ void mainLoop(void)
                 else if((gpioBitRead(ePORTD, pinRD1) == STATE_BUTTON_ON)
                     && (ff5 == false))
                 {
-                    xbeeWriteChar(CHAR_F5);
+                    xbeeWriteChar(CHAR_MOUNT_BIG_BALL_DOWN);
                     ff5 = true;
                 }
                 else if((gpioBitRead(ePORTD, pinRD2) == STATE_BUTTON_ON)
@@ -313,7 +313,7 @@ void mainLoop(void)
                 }
                 else if((f1 == true) && (ff1 == false))
                 {
-                    xbeeWriteChar(CHAR_MOUNT_BIG_BALL);
+                    xbeeWriteChar(CHAR_MOUNT_BIG_BALL_UP);
                     ff1 = true;
                 }
                 else if((f2 == true) && (ff2 == false))
@@ -323,7 +323,7 @@ void mainLoop(void)
                 }
                 else if((f3 == true) && (ff3 == false))
                 {
-                    xbeeWriteChar(CHAR_BUTTON_4);
+                    xbeeWriteChar(CHAR_CLAPET);
                     ff3 = true;
                 }
                 else if((f4 == true) && (ff4 == false))

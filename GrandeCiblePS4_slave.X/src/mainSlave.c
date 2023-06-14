@@ -27,13 +27,12 @@ char state = WAIT_CONNECTION;
 bool flagBigWheel = false;
 bool stateBigWheel = false;
 bool dirBigWheel = false;
-bool flagMountBigBall = false;
+bool flagMountBigBallUp = false;
+bool flagMountBigBallDown = false;
 bool stateMountBigBall = false;
 bool dirMountBigBall = false;
-bool fButton3 = false;
-bool fButton4 = false;
 
-uint16_t timeMountBigBall = 0;
+//uint16_t timeMountBigBall = 0;
 
 /******************************************************************************/
 /*                               User functions                               */
@@ -51,29 +50,33 @@ void externalINT0Interrupt( void )
 //INT1 interrupt
 void externalINT1Interrupt( void )
 {
-  // user code
+    /*setPwmFreq(BIG_WHEEL_FREQ_DOWN, ePWMPrimaryTimeBase);
+    pwmStepByStepSetDirection(ePWM1, ePWM2, ePWMDown);
+    pwmStepByStepEnable(ePWM1, ePWM2);
+    //pwmStepByStepInit(ePWM1, ePWM2, RAIL_FREQ, ePWMPrimaryTimeBase, ePWMDown);
+    dirBigWheel = false;*/
 }
 //INT2 interrupt
 void externalINT2Interrupt( void )
 {
-    //setPwmFreq(100, ePWMPrimaryTimeBase);
-    //pwmStepByStepSetDirection(ePWM1, ePWM2, ePWMUp);
-    //pwmStepByStepEnable(ePWM1, ePWM2);
-    //pwmStepByStepInit(ePWM1, ePWM2, 100, ePWMPrimaryTimeBase, ePWMDown);
-    //stateMountBigBall = true;
-    //timeMountBigBall = 0;
-    //uartWriteChar(eUART3, CHAR_MOUNT_BIG_BALL);
+    /*pwmStepByStepDisable(ePWM1, ePWM2);
+    stateBigWheel = false;*/
 }
 //INT3 interrupt
 void externalINT3Interrupt( void )
 {
-    //pwmStepByStepInit(ePWM3, ePWM4, 150, ePWMSecondaryTimeBase, ePWMDown);
-    //stateBigWheel = true;
+    /*setPwmFreq(MOUNT_BIG_BALL_FREQ, ePWMSecondaryTimeBase);
+    pwmStepByStepSetDirection(ePWM3, ePWM4, ePWMUp);
+    pwmStepByStepEnable(ePWM3, ePWM4);
+    dirMountBigBall = true;
+    //pwmStepByStepInit(ePWM3, ePWM4, 30, ePWMSecondaryTimeBase, ePWMUp);
+    stateMountBigBall = true;*/
 }
 //INT4 interrupt
 void externalINT4Interrupt( void )
 {
-  // user code
+    /*pwmStepByStepDisable(ePWM3, ePWM4);
+    stateMountBigBall = false;*/
 }
 
 /******************************************************************************/
@@ -151,8 +154,12 @@ void uart3RXInterrupt( void )
             state = RUN;
             break;
             
-        case CHAR_MOUNT_BIG_BALL:
-            flagMountBigBall = true;
+        case CHAR_MOUNT_BIG_BALL_UP:
+            flagMountBigBallUp = true;
+            break;
+            
+        case CHAR_MOUNT_BIG_BALL_DOWN:
+            flagMountBigBallDown = true;
             break;
             
         case CHAR_BIG_WHEEL:
@@ -305,29 +312,27 @@ void mainLoop(void)
                 if(firstLoop == true)
                 {
                     pwmStepByStepInit(ePWM1, ePWM2, BIG_WHEEL_FREQ_UP, ePWMPrimaryTimeBase, ePWMUp);
-                    pwmStepByStepDisable(ePWM1, ePWM2);
-                    pwmStepByStepInit(ePWM3, ePWM4, RAIL_FREQ, ePWMSecondaryTimeBase, ePWMUp);
-                    pwmStepByStepDisable(ePWM3, ePWM4);
+                    pwmStepByStepInit(ePWM3, ePWM4, MOUNT_BIG_BALL_FREQ, ePWMSecondaryTimeBase, ePWMUp);
                     
                     firstLoop = false;
                 }
                 
-                if(flagMountBigBall==true)
+                if(flagBigWheel==true)
                 {
-                    if(stateMountBigBall==true)
+                    if(stateBigWheel==true)
                     {
-                        if(dirMountBigBall == true)
+                        if(dirBigWheel==false)
                         {
                             pwmStepByStepDisable(ePWM1, ePWM2);
-                            stateMountBigBall = false;
-                            dirMountBigBall = false;
+                            stateBigWheel = false;
                         }
                         else
                         {
                             setPwmFreq(BIG_WHEEL_FREQ_DOWN, ePWMPrimaryTimeBase);
                             pwmStepByStepSetDirection(ePWM1, ePWM2, ePWMDown);
                             pwmStepByStepEnable(ePWM1, ePWM2);
-                            dirMountBigBall = true;
+                            //pwmStepByStepInit(ePWM1, ePWM2, RAIL_FREQ, ePWMPrimaryTimeBase, ePWMDown);
+                            dirBigWheel = false;
                         }
                     }
                     else
@@ -335,41 +340,50 @@ void mainLoop(void)
                         setPwmFreq(BIG_WHEEL_FREQ_UP, ePWMPrimaryTimeBase);
                         pwmStepByStepSetDirection(ePWM1, ePWM2, ePWMUp);
                         pwmStepByStepEnable(ePWM1, ePWM2);
-                        //pwmStepByStepInit(ePWM1, ePWM2, 30, ePWMPrimaryTimeBase, ePWMUp);
-                        stateMountBigBall = true;
-                        timeMountBigBall = 0;
+                        //pwmStepByStepInit(ePWM1, ePWM2, RAIL_FREQ, ePWMPrimaryTimeBase, ePWMUp);
+                        stateBigWheel = true;
+                        dirBigWheel = true;
                     }
-                    flagMountBigBall = false;
+                    flagBigWheel = false;
                 }
                 
-                if(flagBigWheel==true)
+                if(flagMountBigBallUp==true)
                 {
-                    if(stateBigWheel==true)
+                    if((stateMountBigBall==true)&&(dirMountBigBall == true))
                     {
-                        if(dirBigWheel==true)
-                        {
-                            pwmStepByStepDisable(ePWM3, ePWM4);
-                            stateBigWheel = false;
-                            dirBigWheel = false;
-                        }
-                        else
-                        {
-                            //setPwmFreq(100, ePWMSecondaryTimeBase);
-                            //pwmStepByStepSetDirection(ePWM3, ePWM4, ePWMDown);
-                            //pwmStepByStepEnable(ePWM3, ePWM4);
-                            pwmStepByStepInit(ePWM3, ePWM4, RAIL_FREQ, ePWMSecondaryTimeBase, ePWMDown);
-                            dirBigWheel = true;
-                        }
+                        pwmStepByStepDisable(ePWM3, ePWM4);
+                        stateMountBigBall = false;
                     }
                     else
                     {
-                        //setPwmFreq(100, ePWMSecondaryTimeBase);
-                        //pwmStepByStepSetDirection(ePWM3, ePWM4, ePWMUp);
-                        //pwmStepByStepEnable(ePWM3, ePWM4);
-                        pwmStepByStepInit(ePWM3, ePWM4, RAIL_FREQ, ePWMSecondaryTimeBase, ePWMUp);
-                        stateBigWheel = true;
+                        setPwmFreq(MOUNT_BIG_BALL_FREQ, ePWMSecondaryTimeBase);
+                        pwmStepByStepSetDirection(ePWM3, ePWM4, ePWMUp);
+                        pwmStepByStepEnable(ePWM3, ePWM4);
+                        dirMountBigBall = true;
+                        //pwmStepByStepInit(ePWM3, ePWM4, 30, ePWMSecondaryTimeBase, ePWMUp);
+                        stateMountBigBall = true;
+                        //timeMountBigBall = 0;
                     }
-                    flagBigWheel = false;
+                    flagMountBigBallUp = false;
+                }
+                if(flagMountBigBallDown==true)
+                {
+                    if((stateMountBigBall==true)&&(dirMountBigBall == false))
+                    {
+                        pwmStepByStepDisable(ePWM3, ePWM4);
+                        stateMountBigBall = false;
+                    }
+                    else
+                    {
+                        setPwmFreq(MOUNT_BIG_BALL_FREQ, ePWMSecondaryTimeBase);
+                        pwmStepByStepSetDirection(ePWM3, ePWM4, ePWMDown);
+                        pwmStepByStepEnable(ePWM3, ePWM4);
+                        dirMountBigBall = false;
+                        //pwmStepByStepInit(ePWM3, ePWM4, 30, ePWMSecondaryTimeBase, ePWMUp);
+                        stateMountBigBall = true;
+                        //timeMountBigBall = 0;
+                    }
+                    flagMountBigBallUp = false;
                 }
                 
                 break;
@@ -462,7 +476,10 @@ int16_t main(void)
     uartInit(eUART3, 115200);
     uartInterruptEnable(eUART3, eRX);
     
+    /*externInterruptInit(eINT1, eRisingEdge);
     externInterruptInit(eINT2, eRisingEdge);
+    externInterruptInit(eINT3, eRisingEdge);
+    externInterruptInit(eINT4, eRisingEdge);*/
 
 	_GENERAL_INTERRUPT_ENABLED_; // start the interrupt
     

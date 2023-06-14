@@ -66,10 +66,9 @@ typedef int8_t joySpeed_t;
 // Times
 #define TIME_MOUNT_BIG_BALL 1000    // t = TIME_MOUNT_BIG_BALL / 150
 
-#define RAIL_FREQ 300
-
 #define BIG_WHEEL_FREQ_UP 30
 #define BIG_WHEEL_FREQ_DOWN 60
+#define MOUNT_BIG_BALL_FREQ 300
 
 // Bit direction definition
 #define INPUT  1
