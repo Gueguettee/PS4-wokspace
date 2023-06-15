@@ -452,7 +452,7 @@ void pwmStepByStepEnable(pwm_t ePWMx, pwm_t ePWMx2)
     pwmEnable(ePWMx);
     pwmEnable(ePWMx2);
     
-    PTCONbits.PTEN = 0;     // Disable PWMx Module
+    /*PTCONbits.PTEN = 0;     // Disable PWMx Module
     
     // Trigger Interrupt Enable
     switch(ePWMx)
@@ -491,7 +491,7 @@ void pwmStepByStepEnable(pwm_t ePWMx, pwm_t ePWMx2)
             break;
     }
     
-    PTCONbits.PTEN = 1;     // Enable PWMx Module
+    PTCONbits.PTEN = 1;     // Enable PWMx Module*/
 }
 
 void pwmStepByStepDisable(pwm_t ePWMx, pwm_t ePWMx2)
@@ -499,7 +499,7 @@ void pwmStepByStepDisable(pwm_t ePWMx, pwm_t ePWMx2)
     pwmDisable(ePWMx);
     pwmDisable(ePWMx2);
     
-    PTCONbits.PTEN = 0;     // Disable PWMx Module
+    /*PTCONbits.PTEN = 0;     // Disable PWMx Module
     
     // Trigger Interrupt Enable
     switch(ePWMx)
@@ -532,7 +532,7 @@ void pwmStepByStepDisable(pwm_t ePWMx, pwm_t ePWMx2)
             break;
     }
     
-    PTCONbits.PTEN = 1;     // Enable PWMx Module
+    PTCONbits.PTEN = 1;     // Enable PWMx Module*/
 }
 
 void pwmStepByStepSetDirection(pwm_t ePWMx, pwm_t ePWMx2, pwmDirection_t pwmD)
@@ -764,6 +764,8 @@ void setPwmDuty(pwm_t ePWMx, uint16_t DC)
 
 void pwmEnable(pwm_t ePWMx)
 {
+    PTCONbits.PTEN = 0;     // Disable PWMx Module
+    
 	switch(ePWMx)
 	{
 		case ePWM1:
@@ -793,11 +795,15 @@ void pwmEnable(pwm_t ePWMx)
 		default:
 			break;
 	}
+    
+    PTCONbits.PTEN = 1;     // Enable PWMx Module
 }
 
 void pwmDisable(pwm_t ePWMx)
 {
-  switch(ePWMx)
+    PTCONbits.PTEN = 0;     // Disable PWMx Module
+    
+    switch(ePWMx)
 	{
 		case ePWM1:
 			IOCON1bits.PENH = 0x0;	// 1 PWM module control PWM1H, 0 GPIO module control PWM1H
@@ -826,10 +832,14 @@ void pwmDisable(pwm_t ePWMx)
 		default:
 			break;
 	}
+    
+    PTCONbits.PTEN = 1;     // Enable PWMx Module
 }
 
 void pwmDisableSide(pwm_t ePWMx, pwmSide_t ePWMSideX)
 {
+    PTCONbits.PTEN = 0;     // Disable PWMx Module
+    
     if(ePWMSideX == ePWMH)
     {
         switch(ePWMx)
@@ -882,6 +892,8 @@ void pwmDisableSide(pwm_t ePWMx, pwmSide_t ePWMSideX)
                 break;
         }
     }
+    
+    PTCONbits.PTEN = 1;     // Enable PWMx Module
 }
 
 /******************************************************************************/

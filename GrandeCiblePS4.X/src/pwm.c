@@ -618,6 +618,8 @@ void setPwmDuty(pwm_t ePWMx, uint16_t DC)
 
 void pwmEnable(pwm_t ePWMx)
 {
+    PTCONbits.PTEN = 0;     // Disable PWMx Module
+    
 	switch(ePWMx)
 	{
 		case ePWM1:
@@ -647,10 +649,14 @@ void pwmEnable(pwm_t ePWMx)
 		default:
 			break;
 	}
+    
+    PTCONbits.PTEN = 1;     // Enable PWMx Module
 }
 
 void pwmEnableSide(pwm_t ePWMx, pwmSide_t ePWMSideX)
 {
+    PTCONbits.PTEN = 0;     // Disable PWMx Module
+    
     if(ePWMSideX == ePWMH)
     {
         switch(ePWMx)
@@ -709,11 +715,15 @@ void pwmEnableSide(pwm_t ePWMx, pwmSide_t ePWMSideX)
                 break;
         }
     }
+    
+    PTCONbits.PTEN = 1;     // Enable PWMx Module
 }
 
 void pwmDisable(pwm_t ePWMx)
 {
-  switch(ePWMx)
+    PTCONbits.PTEN = 0;     // Disable PWMx Module
+    
+    switch(ePWMx)
 	{
 		case ePWM1:
 			IOCON1bits.PENH = 0x0;	// 1 PWM module control PWM1H, 0 GPIO module control PWM1H
@@ -742,10 +752,14 @@ void pwmDisable(pwm_t ePWMx)
 		default:
 			break;
 	}
+  
+    PTCONbits.PTEN = 1;     // Enable PWMx Module
 }
 
 void pwmDisableSide(pwm_t ePWMx, pwmSide_t ePWMSideX)
 {
+    PTCONbits.PTEN = 0;     // Disable PWMx Module
+    
     if(ePWMSideX == ePWMH)
     {
         switch(ePWMx)
@@ -798,6 +812,8 @@ void pwmDisableSide(pwm_t ePWMx, pwmSide_t ePWMSideX)
                 break;
         }
     }
+    
+    PTCONbits.PTEN = 1;     // Enable PWMx Module
 }
 
 /******************************************************************************/
