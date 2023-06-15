@@ -50,20 +50,25 @@ void externalINT0Interrupt( void )
 //INT1 interrupt
 void externalINT1Interrupt( void )
 {
-    /*setPwmFreq(BIG_WHEEL_FREQ_DOWN, ePWMPrimaryTimeBase);
-    pwmStepByStepSetDirection(ePWM1, ePWM2, ePWMDown);
-    pwmStepByStepEnable(ePWM1, ePWM2);
-    //pwmStepByStepInit(ePWM1, ePWM2, RAIL_FREQ, ePWMPrimaryTimeBase, ePWMDown);
-    dirBigWheel = false;*/
+    
 }
 //INT2 interrupt
 void externalINT2Interrupt( void )
 {
-    /*pwmStepByStepDisable(ePWM1, ePWM2);
-    stateBigWheel = false;*/
+    setPwmFreq(BIG_WHEEL_FREQ_DOWN, ePWMPrimaryTimeBase);
+    pwmStepByStepSetDirection(ePWM1, ePWM2, ePWMDown);
+    pwmStepByStepEnable(ePWM1, ePWM2);
+    //pwmStepByStepInit(ePWM1, ePWM2, RAIL_FREQ, ePWMPrimaryTimeBase, ePWMDown);
+    dirBigWheel = false;
 }
 //INT3 interrupt
 void externalINT3Interrupt( void )
+{
+    pwmStepByStepDisable(ePWM1, ePWM2);
+    stateBigWheel = false;
+}
+//INT4 interrupt
+void externalINT4Interrupt( void )
 {
     /*setPwmFreq(MOUNT_BIG_BALL_FREQ, ePWMSecondaryTimeBase);
     pwmStepByStepSetDirection(ePWM3, ePWM4, ePWMUp);
@@ -71,10 +76,6 @@ void externalINT3Interrupt( void )
     dirMountBigBall = true;
     //pwmStepByStepInit(ePWM3, ePWM4, 30, ePWMSecondaryTimeBase, ePWMUp);
     stateMountBigBall = true;*/
-}
-//INT4 interrupt
-void externalINT4Interrupt( void )
-{
     /*pwmStepByStepDisable(ePWM3, ePWM4);
     stateMountBigBall = false;*/
 }
@@ -347,25 +348,6 @@ void mainLoop(void)
                     flagBigWheel = false;
                 }
                 
-                if(flagMountBigBallUp==true)
-                {
-                    if((stateMountBigBall==true)&&(dirMountBigBall == true))
-                    {
-                        pwmStepByStepDisable(ePWM3, ePWM4);
-                        stateMountBigBall = false;
-                    }
-                    else
-                    {
-                        setPwmFreq(MOUNT_BIG_BALL_FREQ, ePWMSecondaryTimeBase);
-                        pwmStepByStepSetDirection(ePWM3, ePWM4, ePWMUp);
-                        pwmStepByStepEnable(ePWM3, ePWM4);
-                        dirMountBigBall = true;
-                        //pwmStepByStepInit(ePWM3, ePWM4, 30, ePWMSecondaryTimeBase, ePWMUp);
-                        stateMountBigBall = true;
-                        //timeMountBigBall = 0;
-                    }
-                    flagMountBigBallUp = false;
-                }
                 if(flagMountBigBallDown==true)
                 {
                     if((stateMountBigBall==true)&&(dirMountBigBall == false))
@@ -379,6 +361,25 @@ void mainLoop(void)
                         pwmStepByStepSetDirection(ePWM3, ePWM4, ePWMDown);
                         pwmStepByStepEnable(ePWM3, ePWM4);
                         dirMountBigBall = false;
+                        //pwmStepByStepInit(ePWM3, ePWM4, 30, ePWMSecondaryTimeBase, ePWMUp);
+                        stateMountBigBall = true;
+                        //timeMountBigBall = 0;
+                    }
+                    flagMountBigBallDown = false;
+                }
+                if(flagMountBigBallUp==true)
+                {
+                    if((stateMountBigBall==true)&&(dirMountBigBall == true))
+                    {
+                        pwmStepByStepDisable(ePWM3, ePWM4);
+                        stateMountBigBall = false;
+                    }
+                    else
+                    {
+                        setPwmFreq(MOUNT_BIG_BALL_FREQ, ePWMSecondaryTimeBase);
+                        pwmStepByStepSetDirection(ePWM3, ePWM4, ePWMUp);
+                        pwmStepByStepEnable(ePWM3, ePWM4);
+                        dirMountBigBall = true;
                         //pwmStepByStepInit(ePWM3, ePWM4, 30, ePWMSecondaryTimeBase, ePWMUp);
                         stateMountBigBall = true;
                         //timeMountBigBall = 0;
@@ -476,10 +477,9 @@ int16_t main(void)
     uartInit(eUART3, 115200);
     uartInterruptEnable(eUART3, eRX);
     
-    /*externInterruptInit(eINT1, eRisingEdge);
     externInterruptInit(eINT2, eRisingEdge);
     externInterruptInit(eINT3, eRisingEdge);
-    externInterruptInit(eINT4, eRisingEdge);*/
+    //externInterruptInit(eINT4, eRisingEdge);
 
 	_GENERAL_INTERRUPT_ENABLED_; // start the interrupt
     

@@ -28,8 +28,9 @@ typedef enum{
 /*                                 DEFINITION                                 */
 /******************************************************************************/
 
-#define N_STEP_JOY 20   // max 48/2-1
-#define JOY2_VALUE 0x30
+#define N_STEP_JOY 10   // max 48/2-1
+#define JOY1_VALUE 0x30
+#define JOY2_VALUE 0x50
 
 #define CHAR_PING 'v'
 #define CHAR_PING_OK 'w'

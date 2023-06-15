@@ -46,11 +46,11 @@ char SpeedToChar(uint16_t valueInt, joystick_t joystick)
 {
     if(joystick == eJoyX)
     {
-        return((char)valueInt); //(valueInt + '0')
+        return((char)(JOY1_VALUE + (char)valueInt)); //(valueInt + '0')
     }
     else
     {
-        return((char)((0x30) + (char)valueInt)); //(valueInt-10) + 'A')
+        return((char)(JOY2_VALUE + (char)valueInt)); //(valueInt-10) + 'A')
     }
 }
 

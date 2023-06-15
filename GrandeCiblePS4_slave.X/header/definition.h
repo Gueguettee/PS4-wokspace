@@ -53,7 +53,7 @@ typedef enum{
 typedef int8_t joySpeed_t;
 
 // Temp system loop
-#define SYS_LOOP 20
+#define SYS_LOOP 10
 
 // General Interrupt Enable/Disable Macro
 #define _GENERAL_INTERRUPT_ENABLED_  INTCON2bits.GIE = 1
@@ -68,7 +68,7 @@ typedef int8_t joySpeed_t;
 
 #define BIG_WHEEL_FREQ_UP 30
 #define BIG_WHEEL_FREQ_DOWN 60
-#define MOUNT_BIG_BALL_FREQ 300
+#define MOUNT_BIG_BALL_FREQ 250
 
 // Bit direction definition
 #define INPUT  1

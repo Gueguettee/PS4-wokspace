@@ -339,50 +339,50 @@ void pwmStepByStepInit(pwm_t ePWMx, pwm_t ePWMx2, uint16_t pwmFreq, pwmPER_t exP
     switch(ePWMx)
     {
         case ePWM1:
-            PWMCON1bits.TRGIEN = 1;     // Trigger event generates an interrupt ?
+            /*PWMCON1bits.TRGIEN = 1;     // Trigger event generates an interrupt ?
             IPC23bits.PWM1IP = 0x5;     // Set priority of interruption at 5
             IFS5bits.PWM1IF = 0;        // Clear PWM1 interrupt flag
-            IEC5bits.PWM1IE = 1;        // Enable PWM1 interrupt
+            IEC5bits.PWM1IE = 1;        // Enable PWM1 interrupt*/
             IOCON1bits.POLH = pwmD;    // PWMxH pin is active-high
             IOCON1bits.POLL = pwmD;    // PWMxL pin is active-high
             break;
         case ePWM2:
-            PWMCON2bits.TRGIEN = 1;     // A trigger event generates an IRQ
+            /*PWMCON2bits.TRGIEN = 1;     // A trigger event generates an IRQ
             IPC23bits.PWM2IP = 0x5;     // Set priority
             IFS5bits.PWM2IF = 0;        // Clear PWM interrupt flag
-            IEC5bits.PWM2IE = 1;        // Enable PWM interrupt
+            IEC5bits.PWM2IE = 1;        // Enable PWM interrupt*/
             IOCON2bits.POLH = pwmD;    // PWMxH pin is active-high
             IOCON2bits.POLL = pwmD;    // PWMxL pin is active-high
             break;
         case ePWM3:
-            PWMCON3bits.TRGIEN = 1;     // A trigger event generates an IRQ
+            /*PWMCON3bits.TRGIEN = 1;     // A trigger event generates an IRQ
             IPC24bits.PWM3IP = 0x5;     // Set priority
             IFS6bits.PWM3IF = 0;        // Clear PWM interrupt flag
-            IEC6bits.PWM3IE = 1;        // Enable PWM interrupt
+            IEC6bits.PWM3IE = 1;        // Enable PWM interrupt*/
             IOCON3bits.POLH = pwmD;    // PWMxH pin is active-high
             IOCON3bits.POLL = pwmD;    // PWMxL pin is active-highh
             break;
         case ePWM4:
-            PWMCON4bits.TRGIEN = 1;     // A trigger event generates an IRQ
+            /*PWMCON4bits.TRGIEN = 1;     // A trigger event generates an IRQ
             IPC24bits.PWM4IP = 0x5;     // Set priority
             IFS6bits.PWM4IF = 0;        // Clear PWM interrupt flag
-            IEC6bits.PWM4IE = 1;        // Enable PWM interrupt
+            IEC6bits.PWM4IE = 1;        // Enable PWM interrupt*/
             IOCON4bits.POLH = pwmD;    // PWMxH pin is active-high
             IOCON4bits.POLL = pwmD;    // PWMxL pin is active-highh
             break;
         case ePWM5:
-            PWMCON5bits.TRGIEN = 1;     // A trigger event generates an IRQ
+            /*PWMCON5bits.TRGIEN = 1;     // A trigger event generates an IRQ
             IPC24bits.PWM5IP = 0x5;     // Set priority
             IFS6bits.PWM5IF = 0;        // Clear PWM interrupt flag
-            IEC6bits.PWM5IE = 1;        // Enable PWM interrupt
+            IEC6bits.PWM5IE = 1;        // Enable PWM interrupt*/
             IOCON5bits.POLH = pwmD;    // PWMxH pin is active-high
             IOCON5bits.POLL = pwmD;    // PWMxL pin is active-highh
             break;
         case ePWM6:
-            PWMCON6bits.TRGIEN = 1;     // A trigger event generates an IRQ
+            /*PWMCON6bits.TRGIEN = 1;     // A trigger event generates an IRQ
             IPC24bits.PWM6IP = 0x5;     // Set priority
             IFS6bits.PWM6IF = 0;        // Clear PWM interrupt flag
-            IEC6bits.PWM6IE = 1;        // Enable PWM interrupt
+            IEC6bits.PWM6IE = 1;        // Enable PWM interrupt*/
             IOCON6bits.POLH = pwmD;    // PWMxH pin is active-high
             IOCON6bits.POLL = pwmD;    // PWMxL pin is active-highh
             break;
@@ -393,59 +393,56 @@ void pwmStepByStepInit(pwm_t ePWMx, pwm_t ePWMx2, uint16_t pwmFreq, pwmPER_t exP
     switch(ePWMx2)
     {
         case ePWM1:
-            PWMCON1bits.TRGIEN = 1;     // Trigger event generates an interrupt ?
+            /*PWMCON1bits.TRGIEN = 1;     // Trigger event generates an interrupt ?
             IPC23bits.PWM1IP = 0x5;     // Set priority of interruption at 5
             IFS5bits.PWM1IF = 0;        // Clear PWM1 interrupt flag
-            IEC5bits.PWM1IE = 1;        // Enable PWM1 interrupt
+            IEC5bits.PWM1IE = 1;        // Enable PWM1 interrupt*/
             IOCON1bits.POLH = 0;    // PWMxH pin is active-high
             IOCON1bits.POLL = 0;    // PWMxL pin is active-high
             break;
         case ePWM2:
-            PWMCON2bits.TRGIEN = 1;     // A trigger event generates an IRQ
+            /*PWMCON2bits.TRGIEN = 1;     // A trigger event generates an IRQ
             IPC23bits.PWM2IP = 0x5;     // Set priority
             IFS5bits.PWM2IF = 0;        // Clear PWM interrupt flag
-            IEC5bits.PWM2IE = 1;        // Enable PWM interrupt
+            IEC5bits.PWM2IE = 1;        // Enable PWM interrupt*/
             IOCON2bits.POLH = 0;    // PWMxH pin is active-high
             IOCON2bits.POLL = 0;    // PWMxL pin is active-high
             break;
         case ePWM3:
-            PWMCON3bits.TRGIEN = 1;     // A trigger event generates an IRQ
+            /*PWMCON3bits.TRGIEN = 1;     // A trigger event generates an IRQ
             IPC24bits.PWM3IP = 0x5;     // Set priority
             IFS6bits.PWM3IF = 0;        // Clear PWM interrupt flag
-            IEC6bits.PWM3IE = 1;        // Enable PWM interrupt
+            IEC6bits.PWM3IE = 1;        // Enable PWM interrupt*/
             IOCON3bits.POLH = 0;    // PWMxH pin is active-high
             IOCON3bits.POLL = 0;    // PWMxL pin is active-highh
             break;
         case ePWM4:
-            PWMCON4bits.TRGIEN = 1;     // A trigger event generates an IRQ
+            /*PWMCON4bits.TRGIEN = 1;     // A trigger event generates an IRQ
             IPC24bits.PWM4IP = 0x5;     // Set priority
             IFS6bits.PWM4IF = 0;        // Clear PWM interrupt flag
-            IEC6bits.PWM4IE = 1;        // Enable PWM interrupt
+            IEC6bits.PWM4IE = 1;        // Enable PWM interrupt*/
             IOCON4bits.POLH = 0;    // PWMxH pin is active-high
             IOCON4bits.POLL = 0;    // PWMxL pin is active-highh
             break;
         case ePWM5:
-            PWMCON5bits.TRGIEN = 1;     // A trigger event generates an IRQ
+            /*PWMCON5bits.TRGIEN = 1;     // A trigger event generates an IRQ
             IPC24bits.PWM5IP = 0x5;     // Set priority
             IFS6bits.PWM5IF = 0;        // Clear PWM interrupt flag
-            IEC6bits.PWM5IE = 1;        // Enable PWM interrupt
+            IEC6bits.PWM5IE = 1;        // Enable PWM interrupt*/
             IOCON5bits.POLH = 0;    // PWMxH pin is active-high
             IOCON5bits.POLL = 0;    // PWMxL pin is active-highh
             break;
         case ePWM6:
-            PWMCON6bits.TRGIEN = 1;     // A trigger event generates an IRQ
+            /*PWMCON6bits.TRGIEN = 1;     // A trigger event generates an IRQ
             IPC24bits.PWM6IP = 0x5;     // Set priority
             IFS6bits.PWM6IF = 0;        // Clear PWM interrupt flag
-            IEC6bits.PWM6IE = 1;        // Enable PWM interrupt
+            IEC6bits.PWM6IE = 1;        // Enable PWM interrupt*/
             IOCON6bits.POLH = 0;    // PWMxH pin is active-high
             IOCON6bits.POLL = 0;    // PWMxL pin is active-high
             break;
         default:
             break;
     }
-            
-    pwmEnable(ePWMx);
-    pwmEnable(ePWMx2);
     
     PTCONbits.PTEN = 1;     // Enable PWMx Module
 }
