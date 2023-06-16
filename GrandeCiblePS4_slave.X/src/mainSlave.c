@@ -76,8 +76,8 @@ void externalINT4Interrupt( void )
     dirMountBigBall = true;
     //pwmStepByStepInit(ePWM3, ePWM4, 30, ePWMSecondaryTimeBase, ePWMUp);
     stateMountBigBall = true;*/
-    /*pwmStepByStepDisable(ePWM3, ePWM4);
-    stateMountBigBall = false;*/
+    pwmStepByStepDisable(ePWM3, ePWM4);
+    stateMountBigBall = false;
 }
 
 /******************************************************************************/
@@ -367,7 +367,7 @@ void mainLoop(void)
                     }
                     flagMountBigBallDown = false;
                 }
-                if(flagMountBigBallUp==true)
+                else if(flagMountBigBallUp==true)
                 {
                     if((stateMountBigBall==true)&&(dirMountBigBall == true))
                     {
@@ -385,6 +385,19 @@ void mainLoop(void)
                         //timeMountBigBall = 0;
                     }
                     flagMountBigBallUp = false;
+                }
+                else if(stateMountBigBall==true)
+                {
+                    if((gpioBitRead(ePORTE, pinRE8) == LOW)&&(dirMountBigBall == true))
+                    {
+                        pwmStepByStepDisable(ePWM3, ePWM4);
+                        stateMountBigBall = false;
+                    }
+                    else if((gpioBitRead(ePORTE, pinRE9) == LOW)&&(dirMountBigBall == false))
+                    {
+                        pwmStepByStepDisable(ePWM3, ePWM4);
+                        stateMountBigBall = false;
+                    }
                 }
                 
                 break;
@@ -477,9 +490,9 @@ int16_t main(void)
     uartInit(eUART3, 115200);
     uartInterruptEnable(eUART3, eRX);
     
-    externInterruptInit(eINT2, eRisingEdge);
-    externInterruptInit(eINT3, eRisingEdge);
-    //externInterruptInit(eINT4, eRisingEdge);
+    externInterruptInit(eINT2, eFallingEdge);
+    externInterruptInit(eINT3, eFallingEdge);
+    //externInterruptInit(eINT4, eFallingEdge);
 
 	_GENERAL_INTERRUPT_ENABLED_; // start the interrupt
     

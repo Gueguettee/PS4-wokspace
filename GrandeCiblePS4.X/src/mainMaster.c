@@ -358,7 +358,10 @@ void mainLoop(void)
                 {
                     setPwmFreq(DC_FREQ, ePWMPrimaryTimeBase);
                     pwmInit(ePWM1,ePWMPrimaryTimeBase, ePWMModeCompl);
+                    pwmInit(ePWM4,ePWMPrimaryTimeBase, ePWMModeCompl);
                     setPwmDuty(ePWM1, 
+                        (uint16_t)(5000));
+                    setPwmDuty(ePWM4, 
                         (uint16_t)(5000));
 
                     setPwmFreq(SERVO_FREQ, ePWMSecondaryTimeBase);
@@ -379,6 +382,7 @@ void mainLoop(void)
                 if(tempSpeed[eJoyX] == 0)
                 {
                     pwmDisable(ePWM1);
+                    pwmDisable(ePWM4);
                     lastSpeed[eJoyX] = tempSpeed[eJoyX];
                 }
                 else
@@ -389,13 +393,19 @@ void mainLoop(void)
                         {
                             setPwmDuty(ePWM1, 
                                 (uint16_t)(10000/N_STEP_JOY*tempSpeed[eJoyX]));
+                            setPwmDuty(ePWM4, 
+                                (uint16_t)(10000/N_STEP_JOY*tempSpeed[eJoyX]));
                             pwmEnableSide(ePWM1, ePWMH);
+                            pwmEnableSide(ePWM4, ePWMH);
                         }
                         else
                         {
                             setPwmDuty(ePWM1, 
                                 (uint16_t)(10000/N_STEP_JOY*(N_STEP_JOY+tempSpeed[eJoyX])));    //'+' car tempSpeed negatif
+                            setPwmDuty(ePWM4, 
+                                (uint16_t)(10000/N_STEP_JOY*(N_STEP_JOY+tempSpeed[eJoyX])));    //'+' car tempSpeed negatif
                             pwmEnableSide(ePWM1, ePWML);
+                            pwmEnableSide(ePWM4, ePWML);
                         }
                         lastSpeed[eJoyX] = tempSpeed[eJoyX];
                     }
@@ -406,6 +416,53 @@ void mainLoop(void)
                     setPwmDuty(ePWM2, 
                         (SERVO_MIDDLE_DUTY_ON + SERVO_GAP_DUTY_ON/N_STEP_JOY*tempSpeed[eJoyY]));
                     lastSpeed[eJoyY] = tempSpeed[eJoyY];
+                    
+                    /*if(tempSpeed[eJoyX] == 0)
+                    {
+                        if(tempSpeed[eJoyY] > 0)
+                        {
+                            setPwmDuty(ePWM1, 
+                                (uint16_t)(10000/N_STEP_JOY*tempSpeed[eJoyY]));
+                            pwmEnableSide(ePWM1, ePWMH);
+                        }
+                        else
+                        {
+                            setPwmDuty(ePWM4, 
+                                (uint16_t)(10000/N_STEP_JOY*(-tempSpeed[eJoyY])));
+                            pwmEnableSide(ePWM4, ePWMH);
+                        }
+                    }
+                    else
+                    {
+                        if(tempSpeed[eJoyX] > 0)
+                        {
+                            if(tempSpeed[eJoyY] > 0)
+                            {
+                                setPwmDuty(ePWM1, 
+                                    ((10000/N_STEP_JOY*(uint16_t)tempSpeed[eJoyX])+(N_STEP_JOY-(uint16_t)tempSpeed[eJoyX])*10000*(uint16_t)tempSpeed[eJoyY]/N_STEP_JOY));
+                            }
+                            else
+                            {
+                                setPwmDuty(ePWM4, 
+                                    ((10000/N_STEP_JOY*(uint16_t)tempSpeed[eJoyX])+(N_STEP_JOY-(uint16_t)tempSpeed[eJoyX])*10000*(uint16_t)tempSpeed[eJoyY]/N_STEP_JOY));
+                            }
+                        }
+                        else
+                        {
+                            if(tempSpeed[eJoyY] > 0)
+                            {
+                                setPwmDuty(ePWM1, 
+                                    ((10000/N_STEP_JOY*(N_STEP_JOY+(uint16_t)tempSpeed[eJoyX]))
+                                        +(uint16_t)(-tempSpeed[eJoyX])*10000*(uint16_t)(-tempSpeed[eJoyY])/N_STEP_JOY));
+                            }
+                            else
+                            {
+                                setPwmDuty(ePWM4, 
+                                    ((10000/N_STEP_JOY*(N_STEP_JOY+(uint16_t)tempSpeed[eJoyX]))
+                                        +(uint16_t)(-tempSpeed[eJoyX])*10000*(uint16_t)(-tempSpeed[eJoyY])/N_STEP_JOY));
+                            }
+                        }
+                    }*/
                 }
                 
                 if(flagMountBigBallUp == true)
@@ -478,8 +535,8 @@ void mainLoop(void)
                     fClapet = false;
                 }
                 
-                pwmEnable(ePWM2);
-                pwmEnable(ePWM3);
+                //pwmEnable(ePWM2);
+                //pwmEnable(ePWM3);
                 
                 break;
             }

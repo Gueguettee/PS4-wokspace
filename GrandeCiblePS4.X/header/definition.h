@@ -78,7 +78,7 @@ typedef int8_t joyspeed_t;
 
 #define SERVO_FREQ 50
 
-#define DC_FREQ 150
+#define DC_FREQ 10000
 
 // Times
 #define TIME_BIG_WHEEL 10000
