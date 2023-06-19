@@ -348,6 +348,23 @@ void mainLoop(void)
                     }
                     flagBigWheel = false;
                 }
+                else if(stateBigWheel==true)
+                {
+                    if((gpioBitRead(ePORTA, pinRA12) == LOW)&&(dirBigWheel == true))
+                    {
+                        setPwmFreq(BIG_WHEEL_FREQ_DOWN, ePWMPrimaryTimeBase);
+                        pwmStepByStepSetDirection(ePWM1, ePWM2, ePWMDown);
+                        pwmStepByStepEnable(ePWM1, ePWM2);
+                        //pwmStepByStepInit(ePWM1, ePWM2, RAIL_FREQ, ePWMPrimaryTimeBase, ePWMDown);
+                        dirBigWheel = false;
+                        stateBigWheel = true;
+                    }
+                    else if((gpioBitRead(ePORTA, pinRA14) == LOW)&&(dirBigWheel == false))
+                    {
+                        pwmStepByStepDisable(ePWM1, ePWM2);
+                        stateBigWheel = false;
+                    }
+                }
                 
                 if(flagMountBigBallDown==true)
                 {
@@ -491,8 +508,8 @@ int16_t main(void)
     uartInit(eUART3, 115200);
     uartInterruptEnable(eUART3, eRX);
     
-    externInterruptInit(eINT2, eFallingEdge);
-    externInterruptInit(eINT3, eFallingEdge);
+    //externInterruptInit(eINT2, eFallingEdge);
+    //externInterruptInit(eINT3, eFallingEdge);
     //externInterruptInit(eINT4, eFallingEdge);
 
 	_GENERAL_INTERRUPT_ENABLED_; // start the interrupt

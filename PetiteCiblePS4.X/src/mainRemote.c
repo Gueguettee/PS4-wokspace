@@ -275,6 +275,7 @@ void mainLoop(void)
                     lastJoySpeed[eJoyY] = JoystickToSpeedChar(eJoyY);
                     firstLoop = false;
                 }
+                
                 char speed[2] = 
                     {JoystickToSpeedChar(eJoyX),
                     JoystickToSpeedChar(eJoyY)};

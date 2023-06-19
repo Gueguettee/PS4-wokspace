@@ -21,8 +21,11 @@
 typedef enum{
   eJoyX,
   eJoyY,
-  eNbrOfJoy
+  eNbrOfJoy,
+  eJoyNone
 }joystick_t;
+
+
 
 /******************************************************************************/
 /*                                 DEFINITION                                 */
