@@ -67,29 +67,35 @@ void JoystickInit(void)
     
 char JoystickToSpeedChar(joystick_t joystick)
 {   
-    joySpeed_t value = adcChannelRead(AN_JOYSTICK[joystick]);
+    joySpeed_t value = adcChannelRead(AN_JOYSTICK[joystick]);   //lecture ADC
     joySpeed_t step = 0;
     
-    if(value >= middleJoyValue[joystick])
+    if(value >= middleJoyValue[joystick])   //si joysitck déplacé en avant
     {
         for(step=N_STEP_JOY; step>0; step--)
         {
+            // test si la valeur est plus grande que tant de step
             if(value >= (middleJoyValue[joystick]+(step+1)*stepPos[joystick]))
             {
                 return(SpeedToChar(N_STEP_JOY+step, joystick));
             }
         }
+        //Sinon retourne valeur milieu (joystick au centre)
         return(SpeedToChar(N_STEP_JOY, joystick));
     }
-    else
+    else        //joystick déplacé en arrière
     {
         for(step=N_STEP_JOY; step>0; step--)
         {
+            // test si la valeur est plus petite que tant de step
             if(value <= (middleJoyValue[joystick]-(step+1)*stepNeg[joystick]))
             {
+                //Renvoie la valeur en négatif additionné au nombre de STEP total
+                //dans le but de n'avoir que des valeurs non-signées
                 return(SpeedToChar(N_STEP_JOY-step, joystick));
             }
         }
+        //Sinon retourne valeur valeur milieu (joystick au centre) 
         return(SpeedToChar(N_STEP_JOY, joystick));
     }
 }
