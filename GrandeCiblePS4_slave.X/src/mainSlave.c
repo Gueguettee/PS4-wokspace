@@ -60,6 +60,7 @@ void externalINT2Interrupt( void )
     pwmStepByStepEnable(ePWM1, ePWM2);
     //pwmStepByStepInit(ePWM1, ePWM2, RAIL_FREQ, ePWMPrimaryTimeBase, ePWMDown);
     dirBigWheel = false;
+    stateBigWheel = true;
 }
 //INT3 interrupt
 void externalINT3Interrupt( void )

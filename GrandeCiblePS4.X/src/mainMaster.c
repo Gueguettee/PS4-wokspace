@@ -200,7 +200,7 @@ void uart3TXInterrupt( void )
 void xbeeRXInterrupt( void )
 { 
     xbeeChar = xbeeReadChar();
-    uartWriteChar(eUART2, xbeeChar);    ////////////////////
+    //uartWriteChar(eUART2, xbeeChar);  // for debug
     
     switch(xbeeChar)
     {
@@ -535,9 +535,6 @@ void mainLoop(void)
                     fClapet = false;
                 }
                 
-                //pwmEnable(ePWM2);
-                //pwmEnable(ePWM3);
-                
                 break;
             }
             default:
@@ -625,8 +622,8 @@ int16_t main(void)
     
 	// TBD: INITIALIZATION OF THE USER USED MODULE
   
-    uartInit(eUART2, 9600);
-    uartInterruptEnable(eUART2, eRX);
+    //uartInit(eUART2, 9600);
+    //uartInterruptEnable(eUART2, eRX);
     uartInit(eUART3, 115200);
     uartInterruptEnable(eUART3, eRX);
     
