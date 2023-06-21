@@ -24,21 +24,13 @@
 /******************************************************************************/
 char state = WAIT_CONNECTION;
 
+char speedChar[eNbrOfJoy] = {(JOY1_VALUE+N_STEP_JOY), (JOY2_VALUE+N_STEP_JOY)};
+
 bool flagBigWheel = false;
-//bool stateBigWheel = false;
 bool flagMountBigBallUp = false;
 bool flagMountBigBallDown = false;
-//bool stateMountBigBall = false;
 bool fVerin = false;
-verinState_t stateVerin = eVerinNotPull;
 bool fClapet = false;
-bool stateClapet = false;
-
-char xbeeChar = '0';
-char lastXbeeChar = '0';
-char speedChar[eNbrOfJoy] = {0};
-
-joyspeed_t lastSpeed[eNbrOfJoy] = {0};
 
 /******************************************************************************/
 /*                               User functions                               */
@@ -199,7 +191,8 @@ void uart3TXInterrupt( void )
 /******************************************************************************/
 //XBee RX interrupt
 void xbeeRXInterrupt( void )
-{ 
+{
+    static xbeeChar;
     xbeeChar = xbeeReadChar();
     //uartWriteChar(eUART2, xbeeChar);  // for debug
     
@@ -235,7 +228,11 @@ void xbeeRXInterrupt( void )
             break;
 
         default:
-            speedChar[SpeedcharToJoystick(xbeeChar)] = xbeeChar;
+            joystick_t joy = SpeedcharToJoystick(xbeeChar);
+            if(joy != eJoyNone)
+            {
+                speedChar[joy] = xbeeChar;
+            }
             break;
     }
 }
@@ -338,6 +335,11 @@ void PWM6Interrupt( void )
 void mainLoop(void)
 {
 	// TBD: USER CODE HERE
+    joyspeed_t lastSpeed[eNbrOfJoy] = {0};
+    
+    verinState_t stateVerin = eVerinNotPull;
+    bool stateClapet = false;
+    
     static uint16_t sysCounter=0;
     static bool firstLoop = true;
     if (SYS_LOOP==sysCounter++)
