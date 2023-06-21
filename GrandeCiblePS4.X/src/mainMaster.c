@@ -382,7 +382,8 @@ void mainLoop(void)
                     {SpeedcharToJoyspeed(speedChar[eJoyX], eJoyX), 
                     SpeedcharToJoyspeed(speedChar[eJoyY], eJoyY)};
                 
-                if(tempSpeed[eJoyX] != lastSpeed[eJoyX])
+                if((tempSpeed[eJoyX] != lastSpeed[eJoyX])
+                        &&(tempSpeed[eJoyY] == 0))
                 {
                     if(tempSpeed[eJoyX] == 0)
                     {
@@ -414,8 +415,11 @@ void mainLoop(void)
                 {
                     setPwmDuty(ePWM2, 
                         (SERVO_MIDDLE_DUTY_ON + SERVO_GAP_DUTY_ON/N_STEP_JOY*tempSpeed[eJoyY]));
-                    lastSpeed[eJoyY] = tempSpeed[eJoyY];
-                    
+                }
+                
+                if((tempSpeed[eJoyY] != lastSpeed[eJoyY])||
+                        ((tempSpeed[eJoyY] != 0)&&(tempSpeed[eJoyX]!=lastSpeed[eJoyX])))
+                {
                     if(tempSpeed[eJoyX] == 0)
                     {
                         if(tempSpeed[eJoyY] > 0)
@@ -467,6 +471,8 @@ void mainLoop(void)
                             }
                         }
                     }
+                    lastSpeed[eJoyX] = tempSpeed[eJoyX];
+                    lastSpeed[eJoyY] = tempSpeed[eJoyY];
                 }
                 
                 if(flagMountBigBallUp == true)
