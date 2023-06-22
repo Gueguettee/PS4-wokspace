@@ -29,7 +29,8 @@ char speedChar[eNbrOfJoy] = {(JOY1_VALUE+N_STEP_JOY), (JOY2_VALUE+N_STEP_JOY)};
 bool flagBigWheel = false;
 bool flagMountBigBallUp = false;
 bool flagMountBigBallDown = false;
-bool fVerin = false;
+bool fVerinUp = false;
+bool fVerinDown = false;
 bool fClapet = false;
 
 /******************************************************************************/
@@ -192,7 +193,8 @@ void uart3TXInterrupt( void )
 //XBee RX interrupt
 void xbeeRXInterrupt( void )
 {
-    static xbeeChar;
+    static char xbeeChar;
+    joystick_t joy;
     xbeeChar = xbeeReadChar();
     //uartWriteChar(eUART2, xbeeChar);  // for debug
     
@@ -219,8 +221,12 @@ void xbeeRXInterrupt( void )
             flagMountBigBallDown = true;
             break;
 
-        case CHAR_VERIN:
-            fVerin = true;
+        case CHAR_VERIN_UP:
+            fVerinUp = true;
+            break;
+            
+        case CHAR_VERIN_DOWN:
+            fVerinDown = true;
             break;
 
         case CHAR_CLAPET:
@@ -228,7 +234,7 @@ void xbeeRXInterrupt( void )
             break;
 
         default:
-            joystick_t joy = SpeedcharToJoystick(xbeeChar);
+            joy = SpeedcharToJoystick(xbeeChar);
             if(joy != eJoyNone)
             {
                 speedChar[joy] = xbeeChar;
@@ -335,13 +341,14 @@ void PWM6Interrupt( void )
 void mainLoop(void)
 {
 	// TBD: USER CODE HERE
-    joyspeed_t lastSpeed[eNbrOfJoy] = {0};
+    static joyspeed_t lastSpeed[eNbrOfJoy] = {0};
     
-    verinState_t stateVerin = eVerinNotPull;
-    bool stateClapet = false;
+    static verinState_t stateVerin = eVerinNotPull;
+    static bool stateClapet = false;
     
     static uint16_t sysCounter=0;
     static bool firstLoop = true;
+    
     if (SYS_LOOP==sysCounter++)
     {              
         switch(state)
@@ -371,7 +378,7 @@ void mainLoop(void)
                     pwmInit(ePWM2,ePWMSecondaryTimeBase, ePWMModeCompl);
                     pwmInit(ePWM3,ePWMSecondaryTimeBase, ePWMModeCompl);
                     setPwmDuty(ePWM2, SERVO_MIDDLE_DUTY_ON);
-                    setPwmDuty(ePWM3, SERVO_MAX_DUTY_ON);
+                    setPwmDuty(ePWM3, SERVO_MIN_DUTY_ON);
                     pwmEnable(ePWM2);
                     pwmEnable(ePWM3);
                     
@@ -380,10 +387,10 @@ void mainLoop(void)
                 
                 joyspeed_t tempSpeed[eNbrOfJoy] = 
                     {SpeedcharToJoyspeed(speedChar[eJoyX], eJoyX), 
-                    SpeedcharToJoyspeed(speedChar[eJoyY], eJoyY)};
+                    -(SpeedcharToJoyspeed(speedChar[eJoyY], eJoyY))};
                 
-                if((tempSpeed[eJoyX] != lastSpeed[eJoyX])
-                        &&(tempSpeed[eJoyY] == 0))
+                if((tempSpeed[eJoyY]==0)&&((tempSpeed[eJoyX]!=lastSpeed[eJoyX])
+                        ||(tempSpeed[eJoyY] != lastSpeed[eJoyY])))
                 {
                     if(tempSpeed[eJoyX] == 0)
                     {
@@ -408,7 +415,7 @@ void mainLoop(void)
                         pwmEnableSide(ePWM1, ePWML);
                         pwmEnableSide(ePWM4, ePWML);
                     }
-                    lastSpeed[eJoyX] = tempSpeed[eJoyX];
+                    //lastSpeed[eJoyX] = tempSpeed[eJoyX];
                 }
                 
                 if(tempSpeed[eJoyY] != lastSpeed[eJoyY])
@@ -418,7 +425,7 @@ void mainLoop(void)
                 }
                 
                 if((tempSpeed[eJoyY] != lastSpeed[eJoyY])||
-                        ((tempSpeed[eJoyY] != 0)&&(tempSpeed[eJoyX]!=lastSpeed[eJoyX])))
+                        ((tempSpeed[eJoyY]!=0)&&(tempSpeed[eJoyX]!=lastSpeed[eJoyX])))
                 {
                     if(tempSpeed[eJoyX] == 0)
                     {
@@ -434,7 +441,7 @@ void mainLoop(void)
                                 (uint16_t)(10000/N_STEP_JOY*(-tempSpeed[eJoyY])));
                             pwmEnableSide(ePWM4, ePWMH);
                         }
-                        else
+                        else 
                         {
                             pwmDisable(ePWM1);
                             pwmDisable(ePWM4);
@@ -471,8 +478,24 @@ void mainLoop(void)
                             }
                         }
                     }
-                    lastSpeed[eJoyX] = tempSpeed[eJoyX];
-                    lastSpeed[eJoyY] = tempSpeed[eJoyY];
+                }
+                
+                lastSpeed[eJoyX] = tempSpeed[eJoyX];
+                lastSpeed[eJoyY] = tempSpeed[eJoyY];
+                
+                if(fClapet == true)
+                {
+                    if(stateClapet == true)
+                    {
+                        setPwmDuty(ePWM3, SERVO_MIN_DUTY_ON);
+                        stateClapet = false;
+                    }
+                    else
+                    {
+                        setPwmDuty(ePWM3, SERVO_MAX_DUTY_ON);
+                        stateClapet = true;
+                    }
+                    fClapet = false;
                 }
                 
                 if(flagMountBigBallUp == true)
@@ -480,7 +503,7 @@ void mainLoop(void)
                     uartWriteChar(eUART3, CHAR_MOUNT_BIG_BALL_UP);
                     flagMountBigBallUp = false;
                 }
-                if(flagMountBigBallDown == true)
+                else if(flagMountBigBallDown == true)
                 {
                     uartWriteChar(eUART3, CHAR_MOUNT_BIG_BALL_DOWN);
                     flagMountBigBallDown = false;
@@ -490,59 +513,22 @@ void mainLoop(void)
                 {
                     uartWriteChar(eUART3, CHAR_BIG_WHEEL);
                     flagBigWheel = false;
-                }
-                
-                if(fVerin == true)
-                {
-                    if(stateVerin == eVerinNotPull)
-                    {
-                        gpioBitConfig(ePORTF, pinRF7, OUTPUT);
-                        gpioBitWrite(ePORTF, pinRF7, HIGH);
-                        gpioBitConfig(ePORTF, pinRF6, OUTPUT);
-                        gpioBitWrite(ePORTF, pinRF6, HIGH);
-                        stateVerin = eVerinInTransitionToPull;
-                    }
-                    else if(stateVerin == eVerinPull)
-                    {
-                        gpioBitConfig(ePORTF, pinRF7, OUTPUT);
-                        gpioBitWrite(ePORTF, pinRF7, LOW);
-                        gpioBitConfig(ePORTF, pinRF6, OUTPUT);
-                        gpioBitWrite(ePORTF, pinRF6, HIGH);
-                        stateVerin = eVerinInTransitionToNotPull;
-                    }
-                    else if(stateVerin == eVerinInTransitionToNotPull)
-                    {
-                        gpioBitWrite(ePORTF, pinRF6, LOW);
-                        stateVerin = eVerinNotPull;
-                    }
-                    else    //(stateVerin == eVerinInTransitionToPull)
-                    {
-                        gpioBitWrite(ePORTF, pinRF6, LOW);
-                        stateVerin = eVerinPull;
-                    }
-                    fVerin = false;
-                }
-                else if(stateVerin == true)
-                {
-                    /*if(gpioBitRead(ePORT..., pinR...) == HIGH)
-                    {
-                        
-                    }*/
-                }
-                
-                if(fClapet == true)
-                {
                     if(stateClapet == true)
                     {
-                        setPwmDuty(ePWM3, SERVO_MAX_DUTY_ON);
+                        setPwmDuty(ePWM3, SERVO_MIN_DUTY_ON);
                         stateClapet = false;
                     }
-                    else
-                    {
-                        setPwmDuty(ePWM3, SERVO_MIN_DUTY_ON);
-                        stateClapet = true;
-                    }
-                    fClapet = false;
+                }
+                
+                if(fVerinUp == true)
+                {
+                    uartWriteChar(eUART3, CHAR_VERIN_UP);
+                    fVerinUp = false;
+                }
+                else if(fVerinDown == true)
+                {
+                    uartWriteChar(eUART3, CHAR_VERIN_DOWN);
+                    fVerinDown = false;
                 }
                 
                 break;

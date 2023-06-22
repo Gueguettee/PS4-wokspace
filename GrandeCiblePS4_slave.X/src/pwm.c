@@ -449,8 +449,69 @@ void pwmStepByStepInit(pwm_t ePWMx, pwm_t ePWMx2, uint16_t pwmFreq, pwmPER_t exP
 
 void pwmStepByStepEnable(pwm_t ePWMx, pwm_t ePWMx2)
 {
-    pwmEnable(ePWMx);
-    pwmEnable(ePWMx2);
+    PTCONbits.PTEN = 0;     // Disable PWMx Module
+    
+	switch(ePWMx)
+	{
+		case ePWM1:
+			IOCON1bits.PENH = 0x1;		// 1 PWM module control PWM1H, 0 GPIO module control PWM1H
+			IOCON1bits.PENL = 0x1;		// 1 PWM module control PWM1L, 0 GPIO module control PWM1L
+			break;
+		case ePWM2:
+			IOCON2bits.PENH = 0x1;		// 1 PWM module control PWM2H, 0 GPIO module control PWM2H
+			IOCON2bits.PENL = 0x1;		// 1 PWM module control PWM2L, 0 GPIO module control PWM2L
+			break;
+		case ePWM3:
+			IOCON3bits.PENH = 0x1;		// 1 PWM module control PWM3H, 0 GPIO module control PWM3H
+			IOCON3bits.PENL = 0x1;		// 1 PWM module control PWM3L, 0 GPIO module control PWM3L
+			break;
+		case ePWM4:
+			IOCON4bits.PENH = 0x1;		// 1 PWM module control PWM4H, 0 GPIO module control PWM4H
+			IOCON4bits.PENL = 0x1;		// 1 PWM module control PWM4L, 0 GPIO module control PWM4L
+			break;
+		case ePWM5:
+			IOCON5bits.PENH = 0x1;		// 1 PWM module control PWM5H, 0 GPIO module control PWM5H
+			IOCON5bits.PENL = 0x1;		// 1 PWM module control PWM5L, 0 GPIO module control PWM5L
+			break;
+		case ePWM6:
+			IOCON6bits.PENH = 0x1;		// 1 PWM module control PWM6H, 0 GPIO module control PWM6H
+			IOCON6bits.PENL = 0x1;		// 1 PWM module control PWM6L, 0 GPIO module control PWM6L
+			break;
+		default:
+			break;
+	}
+    
+	switch(ePWMx2)
+	{
+		case ePWM1:
+			IOCON1bits.PENH = 0x1;		// 1 PWM module control PWM1H, 0 GPIO module control PWM1H
+			IOCON1bits.PENL = 0x1;		// 1 PWM module control PWM1L, 0 GPIO module control PWM1L
+			break;
+		case ePWM2:
+			IOCON2bits.PENH = 0x1;		// 1 PWM module control PWM2H, 0 GPIO module control PWM2H
+			IOCON2bits.PENL = 0x1;		// 1 PWM module control PWM2L, 0 GPIO module control PWM2L
+			break;
+		case ePWM3:
+			IOCON3bits.PENH = 0x1;		// 1 PWM module control PWM3H, 0 GPIO module control PWM3H
+			IOCON3bits.PENL = 0x1;		// 1 PWM module control PWM3L, 0 GPIO module control PWM3L
+			break;
+		case ePWM4:
+			IOCON4bits.PENH = 0x1;		// 1 PWM module control PWM4H, 0 GPIO module control PWM4H
+			IOCON4bits.PENL = 0x1;		// 1 PWM module control PWM4L, 0 GPIO module control PWM4L
+			break;
+		case ePWM5:
+			IOCON5bits.PENH = 0x1;		// 1 PWM module control PWM5H, 0 GPIO module control PWM5H
+			IOCON5bits.PENL = 0x1;		// 1 PWM module control PWM5L, 0 GPIO module control PWM5L
+			break;
+		case ePWM6:
+			IOCON6bits.PENH = 0x1;		// 1 PWM module control PWM6H, 0 GPIO module control PWM6H
+			IOCON6bits.PENL = 0x1;		// 1 PWM module control PWM6L, 0 GPIO module control PWM6L
+			break;
+		default:
+			break;
+	}
+    
+    PTCONbits.PTEN = 1;     // Enable PWMx Module
     
     /*PTCONbits.PTEN = 0;     // Disable PWMx Module
     
@@ -496,8 +557,69 @@ void pwmStepByStepEnable(pwm_t ePWMx, pwm_t ePWMx2)
 
 void pwmStepByStepDisable(pwm_t ePWMx, pwm_t ePWMx2)
 {
-    pwmDisable(ePWMx);
-    pwmDisable(ePWMx2);
+    PTCONbits.PTEN = 0;     // Disable PWMx Module
+    
+    switch(ePWMx)
+	{
+		case ePWM1:
+			IOCON1bits.PENH = 0x0;	// 1 PWM module control PWM1H, 0 GPIO module control PWM1H
+			IOCON1bits.PENL = 0x0;	// 1 PWM module control PWM1L, 0 GPIO module control PWM1L
+			break;
+		case ePWM2:
+			IOCON2bits.PENH = 0x0;	// 1 PWM module control PWM2H, 0 GPIO module control PWM2H
+			IOCON2bits.PENL = 0x0;	// 1 PWM module control PWM2L, 0 GPIO module control PWM2L
+			break;
+		case ePWM3:
+			IOCON3bits.PENH = 0x0;	// 1 PWM module control PWM3H, 0 GPIO module control PWM3H
+			IOCON3bits.PENL = 0x0;	// 1 PWM module control PWM3L, 0 GPIO module control PWM3L
+			break;
+		case ePWM4:
+			IOCON4bits.PENH = 0x0;	// 1 PWM module control PWM4H, 0 GPIO module control PWM4H
+			IOCON4bits.PENL = 0x0;	// 1 PWM module control PWM4L, 0 GPIO module control PWM4L
+			break;
+		case ePWM5:
+			IOCON5bits.PENH = 0x0;	// 1 PWM module control PWM5H, 0 GPIO module control PWM5H
+			IOCON5bits.PENL = 0x0;	// 1 PWM module control PWM5L, 0 GPIO module control PWM5L
+			break;
+		case ePWM6:
+			IOCON6bits.PENH = 0x0;	// 1 PWM module control PWM6H, 0 GPIO module control PWM6H
+			IOCON6bits.PENL = 0x0;	// 1 PWM module control PWM6L, 0 GPIO module control PWM6L
+			break;
+		default:
+			break;
+	}
+    
+    switch(ePWMx2)
+	{
+		case ePWM1:
+			IOCON1bits.PENH = 0x0;	// 1 PWM module control PWM1H, 0 GPIO module control PWM1H
+			IOCON1bits.PENL = 0x0;	// 1 PWM module control PWM1L, 0 GPIO module control PWM1L
+			break;
+		case ePWM2:
+			IOCON2bits.PENH = 0x0;	// 1 PWM module control PWM2H, 0 GPIO module control PWM2H
+			IOCON2bits.PENL = 0x0;	// 1 PWM module control PWM2L, 0 GPIO module control PWM2L
+			break;
+		case ePWM3:
+			IOCON3bits.PENH = 0x0;	// 1 PWM module control PWM3H, 0 GPIO module control PWM3H
+			IOCON3bits.PENL = 0x0;	// 1 PWM module control PWM3L, 0 GPIO module control PWM3L
+			break;
+		case ePWM4:
+			IOCON4bits.PENH = 0x0;	// 1 PWM module control PWM4H, 0 GPIO module control PWM4H
+			IOCON4bits.PENL = 0x0;	// 1 PWM module control PWM4L, 0 GPIO module control PWM4L
+			break;
+		case ePWM5:
+			IOCON5bits.PENH = 0x0;	// 1 PWM module control PWM5H, 0 GPIO module control PWM5H
+			IOCON5bits.PENL = 0x0;	// 1 PWM module control PWM5L, 0 GPIO module control PWM5L
+			break;
+		case ePWM6:
+			IOCON6bits.PENH = 0x0;	// 1 PWM module control PWM6H, 0 GPIO module control PWM6H
+			IOCON6bits.PENL = 0x0;	// 1 PWM module control PWM6L, 0 GPIO module control PWM6L
+			break;
+		default:
+			break;
+	}
+    
+    PTCONbits.PTEN = 1;     // Enable PWMx Module
     
     /*PTCONbits.PTEN = 0;     // Disable PWMx Module
     

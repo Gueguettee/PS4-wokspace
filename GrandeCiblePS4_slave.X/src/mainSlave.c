@@ -29,6 +29,10 @@ bool stateBigWheel = false;
 bool dirBigWheel = false;
 bool flagMountBigBallUp = false;
 bool flagMountBigBallDown = false;
+bool flagVerinUp = false;
+bool flagVerinDown = false;
+bool stateVerin = false;
+bool dirVerin = false;
 bool stateMountBigBall = false;
 bool dirMountBigBall = false;
 
@@ -166,6 +170,14 @@ void uart3RXInterrupt( void )
             
         case CHAR_BIG_WHEEL:
             flagBigWheel = true;
+            break;
+            
+        case CHAR_VERIN_UP:
+            flagVerinUp = true;
+            break;
+            
+        case CHAR_VERIN_DOWN:
+            flagVerinDown = true;
             break;
            
         default:
@@ -315,6 +327,7 @@ void mainLoop(void)
                 {
                     pwmStepByStepInit(ePWM1, ePWM2, BIG_WHEEL_FREQ_UP, ePWMPrimaryTimeBase, ePWMUp);
                     pwmStepByStepInit(ePWM3, ePWM4, MOUNT_BIG_BALL_FREQ, ePWMSecondaryTimeBase, ePWMUp);
+                    pwmStepByStepInit(ePWM5, ePWM6, VERIN_FREQ, ePWMPrimaryTimeBase, ePWMUp);
                     
                     firstLoop = false;
                 }
@@ -330,6 +343,7 @@ void mainLoop(void)
                         }
                         else
                         {
+                            pwmStepByStepDisable(ePWM1, ePWM2);
                             setPwmFreq(BIG_WHEEL_FREQ_DOWN, ePWMPrimaryTimeBase);
                             pwmStepByStepSetDirection(ePWM1, ePWM2, ePWMDown);
                             pwmStepByStepEnable(ePWM1, ePWM2);
@@ -339,6 +353,7 @@ void mainLoop(void)
                     }
                     else
                     {
+                        pwmStepByStepDisable(ePWM1, ePWM2);
                         setPwmFreq(BIG_WHEEL_FREQ_UP, ePWMPrimaryTimeBase);
                         pwmStepByStepSetDirection(ePWM1, ePWM2, ePWMUp);
                         pwmStepByStepEnable(ePWM1, ePWM2);
@@ -352,6 +367,7 @@ void mainLoop(void)
                 {
                     if((gpioBitRead(ePORTA, pinRA12) == LOW)&&(dirBigWheel == true))
                     {
+                        pwmStepByStepDisable(ePWM1, ePWM2);
                         setPwmFreq(BIG_WHEEL_FREQ_DOWN, ePWMPrimaryTimeBase);
                         pwmStepByStepSetDirection(ePWM1, ePWM2, ePWMDown);
                         pwmStepByStepEnable(ePWM1, ePWM2);
@@ -375,13 +391,13 @@ void mainLoop(void)
                     }
                     else
                     {
+                        pwmStepByStepDisable(ePWM3, ePWM4);
                         setPwmFreq(MOUNT_BIG_BALL_FREQ, ePWMSecondaryTimeBase);
                         pwmStepByStepSetDirection(ePWM3, ePWM4, ePWMDown);
                         pwmStepByStepEnable(ePWM3, ePWM4);
                         dirMountBigBall = false;
                         //pwmStepByStepInit(ePWM3, ePWM4, 30, ePWMSecondaryTimeBase, ePWMUp);
                         stateMountBigBall = true;
-                        //timeMountBigBall = 0;
                     }
                     flagMountBigBallDown = false;
                 }
@@ -394,13 +410,13 @@ void mainLoop(void)
                     }
                     else
                     {
+                        pwmStepByStepDisable(ePWM3, ePWM4);
                         setPwmFreq(MOUNT_BIG_BALL_FREQ, ePWMSecondaryTimeBase);
                         pwmStepByStepSetDirection(ePWM3, ePWM4, ePWMUp);
                         pwmStepByStepEnable(ePWM3, ePWM4);
                         dirMountBigBall = true;
                         //pwmStepByStepInit(ePWM3, ePWM4, 30, ePWMSecondaryTimeBase, ePWMUp);
                         stateMountBigBall = true;
-                        //timeMountBigBall = 0;
                     }
                     flagMountBigBallUp = false;
                 }
@@ -416,6 +432,56 @@ void mainLoop(void)
                         pwmStepByStepDisable(ePWM3, ePWM4);
                         stateMountBigBall = false;
                     }
+                }
+                
+                if(flagVerinDown==true)
+                {
+                    if((stateVerin==true)&&(dirVerin == false))
+                    {
+                        pwmStepByStepDisable(ePWM5, ePWM6);
+                        stateVerin = false;
+                    }
+                    else
+                    {
+                        pwmStepByStepDisable(ePWM5, ePWM6);
+                        setPwmFreq(VERIN_FREQ, ePWMPrimaryTimeBase);
+                        pwmStepByStepSetDirection(ePWM5, ePWM6, ePWMDown);
+                        pwmStepByStepEnable(ePWM5, ePWM6);
+                        dirVerin = false;
+                        stateVerin = true;
+                    }
+                    flagVerinDown = false;
+                }
+                else if(flagVerinUp==true)
+                {
+                    if((stateVerin==true)&&(dirVerin == true))
+                    {
+                        pwmStepByStepDisable(ePWM5, ePWM6);
+                        stateVerin = false;
+                    }
+                    else
+                    {
+                        pwmStepByStepDisable(ePWM5, ePWM6);
+                        setPwmFreq(VERIN_FREQ, ePWMPrimaryTimeBase);
+                        pwmStepByStepSetDirection(ePWM5, ePWM6, ePWMUp);
+                        pwmStepByStepEnable(ePWM5, ePWM6);
+                        dirVerin = true;
+                        stateVerin = true;
+                    }
+                    flagVerinUp = false;
+                }
+                else if(stateVerin==true)
+                {
+                    /*if((gpioBitRead(ePORTE, pinRE8) == LOW)&&(dirMountBigBall == true))
+                    {
+                        pwmStepByStepDisable(ePWM3, ePWM4);
+                        stateVerin = false;
+                    }
+                    else if((gpioBitRead(ePORTE, pinRE9) == LOW)&&(dirMountBigBall == false))
+                    {
+                        pwmStepByStepDisable(ePWM3, ePWM4);
+                        stateVerin = false;
+                    }*/
                 }
                 
                 break;

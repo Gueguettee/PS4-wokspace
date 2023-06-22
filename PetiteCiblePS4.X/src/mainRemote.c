@@ -42,15 +42,15 @@ bool f4 = false;
     sprintf(hexStr, "%03X", valueInt);
 }*/
 
-char SpeedToChar(uint16_t valueInt, joystick_t joystick)
+char SpeedToChar(uint16_t valueUint, joystick_t joystick)
 {
     if(joystick == eJoyX)
     {
-        return((char)(JOY1_VALUE + (char)valueInt)); //(valueInt + '0')
+        return((char)(JOY1_VALUE + (char)valueUint));
     }
     else
     {
-        return((char)(JOY2_VALUE + (char)valueInt)); //(valueInt-10) + 'A')
+        return((char)(JOY2_VALUE + (char)valueUint));
     }
 }
 
@@ -303,7 +303,7 @@ void mainLoop(void)
                 else if((gpioBitRead(ePORTD, pinRD2) == STATE_BUTTON_ON)
                     && (ff6 == false))
                 {
-                    xbeeWriteChar(CHAR_F6);
+                    xbeeWriteChar(CHAR_VERIN_DOWN);
                     ff6 = true;
                 }
                 else if((gpioBitRead(ePORTD, pinRD3) == STATE_BUTTON_ON)
@@ -325,7 +325,7 @@ void mainLoop(void)
                 }
                 else if((f2 == true) && (ff2 == false))
                 {
-                    xbeeWriteChar(CHAR_BIG_WHEEL);
+                    xbeeWriteChar(CHAR_VERIN_UP);
                     ff2 = true;
                 }
                 else if((f3 == true) && (ff3 == false))
@@ -335,7 +335,7 @@ void mainLoop(void)
                 }
                 else if((f4 == true) && (ff4 == false))
                 {
-                    xbeeWriteChar(CHAR_VERIN);
+                    xbeeWriteChar(CHAR_BIG_WHEEL);
                     ff4 = true;
                 }
                 else

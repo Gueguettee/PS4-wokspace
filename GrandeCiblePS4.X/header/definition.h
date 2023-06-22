@@ -73,7 +73,7 @@ typedef int8_t joyspeed_t;
 // Servomoteurs (min 0.5ms, middle 1.5 ms, max 2.5ms, f=50Hz)
 #define SERVO_MAX_DUTY_ON 1250
 #define SERVO_MIDDLE_DUTY_ON 750
-#define SERVO_MIN_DUTY_ON 250
+#define SERVO_MIN_DUTY_ON 240   //250
 #define SERVO_GAP_DUTY_ON 500
 
 #define SERVO_FREQ 50

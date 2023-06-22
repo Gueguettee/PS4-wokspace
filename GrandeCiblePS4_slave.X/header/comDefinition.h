@@ -35,12 +35,12 @@ typedef enum{
 #define CHAR_PING 'v'
 #define CHAR_PING_OK 'w'
 
-#define CHAR_VERIN 'o'
+#define CHAR_VERIN_UP 'o'
 #define CHAR_BIG_WHEEL 'p'
 #define CHAR_MOUNT_BIG_BALL_UP 'q'
 #define CHAR_CLAPET 'n'
 #define CHAR_MOUNT_BIG_BALL_DOWN 'r'
-#define CHAR_F6 's'
+#define CHAR_VERIN_DOWN 's'
 #define CHAR_F7 't'
 #define CHAR_F8 'u'
 
