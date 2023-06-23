@@ -332,16 +332,45 @@ void mainLoop(void)
                     firstLoop = false;
                 }
                 
-                if(flagBigWheel==true)
+                /* Big Wheel */
+                if(stateVerin==false)
                 {
-                    if(stateBigWheel==true)
+                    if(flagBigWheel==true)
                     {
-                        if(dirBigWheel==false)
+                        if(stateBigWheel==true)
                         {
-                            pwmStepByStepDisable(ePWM1, ePWM2);
-                            stateBigWheel = false;
+                            if(dirBigWheel==false)
+                            {
+                                pwmStepByStepDisable(ePWM1, ePWM2);
+                                stateBigWheel = false;
+                                uartWriteChar(eUART3, CHAR_BIG_WHEEL_OFF);
+                            }
+                            else
+                            {
+                                pwmStepByStepDisable(ePWM1, ePWM2);
+                                setPwmFreq(BIG_WHEEL_FREQ_DOWN, ePWMPrimaryTimeBase);
+                                pwmStepByStepSetDirection(ePWM1, ePWM2, ePWMDown);
+                                pwmStepByStepEnable(ePWM1, ePWM2);
+                                //pwmStepByStepInit(ePWM1, ePWM2, RAIL_FREQ, ePWMPrimaryTimeBase, ePWMDown);
+                                dirBigWheel = false;
+                            }
                         }
                         else
+                        {
+                            pwmStepByStepDisable(ePWM1, ePWM2);
+                            setPwmFreq(BIG_WHEEL_FREQ_UP, ePWMPrimaryTimeBase);
+                            pwmStepByStepSetDirection(ePWM1, ePWM2, ePWMUp);
+                            pwmStepByStepEnable(ePWM1, ePWM2);
+                            //pwmStepByStepInit(ePWM1, ePWM2, RAIL_FREQ, ePWMPrimaryTimeBase, ePWMUp);
+                            stateBigWheel = true;
+                            uartWriteChar(eUART3, CHAR_BIG_WHEEL_ON);
+                            dirBigWheel = true;
+                        }
+                        flagBigWheel = false;
+                    }
+                    else if(stateBigWheel==true)
+                    {
+                        if((gpioBitRead(ePORTA, pinRA12) == LOW)&&(dirBigWheel == true))
                         {
                             pwmStepByStepDisable(ePWM1, ePWM2);
                             setPwmFreq(BIG_WHEEL_FREQ_DOWN, ePWMPrimaryTimeBase);
@@ -350,38 +379,79 @@ void mainLoop(void)
                             //pwmStepByStepInit(ePWM1, ePWM2, RAIL_FREQ, ePWMPrimaryTimeBase, ePWMDown);
                             dirBigWheel = false;
                         }
+                        else if((gpioBitRead(ePORTA, pinRA14) == LOW)&&(dirBigWheel == false))
+                        {
+                            pwmStepByStepDisable(ePWM1, ePWM2);
+                            stateBigWheel = false;
+                            uartWriteChar(eUART3, CHAR_BIG_WHEEL_OFF);
+                        }
                     }
-                    else
-                    {
-                        pwmStepByStepDisable(ePWM1, ePWM2);
-                        setPwmFreq(BIG_WHEEL_FREQ_UP, ePWMPrimaryTimeBase);
-                        pwmStepByStepSetDirection(ePWM1, ePWM2, ePWMUp);
-                        pwmStepByStepEnable(ePWM1, ePWM2);
-                        //pwmStepByStepInit(ePWM1, ePWM2, RAIL_FREQ, ePWMPrimaryTimeBase, ePWMUp);
-                        stateBigWheel = true;
-                        dirBigWheel = true;
-                    }
+                }
+                else
+                {
                     flagBigWheel = false;
                 }
-                else if(stateBigWheel==true)
+                
+                /* Verin */
+                if(stateBigWheel==false)
                 {
-                    if((gpioBitRead(ePORTA, pinRA12) == LOW)&&(dirBigWheel == true))
+                    if(flagVerinDown==true)
                     {
-                        pwmStepByStepDisable(ePWM1, ePWM2);
-                        setPwmFreq(BIG_WHEEL_FREQ_DOWN, ePWMPrimaryTimeBase);
-                        pwmStepByStepSetDirection(ePWM1, ePWM2, ePWMDown);
-                        pwmStepByStepEnable(ePWM1, ePWM2);
-                        //pwmStepByStepInit(ePWM1, ePWM2, RAIL_FREQ, ePWMPrimaryTimeBase, ePWMDown);
-                        dirBigWheel = false;
-                        stateBigWheel = true;
+                        if((stateVerin==true)&&(dirVerin == false))
+                        {
+                            pwmStepByStepDisable(ePWM5, ePWM6);
+                            stateVerin = false;
+                            uartWriteChar(eUART3, CHAR_VERIN_OFF);
+                        }
+                        else
+                        {
+                            pwmStepByStepDisable(ePWM5, ePWM6);
+                            setPwmFreq(VERIN_FREQ, ePWMPrimaryTimeBase);
+                            pwmStepByStepSetDirection(ePWM5, ePWM6, ePWMDown);
+                            pwmStepByStepEnable(ePWM5, ePWM6);
+                            dirVerin = false;
+                            stateVerin = true;
+                            uartWriteChar(eUART3, CHAR_VERIN_ON);
+                        }
+                        flagVerinDown = false;
                     }
-                    else if((gpioBitRead(ePORTA, pinRA14) == LOW)&&(dirBigWheel == false))
+                    else if(flagVerinUp==true)
                     {
-                        pwmStepByStepDisable(ePWM1, ePWM2);
-                        stateBigWheel = false;
+                        if((stateVerin==true)&&(dirVerin == true))
+                        {
+                            pwmStepByStepDisable(ePWM5, ePWM6);
+                            stateVerin = false;
+                            uartWriteChar(eUART3, CHAR_VERIN_OFF);
+                        }
+                        else
+                        {
+                            pwmStepByStepDisable(ePWM5, ePWM6);
+                            setPwmFreq(VERIN_FREQ, ePWMPrimaryTimeBase);
+                            pwmStepByStepSetDirection(ePWM5, ePWM6, ePWMUp);
+                            pwmStepByStepEnable(ePWM5, ePWM6);
+                            dirVerin = true;
+                            stateVerin = true;
+                            uartWriteChar(eUART3, CHAR_VERIN_ON);
+                        }
+                        flagVerinUp = false;
+                    }
+                }
+                else
+                {
+                    flagVerinUp = false;
+                    flagVerinDown = false;
+                }
+                if(stateVerin==true)    //pas else if
+                {
+                    if((gpioBitRead(ePORTE, pinRE14) == LOW)&&(dirVerin==true))
+                    {
+                        pwmStepByStepDisable(ePWM5, ePWM6);
+                        stateVerin = false;
+                        uartWriteChar(eUART3, CHAR_VERIN_OFF);
                     }
                 }
                 
+                /* Mount Big Ball */
                 if(flagMountBigBallDown==true)
                 {
                     if((stateMountBigBall==true)&&(dirMountBigBall == false))
@@ -420,7 +490,7 @@ void mainLoop(void)
                     }
                     flagMountBigBallUp = false;
                 }
-                else if(stateMountBigBall==true)
+                if(stateMountBigBall==true) // pas de else if
                 {
                     if((gpioBitRead(ePORTE, pinRE8) == LOW)&&(dirMountBigBall == true))
                     {
@@ -432,56 +502,6 @@ void mainLoop(void)
                         pwmStepByStepDisable(ePWM3, ePWM4);
                         stateMountBigBall = false;
                     }
-                }
-                
-                if(flagVerinDown==true)
-                {
-                    if((stateVerin==true)&&(dirVerin == false))
-                    {
-                        pwmStepByStepDisable(ePWM5, ePWM6);
-                        stateVerin = false;
-                    }
-                    else
-                    {
-                        pwmStepByStepDisable(ePWM5, ePWM6);
-                        setPwmFreq(VERIN_FREQ, ePWMPrimaryTimeBase);
-                        pwmStepByStepSetDirection(ePWM5, ePWM6, ePWMDown);
-                        pwmStepByStepEnable(ePWM5, ePWM6);
-                        dirVerin = false;
-                        stateVerin = true;
-                    }
-                    flagVerinDown = false;
-                }
-                else if(flagVerinUp==true)
-                {
-                    if((stateVerin==true)&&(dirVerin == true))
-                    {
-                        pwmStepByStepDisable(ePWM5, ePWM6);
-                        stateVerin = false;
-                    }
-                    else
-                    {
-                        pwmStepByStepDisable(ePWM5, ePWM6);
-                        setPwmFreq(VERIN_FREQ, ePWMPrimaryTimeBase);
-                        pwmStepByStepSetDirection(ePWM5, ePWM6, ePWMUp);
-                        pwmStepByStepEnable(ePWM5, ePWM6);
-                        dirVerin = true;
-                        stateVerin = true;
-                    }
-                    flagVerinUp = false;
-                }
-                else if(stateVerin==true)
-                {
-                    /*if((gpioBitRead(ePORTE, pinRE8) == LOW)&&(dirMountBigBall == true))
-                    {
-                        pwmStepByStepDisable(ePWM3, ePWM4);
-                        stateVerin = false;
-                    }
-                    else if((gpioBitRead(ePORTE, pinRE9) == LOW)&&(dirMountBigBall == false))
-                    {
-                        pwmStepByStepDisable(ePWM3, ePWM4);
-                        stateVerin = false;
-                    }*/
                 }
                 
                 break;

@@ -69,7 +69,7 @@ typedef int8_t joySpeed_t;
 #define BIG_WHEEL_FREQ_UP 30
 #define BIG_WHEEL_FREQ_DOWN 60
 #define MOUNT_BIG_BALL_FREQ 160
-#define VERIN_FREQ 200
+#define VERIN_FREQ 300
 
 // Bit direction definition
 #define INPUT  1

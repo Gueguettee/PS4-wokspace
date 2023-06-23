@@ -44,5 +44,9 @@ typedef enum{
 #define CHAR_VERIN_DOWN 's'
 #define CHAR_F7 't'
 #define CHAR_F8 'u'
+#define CHAR_BIG_WHEEL_ON 'l'
+#define CHAR_BIG_WHEEL_OFF 'm'
+#define CHAR_VERIN_ON 'n'
+#define CHAR_VERIN_OFF 'k'
 
 #endif	/* _COMDEFINITION_H_ */

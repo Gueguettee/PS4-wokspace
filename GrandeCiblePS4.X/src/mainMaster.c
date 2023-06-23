@@ -169,13 +169,21 @@ void uart3RXInterrupt( void )
         case CHAR_PING_OK:
             break;
             
-        /*case CHAR_MOUNT_BIG_BALL:
-            stateMountBigBall = false;
+        case CHAR_VERIN_ON:
+            xbeeWriteChar(CHAR_VERIN_ON);
             break;
             
-        case CHAR_BIG_WHEEL:
-            stateBigWheel = false;
-            break;*/
+        case CHAR_VERIN_OFF:
+            xbeeWriteChar(CHAR_VERIN_OFF);
+            break;
+            
+        case CHAR_BIG_WHEEL_ON:
+            xbeeWriteChar(CHAR_BIG_WHEEL_ON);
+            break;
+            
+        case CHAR_BIG_WHEEL_OFF:
+            xbeeWriteChar(CHAR_BIG_WHEEL_OFF);
+            break;
             
         default:
             break;
@@ -343,7 +351,6 @@ void mainLoop(void)
 	// TBD: USER CODE HERE
     static joyspeed_t lastSpeed[eNbrOfJoy] = {0};
     
-    static verinState_t stateVerin = eVerinNotPull;
     static bool stateClapet = false;
     
     static uint16_t sysCounter=0;
@@ -378,7 +385,7 @@ void mainLoop(void)
                     pwmInit(ePWM2,ePWMSecondaryTimeBase, ePWMModeCompl);
                     pwmInit(ePWM3,ePWMSecondaryTimeBase, ePWMModeCompl);
                     setPwmDuty(ePWM2, SERVO_MIDDLE_DUTY_ON);
-                    setPwmDuty(ePWM3, SERVO_MIN_DUTY_ON);
+                    setPwmDuty(ePWM3, SERVO_CLOPET_DUTY_CLOSE);
                     pwmEnable(ePWM2);
                     pwmEnable(ePWM3);
                     
@@ -454,12 +461,24 @@ void mainLoop(void)
                             if(tempSpeed[eJoyY] > 0)
                             {
                                 setPwmDuty(ePWM1, 
-                                    ((10000/N_STEP_JOY*(uint16_t)tempSpeed[eJoyX])+(N_STEP_JOY-(uint16_t)tempSpeed[eJoyX])*10000*(uint16_t)tempSpeed[eJoyY]/N_STEP_JOY));
+                                    ((10000/N_STEP_JOY*(uint16_t)tempSpeed[eJoyX])
+                                        +(N_STEP_JOY-(uint16_t)tempSpeed[eJoyX])*10000*(uint16_t)tempSpeed[eJoyY]/N_STEP_JOY));
+                                setPwmDuty(ePWM4, 
+                                    ((10000/N_STEP_JOY*(uint16_t)tempSpeed[eJoyX])
+                                        -(uint16_t)tempSpeed[eJoyX]*10000*(uint16_t)tempSpeed[eJoyY]/N_STEP_JOY));
+                                pwmEnableSide(ePWM1, ePWMH);
+                                pwmEnableSide(ePWM4, ePWMH);
                             }
                             else
                             {
                                 setPwmDuty(ePWM4, 
-                                    ((10000/N_STEP_JOY*(uint16_t)tempSpeed[eJoyX])+(N_STEP_JOY-(uint16_t)tempSpeed[eJoyX])*10000*(uint16_t)tempSpeed[eJoyY]/N_STEP_JOY));
+                                    ((10000/N_STEP_JOY*(uint16_t)tempSpeed[eJoyX])
+                                        +(N_STEP_JOY-(uint16_t)tempSpeed[eJoyX])*10000*(uint16_t)(-tempSpeed[eJoyY])/N_STEP_JOY));
+                                setPwmDuty(ePWM1, 
+                                    ((10000/N_STEP_JOY*(uint16_t)tempSpeed[eJoyX])
+                                        -(uint16_t)tempSpeed[eJoyX]*10000*(uint16_t)(-tempSpeed[eJoyY])/N_STEP_JOY));
+                                pwmEnableSide(ePWM1, ePWMH);
+                                pwmEnableSide(ePWM4, ePWMH);
                             }
                         }
                         else
@@ -467,14 +486,24 @@ void mainLoop(void)
                             if(tempSpeed[eJoyY] > 0)
                             {
                                 setPwmDuty(ePWM1, 
-                                    ((10000/N_STEP_JOY*(N_STEP_JOY+(uint16_t)tempSpeed[eJoyX]))
-                                        +(uint16_t)(-tempSpeed[eJoyX])*10000*(uint16_t)(-tempSpeed[eJoyY])/N_STEP_JOY));
+                                    ((10000/N_STEP_JOY*(N_STEP_JOY-(uint16_t)(-tempSpeed[eJoyX])))
+                                        -(uint16_t)(-tempSpeed[eJoyX])*10000*(uint16_t)tempSpeed[eJoyY]/N_STEP_JOY));
+                                setPwmDuty(ePWM4, 
+                                    ((10000/N_STEP_JOY*(N_STEP_JOY-(uint16_t)(-tempSpeed[eJoyX])))
+                                        +(N_STEP_JOY-(uint16_t)(-tempSpeed[eJoyX]))*10000*(uint16_t)tempSpeed[eJoyY]/N_STEP_JOY));
+                                pwmEnableSide(ePWM1, ePWML);
+                                pwmEnableSide(ePWM4, ePWML);
                             }
                             else
                             {
                                 setPwmDuty(ePWM4, 
-                                    ((10000/N_STEP_JOY*(N_STEP_JOY+(uint16_t)tempSpeed[eJoyX]))
-                                        +(uint16_t)(-tempSpeed[eJoyX])*10000*(uint16_t)(-tempSpeed[eJoyY])/N_STEP_JOY));
+                                    ((10000/N_STEP_JOY*(N_STEP_JOY-(uint16_t)(-tempSpeed[eJoyX])))
+                                        -(uint16_t)(-tempSpeed[eJoyX])*10000*(uint16_t)(-tempSpeed[eJoyY])/N_STEP_JOY));
+                                setPwmDuty(ePWM1, 
+                                    ((10000/N_STEP_JOY*(N_STEP_JOY-(uint16_t)(-tempSpeed[eJoyX])))
+                                        +(N_STEP_JOY-(uint16_t)(-tempSpeed[eJoyX]))*10000*(uint16_t)(-tempSpeed[eJoyY])/N_STEP_JOY));
+                                pwmEnableSide(ePWM1, ePWML);
+                                pwmEnableSide(ePWM4, ePWML);
                             }
                         }
                     }
@@ -487,12 +516,12 @@ void mainLoop(void)
                 {
                     if(stateClapet == true)
                     {
-                        setPwmDuty(ePWM3, SERVO_MIN_DUTY_ON);
+                        setPwmDuty(ePWM3, SERVO_CLOPET_DUTY_CLOSE);
                         stateClapet = false;
                     }
                     else
                     {
-                        setPwmDuty(ePWM3, SERVO_MAX_DUTY_ON);
+                        setPwmDuty(ePWM3, SERVO_CLOPET_DUTY_OPEN);
                         stateClapet = true;
                     }
                     fClapet = false;
@@ -515,7 +544,7 @@ void mainLoop(void)
                     flagBigWheel = false;
                     if(stateClapet == true)
                     {
-                        setPwmDuty(ePWM3, SERVO_MIN_DUTY_ON);
+                        setPwmDuty(ePWM3, SERVO_CLOPET_DUTY_CLOSE);
                         stateClapet = false;
                     }
                 }

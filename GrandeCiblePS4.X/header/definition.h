@@ -71,10 +71,13 @@ typedef int8_t joyspeed_t;
 #define RUN 1
 
 // Servomoteurs (min 0.5ms, middle 1.5 ms, max 2.5ms, f=50Hz)
-#define SERVO_MAX_DUTY_ON 1250
+#define SERVO_MAX_DUTY_ON 1200  //1250
 #define SERVO_MIDDLE_DUTY_ON 750
-#define SERVO_MIN_DUTY_ON 240   //250
+#define SERVO_MIN_DUTY_ON 300   //250
 #define SERVO_GAP_DUTY_ON 500
+
+#define SERVO_CLOPET_DUTY_CLOSE 242 //250
+#define SERVO_CLOPET_DUTY_OPEN 1250
 
 #define SERVO_FREQ 50
 

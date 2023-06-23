@@ -201,6 +201,24 @@ void xbeeRXInterrupt( void )
             state = RUN;
             break;
             
+        case CHAR_VERIN_ON:
+            gpioBitConfig(ePORTD, pinRD13, OUTPUT);
+            gpioBitWrite(ePORTD, pinRD13, HIGH);    // blanche
+            break;
+            
+        case CHAR_VERIN_OFF:
+            gpioBitWrite(ePORTD, pinRD13, LOW);
+            break;
+            
+        case CHAR_BIG_WHEEL_ON:
+            gpioBitConfig(ePORTD, pinRD14, OUTPUT);
+            gpioBitWrite(ePORTD, pinRD14, HIGH);    // jaune
+            break;
+            
+        case CHAR_BIG_WHEEL_OFF:
+            gpioBitWrite(ePORTD, pinRD14, LOW);
+            break;
+            
         default:
             xbeeWriteChar(xbeeChar);
             break;
@@ -303,19 +321,19 @@ void mainLoop(void)
                 else if((gpioBitRead(ePORTD, pinRD2) == STATE_BUTTON_ON)
                     && (ff6 == false))
                 {
-                    xbeeWriteChar(CHAR_VERIN_DOWN);
+                    xbeeWriteChar(CHAR_F7);
                     ff6 = true;
                 }
                 else if((gpioBitRead(ePORTD, pinRD3) == STATE_BUTTON_ON)
                     && (ff7 == false))
                 {
-                    xbeeWriteChar(CHAR_F7);
+                    xbeeWriteChar(CHAR_VERIN_DOWN);
                     ff7 = true;
                 }
                 else if((gpioBitRead(ePORTD, pinRD4) == STATE_BUTTON_ON)
                     && (ff8 == false))
                 {
-                    xbeeWriteChar(CHAR_F8);
+                    xbeeWriteChar(CHAR_BIG_WHEEL);
                     ff8 = true;
                 }
                 else if((f1 == true) && (ff1 == false))
@@ -325,17 +343,17 @@ void mainLoop(void)
                 }
                 else if((f2 == true) && (ff2 == false))
                 {
-                    xbeeWriteChar(CHAR_VERIN_UP);
+                    xbeeWriteChar(CHAR_CLAPET);
                     ff2 = true;
                 }
                 else if((f3 == true) && (ff3 == false))
                 {
-                    xbeeWriteChar(CHAR_CLAPET);
+                    xbeeWriteChar(CHAR_VERIN_UP);
                     ff3 = true;
                 }
                 else if((f4 == true) && (ff4 == false))
                 {
-                    xbeeWriteChar(CHAR_BIG_WHEEL);
+                    xbeeWriteChar(CHAR_F7);
                     ff4 = true;
                 }
                 else
@@ -486,6 +504,9 @@ int16_t main(void)
     externInterruptInit(eINT2, eRisingEdge);
     externInterruptInit(eINT3, eRisingEdge);
     externInterruptInit(eINT4, eRisingEdge);
+    
+    gpioBitConfig(ePORTD, pinRD15, OUTPUT);
+    gpioBitWrite(ePORTD, pinRD15, HIGH);    // vert
     
 	_GENERAL_INTERRUPT_ENABLED_; // start the interrupt
     
