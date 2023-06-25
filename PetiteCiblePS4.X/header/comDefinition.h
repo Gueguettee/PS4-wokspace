@@ -32,7 +32,7 @@ typedef enum{
 #define JOY1_VALUE 0x30
 #define JOY2_VALUE 0x50
 
-#define CHAR_PING 'v'
+#define CHAR_PING 'v'   //min 'e' with 10 step
 #define CHAR_PING_OK 'w'
 
 #define CHAR_VERIN_UP 'o'
@@ -45,7 +45,7 @@ typedef enum{
 #define CHAR_F8 'u'
 #define CHAR_BIG_WHEEL_ON 'l'
 #define CHAR_BIG_WHEEL_OFF 'm'
-#define CHAR_VERIN_ON 'n'
+#define CHAR_VERIN_ON 'x'
 #define CHAR_VERIN_OFF 'k'
 
 #endif	/* _COMDEFINITION_H_ */

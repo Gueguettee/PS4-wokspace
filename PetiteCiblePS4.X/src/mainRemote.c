@@ -341,7 +341,7 @@ void mainLoop(void)
                     xbeeWriteChar(CHAR_MOUNT_BIG_BALL_UP);
                     ff1 = true;
                 }
-                else if((f2 == true) && (ff2 == false))
+                else if((gpioBitRead(ePORTA, pinRA12) == STATE_BUTTON_ON) && (ff2 == false))
                 {
                     xbeeWriteChar(CHAR_CLAPET);
                     ff2 = true;
@@ -501,7 +501,7 @@ int16_t main(void)
     xbeeInterruptEnable(eRX);
     
     externInterruptInit(eINT1, eRisingEdge);
-    externInterruptInit(eINT2, eRisingEdge);
+    //externInterruptInit(eINT2, eRisingEdge);
     externInterruptInit(eINT3, eRisingEdge);
     externInterruptInit(eINT4, eRisingEdge);
     

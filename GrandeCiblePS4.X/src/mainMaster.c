@@ -204,7 +204,7 @@ void xbeeRXInterrupt( void )
     static char xbeeChar;
     joystick_t joy;
     xbeeChar = xbeeReadChar();
-    //uartWriteChar(eUART2, xbeeChar);  // for debug
+    uartWriteChar(eUART2, xbeeChar);  // for debug
     
     switch(xbeeChar)
     {
@@ -440,12 +440,14 @@ void mainLoop(void)
                         {
                             setPwmDuty(ePWM1, 
                                 (uint16_t)(10000/N_STEP_JOY*tempSpeed[eJoyY]));
+                            pwmDisable(ePWM4);
                             pwmEnableSide(ePWM1, ePWMH);
                         }
                         else if(tempSpeed[eJoyY] < 0)
                         {
                             setPwmDuty(ePWM4, 
                                 (uint16_t)(10000/N_STEP_JOY*(-tempSpeed[eJoyY])));
+                            pwmDisable(ePWM1);
                             pwmEnableSide(ePWM4, ePWMH);
                         }
                         else 
@@ -485,10 +487,10 @@ void mainLoop(void)
                         {
                             if(tempSpeed[eJoyY] > 0)
                             {
-                                setPwmDuty(ePWM1, 
+                                setPwmDuty(ePWM4, 
                                     ((10000/N_STEP_JOY*(N_STEP_JOY-(uint16_t)(-tempSpeed[eJoyX])))
                                         -(uint16_t)(-tempSpeed[eJoyX])*10000*(uint16_t)tempSpeed[eJoyY]/N_STEP_JOY));
-                                setPwmDuty(ePWM4, 
+                                setPwmDuty(ePWM1, 
                                     ((10000/N_STEP_JOY*(N_STEP_JOY-(uint16_t)(-tempSpeed[eJoyX])))
                                         +(N_STEP_JOY-(uint16_t)(-tempSpeed[eJoyX]))*10000*(uint16_t)tempSpeed[eJoyY]/N_STEP_JOY));
                                 pwmEnableSide(ePWM1, ePWML);
@@ -496,10 +498,10 @@ void mainLoop(void)
                             }
                             else
                             {
-                                setPwmDuty(ePWM4, 
+                                setPwmDuty(ePWM1, 
                                     ((10000/N_STEP_JOY*(N_STEP_JOY-(uint16_t)(-tempSpeed[eJoyX])))
                                         -(uint16_t)(-tempSpeed[eJoyX])*10000*(uint16_t)(-tempSpeed[eJoyY])/N_STEP_JOY));
-                                setPwmDuty(ePWM1, 
+                                setPwmDuty(ePWM4, 
                                     ((10000/N_STEP_JOY*(N_STEP_JOY-(uint16_t)(-tempSpeed[eJoyX])))
                                         +(N_STEP_JOY-(uint16_t)(-tempSpeed[eJoyX]))*10000*(uint16_t)(-tempSpeed[eJoyY])/N_STEP_JOY));
                                 pwmEnableSide(ePWM1, ePWML);
@@ -647,8 +649,8 @@ int16_t main(void)
     
 	// TBD: INITIALIZATION OF THE USER USED MODULE
   
-    //uartInit(eUART2, 9600);
-    //uartInterruptEnable(eUART2, eRX);
+    uartInit(eUART2, 9600);
+    uartInterruptEnable(eUART2, eRX);
     uartInit(eUART3, 115200);
     uartInterruptEnable(eUART3, eRX);
     
